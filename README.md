@@ -6,3 +6,4 @@ Collaborator List
 1. Alfrey Chan
 2. Diane Choi
 3. Sung Lee
+4. Amy Sim
