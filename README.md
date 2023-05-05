@@ -5,3 +5,4 @@ Project Pitch: Our project, DTC03, is developing a recipe recommendation app, Pa
 Collaborator List
 1. Alfrey Chan
 2. Diane Choi
+3. Sung Lee
