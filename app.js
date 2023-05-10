@@ -62,7 +62,7 @@ app.post('/signupSubmit', async (req, res) => {
   }
 
   if (!req.body.name) {
-    errorMessage.push('name is required.');
+    errorMessage.push('Name is required.');
   }
   
   if (!req.body.email) {
