@@ -18,6 +18,7 @@ const navLinks = [
 ]
 
 const dotenv = require('dotenv');
+const { error } = require('console');
 dotenv.config();
 
 const dbStore = new MongoDBStore({
@@ -54,76 +55,176 @@ app.get('/signup', (req, res) => {
   });
 });
 
+app.use(express.json());
 app.post('/signupSubmit', async (req, res) => {
   let errorMessage = [];
+  const schema = Joi.object({
+    username: Joi.string()
+    .alphanum()
+    .min(5)
+    .max(15)
+    .required()
+    .messages({
+      'string.alphanum': 'Username must only contain alphanumeric characters.',
+      'string.min': 'Username must be between 5 to 15 characters long.',
+      'string.max': 'Username must be betwen 5 to 15 characters long.',
+      'string.empty': 'Please provide a username.'
+    }),
+    name: Joi.string()
+    .alphanum()
+    .min(5)
+    .max(15)
+    .required()
+    .messages({
+      'string.alphanum': 'Name must only contain alphanumeric characters.',
+      'string.min': 'Name must be between 5 to 15 characters long.',
+      'string.max': 'Username must be betwen 5 to 15 characters long.',
+      'string.empty': 'Please provide a name.'
+    }),
+    email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+    .required()
+    .messages({
+      'string.email': 'Please provide a valid email address.',
+      'string.empty': 'Please provide an email.'
+    }),
+    password: Joi.string()
+    .min(5)
+    .max(30)
+    .required()
+    .messages({
+      'string.max': 'Password must be between 5 and 30 characters long.',
+      'string.min': 'Password must be between 5 and 30 characters long.',
+      'string.empty': 'Please provide a password.'
+    }),
+    confirmPassword: Joi.any().valid(Joi.ref('password'))
+    .required()
+    .messages({
+      'any.only': 'Passwords do not match.',
+    }),
+  }).options({ allowUnknown: true });
 
-  if (!req.body.username) {
-    errorMessage.push('Username is required.');
-  }
-
-  if (!req.body.name) {
-    errorMessage.push('Name is required.');
-  }
-  
-  if (!req.body.email) {
-    errorMessage.push('Email is required.');
-  }
-  
-  if (!req.body.password) {
-    errorMessage.push('Password is required.');
-  }
-
-  if (!req.body.confirmPassword) {
-    errorMessage.push('Please confirm your password.');
-  } else if (req.body.password !== req.body.confirmPassword) {
-      errorMessage.push('Passwords do not match.');
-  }
-  
-  if (errorMessage.length > 0) {
+  try {
+    const { username, password, email } = await schema.validateAsync(req.body, { abortEarly: false });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = {
+      username: username,
+      password: hashedPassword,
+      email: email,
+      type: 'user',
+    };
+    const result = await usersModel.create(user);
+    console.log(result);
+    // add some user created successfully message?
+  } catch (err) {
+    console.log(err);
+    // catch all errors and add to error message array
+    err.details.forEach(error => {
+      errorMessage.push(error.message);
+    });
+    // render the error page with the error message array
     res.render('signupSubmitError', {
       errorMessage: errorMessage,
     });
     return;
-  } else {
-    const schema = Joi.object({
-      username: Joi.string().alphanum().max(30).required(),
-      name: Joi.string().alphanum().max(30).required(),
-      email: Joi.string().max(30).required(),
-      password: Joi.string().max(30).required()
-    });
-
-    try {
-      await schema.validateAsync({
-        username: req.body.username,
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-      });
-    } catch (err) {
-      errorMessage.push('The fields must all be strings!');
-      console.log(errorMessage);
-      res.render('signupSubmitError', {
-        errorMessage: errorMessage,
-      });
-      return;
-    }
-
-    await usersModel.create({
-      username: req.body.username,
-      name: req.body.name,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 10)
-    }).catch((error) => {
-      errorMessage.push('Failed to sign up.');
-      res.render('signupSubmitError', {
-        errorMessage: errorMessage,
-      });
-    });
-    req.session.GLOBAL_AUTHENTICATED = true;
-    req.session.loggedUsername = req.body.username;
-    res.redirect('/')
   }
+  req.session.GLOBAL_AUTHENTICATED = true;
+  req.session.loggedUsername = req.body.username;
+  res.redirect('/')
 });
+
+  // if (!req.body.username) {
+  //   errorMessage.push('Username is required.');
+  // }
+
+  // if (!req.body.name) {
+  //   errorMessage.push('Name is required.');
+  // }
+  
+  // if (!req.body.email) {
+  //   errorMessage.push('Email is required.');
+  // }
+  
+  // if (!req.body.password) {
+  //   errorMessage.push('Password is required.');
+  // }
+
+  // if (!req.body.confirmPassword) {
+  //   errorMessage.push('Please confirm your password.');
+  // } else if (req.body.password !== req.body.confirmPassword) {
+  //     errorMessage.push('Passwords do not match.');
+  // }
+  
+  // if (errorMessage.length > 0) {
+  //   res.render('signupSubmitError', {
+  //     errorMessage: errorMessage,
+  //   });
+  //   return;
+  // } else {
+  //   const schema = Joi.object({
+  //     username: Joi.string().alphanum().min(5).max(15).required()
+  //     .messages({
+  //       'string.alphanum': 'Username must only contain alphanumeric characters.',
+  //       'string.min': 'Username must be between 5 to 15 characters long.',
+  //       'string.max': 'Username must be betwen 5 to 15 characters long.',
+  //       'string.empty': 'Please provide a username.'
+  //     }),
+  //     name: Joi.string().alphanum().min(5).max(15).required()
+  //     .messages({
+  //       'string.alphanum': 'Name must only contain alphanumeric characters.',
+  //       'string.min': 'Name must be between 5 to 15 characters long.',
+  //       'string.max': 'Username must be betwen 5 to 15 characters long.',
+  //       'string.empty': 'Please provide a name.'
+  //     }),
+  //     email: Joi.string().required()
+  //     .messages({
+  //       'string.empty': 'Please provide an email.'
+  //     }),
+  //     password: Joi.string().min(5).max(30).required()
+  //     .messages({
+  //       'string.max': 'Password must be between 5 and 30 characters long.',
+  //       'string.empty': 'Please provide a password.'
+  //     })
+  //   });
+
+    // try {
+    //   await schema.validateAsync({
+    //     username: req.body.username,
+    //     name: req.body.name,
+    //     email: req.body.email,
+    //     password: req.body.password
+    //   });
+    // } catch (err) {
+    //   // errorMessage.push('The fields must all be strings!');
+    //   console.log(err)
+    //   err.details.forEach(error => {
+    //     errorMessage.push(error.message);
+    //     console.log(errorMessage)
+    //   });
+    //   // errorMessage.push(err.details[0].message);
+    //   console.log(errorMessage);
+    //   res.render('signupSubmitError', {
+    //     errorMessage: errorMessage,
+    //   });
+    //   return;
+    // }
+
+//     await usersModel.create({
+//       username: req.body.username,
+//       name: req.body.name,
+//       email: req.body.email,
+//       password: bcrypt.hashSync(req.body.password, 10)
+//     }).catch((error) => {
+//       errorMessage.push('Failed to sign up.');
+//       res.render('signupSubmitError', {
+//         errorMessage: errorMessage,
+//       });
+//     });
+//     req.session.GLOBAL_AUTHENTICATED = true;
+//     req.session.loggedUsername = req.body.username;
+//     res.redirect('/')
+//   }
+// });
 
 app.get('/login', (req, res) => {
   res.render('login', {
