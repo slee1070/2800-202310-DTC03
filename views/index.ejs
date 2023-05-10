@@ -1,0 +1,27 @@
+<%- include("templates/header") %>
+<div class="container text-center">
+  <br>
+  <br>
+  <img src="/images/logo.png" alt="Logo" width="200px">
+<% if (!session.GLOBAL_AUTHENTICATED) { %>
+    <br>
+    <br>
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/signup';">Sign up</button>
+    <br>
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/login';">Log in</button>
+  <% } else { %>
+    <br>
+    <br>
+    <h2>Hello, <%= session.loggedName %>!</h2>
+    <br>
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/chat';">Start Chat</button>
+    <br>
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/my_pantry';">Edit My Pantry</button>
+    <br>
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/logout';">Logout</button>
+  <% } %>
+</div>
+<%- include("templates/footer") %>
+
+
+
