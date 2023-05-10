@@ -1,0 +1,26 @@
+<%- include("templates/header") %>
+<div class="container">
+  <h2>Create user</h2>
+  <br>
+  <form action="/signupSubmit" method="post">
+    <div class="form-group">
+      <label for="name">Username</label>
+      <input type="text" name="username" placeholder="Enter your username" class="form-control" />
+      <br>
+      <label for="name">Name</label>
+      <input type="text" name="name" placeholder="Enter your name" class="form-control" />
+      <br>
+      <label for="username">Email</label>
+      <input type="text" name="email" placeholder="Enter your email" class="form-control" />
+      <br>
+      <label for="password">Password</label>
+      <input type="password" name="password" placeholder="Enter your password" class="form-control" />
+      <br>
+      <label for="password">Confirm Password</label>
+      <input type="password" name="confirmPassword" placeholder="Re-enter your password" class="form-control" />
+      <br>
+      <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+    </div>
+  </form>
+</div>
+<%- include("templates/footer") %>
