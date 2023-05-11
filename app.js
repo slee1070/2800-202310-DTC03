@@ -126,6 +126,7 @@ app.post('/signupSubmit', async (req, res) => {
 
   try {
     const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
+    const hashedSecurityAnswer = await bcrypt.hash(securityAnswer, 10);
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = {
       username: username,
@@ -133,7 +134,7 @@ app.post('/signupSubmit', async (req, res) => {
       password: hashedPassword,
       email: email,
       securityQuestion: securityQuestion,
-      securityAnswer: securityAnswer,
+      securityAnswer: hashedSecurityAnswer,
       type: 'user',
     };
     const result = await usersModel.create(user);
