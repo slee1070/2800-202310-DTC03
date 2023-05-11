@@ -6,19 +6,19 @@
 <% if (!session.GLOBAL_AUTHENTICATED) { %>
     <br>
     <br>
-    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/signup';">Sign up</button>
+    <button type="button" class="mt-3 w-100 btn btn-lg btn-warning" onclick="location.href='/signup';">Sign up</button>
     <br>
-    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/login';">Log in</button>
+    <button type="button" class="mt-3 w-100 btn btn-lg btn-warning" onclick="location.href='/login';">Log in</button>
   <% } else { %>
     <br>
     <br>
     <h2>Hello, <%= session.loggedUsername %>!</h2>
     <br>
-    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/chat';">Start Chat</button>
+    <button type="button" class="mt-3 w-100 btn btn-lg btn-warning" onclick="location.href='/chat';">Start Chat</button>
     <br>
-    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/my_pantry';">Edit My Pantry</button>
+    <button type="button" class="mt-3 w-100 btn btn-lg btn-warning" onclick="location.href='/my_pantry';">Edit My Pantry</button>
     <br>
-    <button type="button" class="btn btn-outline-primary mb-2" onclick="location.href='/logout';">Logout</button>
+    <button type="button" class="mt-3 w-100 btn btn-lg btn-warning" onclick="location.href='/logout';">Logout</button>
   <% } %>
 </div>
 <%- include("templates/footer") %>
