@@ -180,7 +180,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/forget_username', (req, res) => {
-  res.render('forget_username');
+  res.render('forget_username', { session: req.session });
 });
 
 app.post('/recover/username', async (req, res) => {
@@ -201,7 +201,7 @@ app.post('/recover/username', async (req, res) => {
 });
 
 app.get('/forget_password', (req, res) => {
-  res.render('forget_password');
+  res.render('forget_password', { session: req.session });
 });
 
 app.post('/recover/password', async (req, res) => {
