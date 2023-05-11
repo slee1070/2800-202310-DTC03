@@ -88,7 +88,6 @@ app.post('/signupSubmit', async (req, res) => {
       'any.only': 'Passwords do not match.',
     }),
     securityQuestion: Joi.string()
-      .alphanum()
       .min(5)
       .max(30)
       .required()
