@@ -102,15 +102,38 @@ app.post('/signupSubmit', async (req, res) => {
     .messages({
       'any.only': 'Passwords do not match.',
     }),
+    securityQuestion: Joi.string()
+    .alphanum()
+    .min(5)
+    .max(30)
+    .required()
+    .messages({
+      'string.min': 'Security question must be between 5 and 30 characters long.',
+      'string.max': 'Security question must be between 5 and 30 characters long.',
+      'string.empty': 'Please provide a security question.'
+    }),
+    securityAnswer: Joi.string()
+    .alphanum()
+    .min(5)
+    .max(30)
+    .required()
+    .messages({
+      'string.max': 'Security answer must be between 5 and 30 characters long.',
+      'string.min': 'Security answer must be between 5 and 30 characters long.',
+      'string.empty': 'Please provide a security answer.'
+    }),
   }).options({ allowUnknown: true });
 
   try {
-    const { username, password, email } = await schema.validateAsync(req.body, { abortEarly: false });
+    const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = {
       username: username,
+      name: name,
       password: hashedPassword,
       email: email,
+      securityQuestion: securityQuestion,
+      securityAnswer: securityAnswer,
       type: 'user',
     };
     const result = await usersModel.create(user);
@@ -130,101 +153,9 @@ app.post('/signupSubmit', async (req, res) => {
   }
   req.session.GLOBAL_AUTHENTICATED = true;
   req.session.loggedUsername = req.body.username;
+  req.session.loggedName = req.body.name;
   res.redirect('/')
 });
-
-  // if (!req.body.username) {
-  //   errorMessage.push('Username is required.');
-  // }
-
-  // if (!req.body.name) {
-  //   errorMessage.push('Name is required.');
-  // }
-  
-  // if (!req.body.email) {
-  //   errorMessage.push('Email is required.');
-  // }
-  
-  // if (!req.body.password) {
-  //   errorMessage.push('Password is required.');
-  // }
-
-  // if (!req.body.confirmPassword) {
-  //   errorMessage.push('Please confirm your password.');
-  // } else if (req.body.password !== req.body.confirmPassword) {
-  //     errorMessage.push('Passwords do not match.');
-  // }
-  
-  // if (errorMessage.length > 0) {
-  //   res.render('signupSubmitError', {
-  //     errorMessage: errorMessage,
-  //   });
-  //   return;
-  // } else {
-  //   const schema = Joi.object({
-  //     username: Joi.string().alphanum().min(5).max(15).required()
-  //     .messages({
-  //       'string.alphanum': 'Username must only contain alphanumeric characters.',
-  //       'string.min': 'Username must be between 5 to 15 characters long.',
-  //       'string.max': 'Username must be betwen 5 to 15 characters long.',
-  //       'string.empty': 'Please provide a username.'
-  //     }),
-  //     name: Joi.string().alphanum().min(5).max(15).required()
-  //     .messages({
-  //       'string.alphanum': 'Name must only contain alphanumeric characters.',
-  //       'string.min': 'Name must be between 5 to 15 characters long.',
-  //       'string.max': 'Username must be betwen 5 to 15 characters long.',
-  //       'string.empty': 'Please provide a name.'
-  //     }),
-  //     email: Joi.string().required()
-  //     .messages({
-  //       'string.empty': 'Please provide an email.'
-  //     }),
-  //     password: Joi.string().min(5).max(30).required()
-  //     .messages({
-  //       'string.max': 'Password must be between 5 and 30 characters long.',
-  //       'string.empty': 'Please provide a password.'
-  //     })
-  //   });
-
-    // try {
-    //   await schema.validateAsync({
-    //     username: req.body.username,
-    //     name: req.body.name,
-    //     email: req.body.email,
-    //     password: req.body.password
-    //   });
-    // } catch (err) {
-    //   // errorMessage.push('The fields must all be strings!');
-    //   console.log(err)
-    //   err.details.forEach(error => {
-    //     errorMessage.push(error.message);
-    //     console.log(errorMessage)
-    //   });
-    //   // errorMessage.push(err.details[0].message);
-    //   console.log(errorMessage);
-    //   res.render('signupSubmitError', {
-    //     errorMessage: errorMessage,
-    //   });
-    //   return;
-    // }
-
-//     await usersModel.create({
-//       username: req.body.username,
-//       name: req.body.name,
-//       email: req.body.email,
-//       password: bcrypt.hashSync(req.body.password, 10)
-//     }).catch((error) => {
-//       errorMessage.push('Failed to sign up.');
-//       res.render('signupSubmitError', {
-//         errorMessage: errorMessage,
-//       });
-//     });
-//     req.session.GLOBAL_AUTHENTICATED = true;
-//     req.session.loggedUsername = req.body.username;
-//     res.redirect('/')
-//   }
-// });
 
 app.get('/login', (req, res) => {
   res.render('login', {
@@ -253,9 +184,11 @@ app.post('/login', async (req, res) => {
       // set a global variable to true if the user is authenticated
       req.session.GLOBAL_AUTHENTICATED = true;
       req.session.loggedName = result.name;
-      req.session.loggedUsername = req.body.username;
-      req.session.loggedEmail = req.body.email;
-      req.session.loggedPassword = req.body.password;
+      req.session.loggedUsername = result.username;
+      req.session.loggedEmail = result.email;
+      req.session.loggedPassword = result.password;
+      req.session.securityQuestion = result.securityQuestion;
+      req.session.securityAnswer = result.securityAnswer;
       res.redirect('/');
     } else {
       res.render('loginError', {
