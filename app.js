@@ -192,7 +192,7 @@ app.post('/recover/username', async (req, res) => {
     if (user) {
       res.render('display_username', { username: user.username, session: req.session });
     } else {
-      res.render('username_not_found');
+      res.render('user_not_found', { session: req.session });
     }
   } catch (error) {
     console.log(error);
