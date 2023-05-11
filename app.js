@@ -87,18 +87,13 @@ app.post('/signupSubmit', async (req, res) => {
     confirmPassword: Joi.any().valid(Joi.ref('password')).required().messages({
       'any.only': 'Passwords do not match.',
     }),
-    securityQuestion: Joi.string()
-      .alphanum()
-      .min(5)
-      .max(30)
-      .required()
-      .messages({
-        'string.min':
-          'Security question must be between 5 and 30 characters long.',
-        'string.max':
-          'Security question must be between 5 and 30 characters long.',
-        'string.empty': 'Please provide a security question.',
-      }),
+    securityQuestion: Joi.string().min(5).max(30).required().messages({
+      'string.min':
+        'Security question must be between 5 and 30 characters long.',
+      'string.max':
+        'Security question must be between 5 and 30 characters long.',
+      'string.empty': 'Please provide a security question.',
+    }),
     securityAnswer: Joi.string().alphanum().min(5).max(30).required().messages({
       'string.max': 'Security answer must be between 5 and 30 characters long.',
       'string.min': 'Security answer must be between 5 and 30 characters long.',
@@ -191,7 +186,7 @@ app.get('/forget_username', (req, res) => {
   res.render('forget_username');
 });
 
-app.post('/recover/username', async (req, res) => {
+app.post('/display_username', async (req, res) => {
   const email = req.body.email;
 
   try {
@@ -209,67 +204,32 @@ app.post('/recover/username', async (req, res) => {
 });
 
 app.get('/forget_password', (req, res) => {
-  res.render('forget_password');
+  res.render('forget_password', {
+    session: req.session, // Pass the session object to the template
+  });
 });
 
-app.post('/recover/password', async (req, res) => {
-  const { username, email, securityAnswer } = req.body;
-
+app.post('/submit_security_question', async (req, res) => {
+  const { username, email } = req.body;
   try {
     const user = await usersModel.findOne({ username: username, email: email });
-
     if (user) {
-      // Compare the security answer entered by the user with the stored hashed security answer
-      const isSecurityAnswerValid = await bcrypt.compare(
-        securityAnswer,
+      const isAnswerCorrect = await bcrypt.compare(
+        req.body.securityAnswer,
         user.securityAnswer
       );
-
-      if (isSecurityAnswerValid) {
-        // Render the page where the user can enter a new password
-        res.render('change_password', { username: username });
+      if (isAnswerCorrect) {
+        res.render('enter_security_question', { username: user.username });
       } else {
-        // Security answer is incorrect
-        res.render('password_recovery_error', {
-          message: 'Incorrect security answer.',
+        res.render('security_question_error', {
+          message: 'Incorrect answer. Please try again.',
         });
       }
     } else {
-      // User not found
-      res.render('password_recovery_error', { message: 'User not found.' });
+      res.render('password_change_error', { message: 'User not found.' });
     }
   } catch (error) {
     console.log(error);
-    res.render('error');
-  }
-});
-
-app.post('/change/password', async (req, res) => {
-  const { username, password, confirmPassword } = req.body;
-
-  try {
-    // Validate password and confirm password match
-    if (password !== confirmPassword) {
-      res.render('password_recovery_error', {
-        message: "Passwords don't match.",
-      });
-      return;
-    }
-
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Update the user's password in the database
-    await usersModel.updateOne(
-      { username: username },
-      { password: hashedPassword }
-    );
-
-    // Password changed successfully
-    res.render('/login');
-  } catch (error) {
-    console.log(error);
-    res.render('error');
   }
 });
 
