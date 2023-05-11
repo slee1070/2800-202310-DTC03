@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/signup', (req, res) => {
-  res.render('signup', {});
+  res.render('signup', {session: req.session});
 });
 
 app.use(express.json());
@@ -141,7 +141,7 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login', {});
+  res.render('login', {session: req.session});
 });
 
 app.post('/login', async (req, res) => {
