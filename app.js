@@ -160,6 +160,7 @@ app.post('/login', async (req, res) => {
   try {
     const result = await usersModel.findOne({
       username: req.body.username,
+      name: req.body.name
     });
 
     if (result && bcrypt.compareSync(req.body.password, result?.password)) {
