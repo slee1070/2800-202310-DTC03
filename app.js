@@ -159,8 +159,7 @@ app.post('/login', async (req, res) => {
 
   try {
     const result = await usersModel.findOne({
-      username: req.body.username,
-      name: req.body.name
+      username: req.body.username
     });
 
     if (result && bcrypt.compareSync(req.body.password, result?.password)) {
@@ -172,7 +171,6 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
-      console.log(req.session.loggedName)
       res.redirect('/');
     } else {
       res.render('loginError', {});
