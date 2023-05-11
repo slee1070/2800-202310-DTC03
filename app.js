@@ -190,7 +190,7 @@ app.post('/recover/username', async (req, res) => {
     const user = await usersModel.findOne({ email: email });
 
     if (user) {
-      res.render('display_username', { username: user.username });
+      res.render('display_username', { username: user.username, session: req.session });
     } else {
       res.render('username_not_found');
     }
