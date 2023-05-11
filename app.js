@@ -73,7 +73,7 @@ app.post('/signupSubmit', async (req, res) => {
       'string.empty': 'Please provide a name.',
     }),
     email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca', 'gov', 'edu', 'co', 'org'] } })
       .required()
       .messages({
         'string.email': 'Please provide a valid email address.',
