@@ -267,7 +267,7 @@ app.post('/change/password', async (req, res) => {
 });
 
 app.get('/does_not_exist', (req, res) => {
-  res.status(404).render('404', {});
+  res.status(404).render('404', {session: req.session});
 });
 
 app.use(express.static('public'));
