@@ -199,32 +199,24 @@ app.post('/display_username', async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.render('error');
   }
 });
 
 app.get('/forget_password', (req, res) => {
   res.render('forget_password', {
-    session: req.session, // Pass the session object to the template
+    session: req.session, 
   });
 });
 
-app.post('/submit_security_question', async (req, res) => {
+app.post('/submit/security_question', async (req, res) => {
   const { username, email } = req.body;
   try {
     const user = await usersModel.findOne({ username: username, email: email });
     if (user) {
-      const isAnswerCorrect = await bcrypt.compare(
-        req.body.securityAnswer,
-        user.securityAnswer
-      );
-      if (isAnswerCorrect) {
-        res.render('enter_security_question', { username: user.username });
-      } else {
-        res.render('security_question_error', {
-          message: 'Incorrect answer. Please try again.',
-        });
-      }
+      res.render('enter_security_question', {
+        username: user.username,
+        securityQuestion: user.securityQuestion,
+      });
     } else {
       res.render('password_change_error', { message: 'User not found.' });
     }
