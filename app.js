@@ -171,6 +171,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
+      console.log(req.session.loggedName)
       res.redirect('/');
     } else {
       res.render('loginError', {});
