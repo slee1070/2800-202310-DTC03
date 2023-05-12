@@ -1,0 +1,25 @@
+<%- include("templates/header") %>
+
+<div class="table-responsive">
+  <table class="table table-sm table-hover table-borderless text-center">
+    <thead class="text-center table-danger">
+      <tr>
+        <th scope="col">Item</th>
+        <th scope="col">Best Before</th>
+        <th scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (var i = 0; i < pantryItems.length; i++) { %>
+        <tr>
+          <td><%= pantryItems[i].food %></td>
+          <td><%= pantryItems[i].bestBeforeDate %></td>
+          <td><img id="<%= pantryItems[i].food %>" data-itemid="<%= pantryItems[i]._id %>" src="/images/icon_remove.png" style="width:23px; height:auto"></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("templates/footer") %>
+  
