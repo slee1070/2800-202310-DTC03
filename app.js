@@ -271,6 +271,20 @@ app.get('/does_not_exist', (req, res) => {
 });
 
 app.use(express.static('public'));
+app.get('/pantry', async (req, res) => {
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/');
+  } else {
+      const user = await usersModel.findOne({username: req.session.loggedUsername});
+      res.render('pantry', {
+        session: req.session,
+        pantryItems: user.pantry
+      });
+  }
+});
+
+
+app.use(express.static('public'));
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
