@@ -3,6 +3,7 @@
   <main class="w-100 m-auto">
     <div class="d-flex gap-2 justify-content-center py-5">
       <form id="securityQuestionForm" method="post" action="/submit_security_answer">
+        <input type="hidden" name="userId" value="<%= user._id %>">
         <h4 class="h3 mt-5 mb-4 fw-normal text-center">Answer the Security Question</h4>
         <p class="text-center">Question: <%= securityQuestion %>
         </p>
@@ -11,8 +12,6 @@
           <label for="floatingAnswer"></label>
         </div>
         <button class="w-100 btn btn-lg btn-outline-warning mt-3" type="submit">Submit</button>
-      </form>
-
       </form>
     </div>
   </main>
