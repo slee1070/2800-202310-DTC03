@@ -204,21 +204,68 @@ app.post('/display_username', async (req, res) => {
 
 app.get('/forget_password', (req, res) => {
   res.render('forget_password', {
-    session: req.session, 
+    session: req.session,
   });
 });
 
-app.post('/submit/security_question', async (req, res) => {
-  const { username, email } = req.body;
+app.post('/submit_security_question', async (req, res) => {
+  console.log('Hello world!');
   try {
-    const user = await usersModel.findOne({ username: username, email: email });
+    const user = await usersModel.findOne({
+      username: req.body.username,
+      email: req.body.email,
+    });
     if (user) {
+      console.log('Hello world!2nd');
       res.render('enter_security_question', {
-        username: user.username,
+        user: user,
         securityQuestion: user.securityQuestion,
       });
+      console.log(user.securityAnswer);
     } else {
       res.render('password_change_error', { message: 'User not found.' });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post('/submit_security_answer', async (req, res) => {
+  console.log('Hello world!!!! 3rd');
+  try {
+    const user = await usersModel.findOne({
+      // securityQuestion: req.body.securityQuestion, 
+      securityAnswer: req.body.securityAnswer,
+    });
+    console.log(user.securityAnswer);
+    console.log(req.body.securityAnswer);
+    if (
+      user &&
+      req.body.securityAnswer &&
+      user.securityAnswer &&
+      bcrypt.compareSync(req.body.securityAnswer, user.securityAnswer)
+    ) {
+      req.session.GLOBAL_AUTHENTICATED = true;
+      req.session.loggedName = user.name;
+      req.session.loggedUsername = user.username;
+      req.session.loggedEmail = user.email;
+      req.session.loggedPassword = user.password;
+      req.session.securityQuestion = user.securityQuestion;
+      req.session.securityAnswer = user.securityAnswer;
+      res.render('create_new_password', {
+        user: user,
+        securityAnswer: user.securityAnswer,
+      });
+      console.log(user.securityAnswer);
+      console.log(req.body.securityAnswer);
+    } else {
+      res.render('security_question_error');
+      console.log(req.body.securityAnswer);
+      console.log(
+        user
+          ? user.securityAnswer
+          : 'User or securityAnswer is null or undefined'
+      );
     }
   } catch (error) {
     console.log(error);
