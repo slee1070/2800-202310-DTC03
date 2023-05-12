@@ -352,8 +352,11 @@ app.get('/profile_change_password', (req, res) => {
 });
 
 app.post('/profile_change_password', async (req, res) => {
-  const { password, confirmPassword} = req.body;
+  const { old_password, password, confirmPassword } = req.body;
   const schema = Joi.object({
+    old_password: Joi.string().required().messages({
+      'string.empty': 'Please provide your old password.',
+    }),
     password: Joi.string().min(5).max(30).required().messages({
       'string.max': 'Password must be between 5 and 30 characters long.',
       'string.min': 'Password must be between 5 and 30 characters long.',
@@ -367,22 +370,31 @@ app.post('/profile_change_password', async (req, res) => {
       }),
   });
 
-  const { error } = await schema.validate({ password, confirmPassword });
+  const { error } = await schema.validate({ old_password, password, confirmPassword });
   if (error) {
     res.locals.errors = error.details.map((error) => ({
       message: error.message,
     }));
     // render the profile page with errors
-    res.render('profile_change_password', { session: req.session});
+    res.render('profile_change_password', { session: req.session });
   } else {
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Verify old password
+    const user = await usersModel.findOne({ username: req.session.loggedUsername });
+    const passwordMatch = await bcrypt.compare(old_password, user.password);
+    if (!passwordMatch) {
+      res.locals.errors = [{ message: 'Old password is incorrect.' }];
+      // render the profile page with errors
+      res.render('profile_change_password', { session: req.session });
+    } else {
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    await usersModel.updateOne(
-      { username: req.session.loggedUsername },
-      { password: hashedPassword }
-    );
-    res.redirect('/profile');
+      await usersModel.updateOne(
+        { username: req.session.loggedUsername },
+        { password: hashedPassword }
+      );
+      res.redirect('/profile');
+    }
   }
 });
 
