@@ -1,12 +1,20 @@
 <%- include("templates/header") %>
-<div class="container">
-<% if (Array.isArray(errorMessage)) { %>
-    <% errorMessage.forEach((error) => { %>
-      <p><%= error %></p>
-    <% }); %>
-  <% } else if (errorMessage) { %>
-    <p><%= errorMessage %></p>
-  <% } %>
-  <a href="/signup">Try again</a>
-</div>
+  <main class="form-signin w-100 m-auto">
+    <div class="d-flex gap-2 justify-content-center py-5">
+      <form class="text-center">
+        <% if (Array.isArray(errorMessage)) { %>
+          <% errorMessage.forEach((error)=> { %>
+            <p>
+              <%= error %>
+            </p>
+            <% }); %>
+              <% } else if (errorMessage) { %>
+                <p>
+                  <%= errorMessage %>
+                </p>
+                <% } %>
+                  <a class="w-50 btn btn-lg btn-outline-warning" href="/signup">Try again</a>
+      </form>
+    </div>
+  </main>
 <%- include("templates/footer") %>
