@@ -44,6 +44,8 @@
     // else, change it to edit and disable all fields except username
     if (document.getElementById("edit").innerHTML == "Edit") {
       document.getElementById("edit").innerHTML = "Cancel";
+      document.getElementById("edit").classList.remove("btn-warning");
+      document.getElementById("edit").classList.add("btn-outline-warning");
       document.getElementById("floatingName").disabled = false;
       document.getElementById("floatingEmail").disabled = false;
     } else {
