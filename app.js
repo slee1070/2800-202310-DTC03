@@ -129,7 +129,7 @@ app.post('/signupSubmit', async (req, res) => {
       errorMessage.push(error.message);
     });
     // render the error page with the error message array
-    res.render('signupSubmitError', {
+    res.render('signup_submit_error', {
       errorMessage: errorMessage,
     });
     return;
@@ -173,15 +173,15 @@ app.post('/login', async (req, res) => {
       req.session.securityAnswer = result.securityAnswer;
       res.redirect('/');
     } else {
-      res.render('loginError', {});
+      res.render('login_error', {});
     }
   } catch (error) {
     console.log(error);
   }
 });
 
-app.get('/forget_username', (req, res) => {
-  res.render('forget_username', { session: req.session });
+app.get('/username_retreival', (req, res) => {
+  res.render('username_retreival', { session: req.session });
 });
 
 app.post('/display_username', async (req, res) => {
@@ -191,7 +191,10 @@ app.post('/display_username', async (req, res) => {
     const user = await usersModel.findOne({ email: email });
 
     if (user) {
-      res.render('display_username', { username: user.username, session: req.session });
+      res.render('username_retreival_view', {
+        username: user.username,
+        session: req.session,
+      });
     } else {
       res.render('user_not_found', { session: req.session });
     }
@@ -200,18 +203,18 @@ app.post('/display_username', async (req, res) => {
   }
 });
 
-app.get('/forget_password', (req, res) => { 
-  res.render('forget_password', { session: req.session });
+app.get('/password_recovery', (req, res) => { 
+  res.render('password_recovery', { session: req.session });
 });
 
-app.post('/submit_security_question', async (req, res) => {
+app.post('/submit_user_information', async (req, res) => {
   try {
     const user = await usersModel.findOne({
       username: req.body.username,
       email: req.body.email,
     });
     if (user) {
-      res.render('enter_security_question', {
+      res.render('security_answer_submit', {
         user: user,
         securityQuestion: user.securityQuestion,
       });
@@ -240,7 +243,7 @@ app.post('/submit_security_answer', async (req, res) => {
       // Set the req.session.user object
       req.session.user = { _id: user._id };
 
-      res.render('create_new_password', { user: user, securityAnswer: user.securityAnswer });
+      res.render('password_change', { user: user, securityAnswer: user.securityAnswer });
     } else {
       res.render('security_question_error');
     }
@@ -249,9 +252,8 @@ app.post('/submit_security_answer', async (req, res) => {
   }
 });
 
-
-app.get('/enter_security_question', (req, res) => {
-  res.render('enter_security_question');
+app.get('/security_answer_submit', (req, res) => {
+  res.render('security_answer_submit');
 });
 
 app.post('/reset_password', async (req, res) => {
@@ -292,8 +294,8 @@ app.post('/reset_password', async (req, res) => {
   }
 });
 
-app.get('/create_new_password', (req, res) => {
-  res.render('create_new_password');
+app.get('/password_change', (req, res) => {
+  res.render('password_change');
 });
 
 app.get('/profile', (req, res) => {
