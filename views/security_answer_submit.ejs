@@ -1,0 +1,20 @@
+<%- include("templates/header") %>
+
+  <main class="w-100 m-auto">
+    <div class="d-flex gap-2 justify-content-center py-5">
+      <form id="securityQuestionForm" method="post" action="/submit_security_answer">
+        <input type="hidden" name="userId" value="<%= user._id %>">
+        <h4 class="h3 mt-5 fw-normal text-center">Answer to your security question</h4>
+        <h5 class="text-center mb-2">
+          <%= securityQuestion %>
+        </h5>
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingAnswer" placeholder="Answer" name="securityAnswer" required>
+          <label for="floatingAnswer">Answer</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-outline-warning mt-3" type="submit">Submit</button>
+      </form>
+    </div>
+  </main>
+
+<%- include("templates/footer") %>

@@ -1,0 +1,33 @@
+<%- include("templates/header") %>
+
+    <main class="form-signin w-100 m-auto">
+        <div class="d-flex gap-2 justify-content-center py-5">
+            <form class="text-center" style="min-width: 380px;">
+                <img class="mb-4" src="/images/Logo.png" alt="" width="100" height="m-auto">
+                <h1 class="h3 mb-4 fw-normal">Account Information</h1>
+                <!-- display username -->
+                <h5 class="h3 mt-5 mb-3 fw-normal">Username: <%= username %> <br><br> Name: <%= name %> <br><br> Email: <%=
+                                email %>
+                </h5>
+                <!-- <a href="/edit_profile" class="w-100 btn btn-lg btn-warning mt-3">Edit Account</a> -->
+            </form>
+        </div>
+    </main>
+
+    <%- include("templates/footer") %>
+
+    <!-- app.js - DELETED -->
+    <!-- app.get('/account', async (req, res) => {
+    const username = req.session.loggedUsername;
+    try {
+    const user = await usersModel.findOne({ username: username });
+    if (user) {
+    res.render('user_account', { username: user.username, name: user.name, email: user.email, session: req.session });
+    } else {
+    res.render('error', { message: 'User not found' });
+    }
+    } catch (error) {
+    console.log(error);
+    res.render('error', { message: 'Error retrieving user' });
+    }
+    }); -->

@@ -1,0 +1,60 @@
+<%- include("templates/header") %>
+<div class="container">
+  <% if (!session.GLOBAL_AUTHENTICATED) { %>
+    <div class="alert alert-danger">
+      Access denied. You must be logged in to view this page.
+      <a href="/login">Go to login</a>
+    </div>
+  <% } else { %>
+    <main class="form-signiin w-100 m-auto">
+      <div class="d-flex gap-2 justify-content-center py-5">
+        <form class="text-left" action="/profileSubmit" method="post" style="min-width: 380px;">
+          <h1 class="h3 mb-4 fw-normal text-center">My Account</h1>
+          <% if (locals.errors) { %>
+            <div class="alert alert-danger">
+              <% for (let i = 0; i < locals.errors.length; i++) { %>
+                <p><%= locals.errors[i].message %></p>
+              <% } %>
+            </div>
+          <% } %>
+          <div class="form-group mb-2">
+            <label for="floatingUsername">Username</label>
+            <input type="text" name="username" class="form-control" id="floatingUsername" value="<%= session.loggedUsername %>" readonly disabled>
+          </div>
+          <div class="form-group mb-2">
+            <label for="floatingUsername">Name</label>
+            <input type="text" name="name" class="form-control" id="floatingName" value="<%= session.loggedName %>" <% if (locals.disableFields) { %>disabled<% } %> >
+          </div>
+          <div class="form-group mb-2">
+            <label for="floatingEmail">Email address</label>
+            <input type="text" name="email" class="form-control" id="floatingEmail" value="<%= session.loggedEmail %>" <% if (locals.disableFields) { %>disabled<% } %> >
+          </div>
+          <button id="edit" class="w-100 btn btn-lg btn-warning mt-3" type="button" onclick="toggleFields()">Edit</button>
+          <button id="save" class="w-100 btn btn-lg btn-warning mt-3" type="submit">Save</button>
+          <button type="button" class="mt-3 w-100 btn btn-lg btn-warning" onclick="location.href='/profile_change_password';">Change password</button>
+        </form>
+      </div>
+    </main>
+  <% } %>
+</div>
+<%- include("templates/footer") %>
+<script>
+  function toggleFields() {
+    // if edit's innerhtml is edit, change it to cancel and enable all fields except username
+    // else, change it to edit and disable all fields except username
+    const editButton = document.getElementById("edit");
+    if (editButton.innerHTML === "Edit") {
+      editButton.innerHTML = "Cancel";
+      editButton.classList.remove("btn-warning");
+      editButton.classList.add("btn-outline-warning");
+      document.getElementById("floatingName").disabled = false;
+      document.getElementById("floatingEmail").disabled = false;
+    } else {
+      editButton.innerHTML = "Edit";
+      editButton.classList.remove("btn-outline-warning");
+      editButton.classList.add("btn-warning");
+      document.getElementById("floatingName").disabled = true;
+      document.getElementById("floatingEmail").disabled = true;
+    }
+  }
+</script>

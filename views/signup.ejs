@@ -1,0 +1,42 @@
+<%- include("templates/header") %>
+<div class="container">
+  <main class="form-signiin w-100 m-auto">
+    <div class="d-flex gap-2 justify-content-center py-5">
+      <form class="text-center" action="/signupSubmit" method="post" style="min-width: 380px;"> 
+        <img class="mb-4" src="/images/Logo.png" alt="" width="100" height="m-auto">
+        <h1 class="h3 mb-4 fw-normal">Let's sign up</h1>
+        <div class="form-floating mb-2">
+          <input type="text" name="username" class="form-control" id="floatingUsername" placeholder="Username">
+          <label for="floatingUsername">Username</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" name="name" class="form-control" id="floatingName" placeholder="Name">
+          <label for="floatingUsername">Name</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="name@example.com">
+          <label for="floatingEmail">Email address</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+          <label for="floatingPassword">Password</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="password" name="confirmPassword" class="form-control" id="floatingConfirmPassword" placeholder="Confirm password">
+          <label for="floatingConfirmPassword">Confirm password</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" name="securityQuestion" class="form-control" id="floatingSecurityQuestion" placeholder="Security question">
+          <label for="floatingSecurityQuestion">Add your security question</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" name="securityAnswer" class="form-control" id="floatingSecurityAnswer" placeholder="Security answer">
+          <label for="floatingSecurityAnswer">Your answer</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-warning mt-3" type="submit" name="submit">Submit</button>
+      </form>
+    </div>
+  </main>
+</div>
+<%- include("templates/footer") %>
+
