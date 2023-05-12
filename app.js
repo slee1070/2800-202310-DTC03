@@ -40,6 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/', (req, res, next) => {
+  res.locals.session = req.session;
   app.locals.navLinks = navLinks;
   app.locals.currentURL = url.parse(req.url).pathname;
   next();
@@ -88,7 +89,6 @@ app.post('/signupSubmit', async (req, res) => {
       'any.only': 'Passwords do not match.',
     }),
     securityQuestion: Joi.string()
-      .alphanum()
       .min(5)
       .max(30)
       .required()
@@ -181,89 +181,121 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/forget_username', (req, res) => {
-  res.render('forget_username');
+  res.render('forget_username', { session: req.session });
 });
 
-app.post('/recover/username', async (req, res) => {
+app.post('/display_username', async (req, res) => {
   const email = req.body.email;
 
   try {
     const user = await usersModel.findOne({ email: email });
 
     if (user) {
-      res.render('display_username', { username: user.username });
+      res.render('display_username', { username: user.username, session: req.session });
     } else {
-      res.render('username_not_found');
+      res.render('user_not_found', { session: req.session });
     }
   } catch (error) {
     console.log(error);
-    res.render('error');
   }
 });
 
-app.get('/forget_password', (req, res) => {
-  res.render('forget_password');
+app.get('/forget_password', (req, res) => { 
+  res.render('forget_password', { session: req.session });
 });
 
-app.post('/recover/password', async (req, res) => {
-  const { username, email, securityAnswer } = req.body;
-
+app.post('/submit_security_question', async (req, res) => {
   try {
-    const user = await usersModel.findOne({ username: username, email: email });
-
+    const user = await usersModel.findOne({
+      username: req.body.username,
+      email: req.body.email,
+    });
     if (user) {
-      // Compare the security answer entered by the user with the stored hashed security answer
-      const isSecurityAnswerValid = await bcrypt.compare(
-        securityAnswer,
-        user.securityAnswer
-      );
-
-      if (isSecurityAnswerValid) {
-        // Render the page where the user can enter a new password
-        res.render('change_password', { username: username });
-      } else {
-        // Security answer is incorrect
-        res.render('password_recovery_error', {
-          message: 'Incorrect security answer.',
-        });
-      }
+      res.render('enter_security_question', {
+        user: user,
+        securityQuestion: user.securityQuestion,
+      });
+      console.log(user.securityAnswer);
+      console.log(user);
     } else {
-      // User not found
-      res.render('password_recovery_error', { message: 'User not found.' });
+      res.render('password_change_error', { message: 'User not found.' });
     }
   } catch (error) {
     console.log(error);
-    res.render('error');
   }
 });
 
-app.post('/change/password', async (req, res) => {
-  const { username, password, confirmPassword } = req.body;
-
+app.post('/submit_security_answer', async (req, res) => {
   try {
-    // Validate password and confirm password match
-    if (password !== confirmPassword) {
-      res.render('password_recovery_error', {
-        message: "Passwords don't match.",
-      });
-      return;
+    const user = await usersModel.findOne({ _id: req.body.userId });
+    if (
+      user && req.body.securityAnswer && user.securityAnswer && bcrypt.compareSync(req.body.securityAnswer, user.securityAnswer)
+    ) {
+      req.session.GLOBAL_AUTHENTICATED = true;
+      req.session.loggedName = user.name;
+      req.session.loggedUsername = user.username;
+      req.session.loggedEmail = user.email;
+      req.session.loggedPassword = user.password;
+      req.session.securityQuestion = user.securityQuestion;
+      req.session.securityAnswer = user.securityAnswer;
+      res.render('create_new_password', { user: user, securityAnswer: user.securityAnswer });
+    } else {
+      res.render('security_question_error');
     }
-
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Update the user's password in the database
-    await usersModel.updateOne(
-      { username: username },
-      { password: hashedPassword }
-    );
-
-    // Password changed successfully
-    res.render('/login');
   } catch (error) {
     console.log(error);
-    res.render('error');
   }
+});
+
+app.get('/profile', (req, res) => {
+  res.render('profile', {session: req.session, disableFields: true});
+});
+
+app.post('/profileSubmit', async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().alphanum().min(5).max(15).required().messages({
+      'string.alphanum': 'Name must only contain alphanumeric characters.',
+      'string.min': 'Name must be between 5 to 15 characters long.',
+      'string.max': 'Name must be between 5 to 15 characters long.',
+      'string.empty': 'Please provide a name.',
+    }),
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca', 'gov', 'edu', 'co', 'org'] } })
+      .required()
+      .messages({
+        'string.email': 'Please provide a valid email address.',
+        'string.empty': 'Please provide an email.',
+      }),
+  }).options({ allowUnknown: true });
+
+  try {
+    // validate input
+    const { name, email } = await schema.validateAsync(req.body, { abortEarly: false });
+  
+    // update user
+    const updatedUser = await usersModel.findOneAndUpdate(
+      { username: req.session.loggedUsername },
+      { $set: { name: name, email: email } },
+      { new: true }
+    );
+    console.log(updatedUser);
+  
+    // update session data
+    req.session.loggedName = name;
+    req.session.loggedEmail = email;
+  
+    // redirect to profile page
+    res.redirect('/profile');
+  } catch (err) {
+    console.log(err);
+    // pass error messages to response locals
+    res.locals.errors = err.details.map((error) => ({
+      message: error.message,
+    }));
+    // render the profile page with errors
+    res.render('profile', { title: 'My Account', session: req.session, disableFields: false });
+  }
+  
 });
 
 app.get('/does_not_exist', (req, res) => {
