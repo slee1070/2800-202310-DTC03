@@ -247,6 +247,57 @@ app.post('/submit_security_answer', async (req, res) => {
   }
 });
 
+app.get('/profile', (req, res) => {
+  res.render('profile', {session: req.session, disableFields: true});
+});
+
+app.post('/profileSubmit', async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().alphanum().min(5).max(15).required().messages({
+      'string.alphanum': 'Name must only contain alphanumeric characters.',
+      'string.min': 'Name must be between 5 to 15 characters long.',
+      'string.max': 'Name must be between 5 to 15 characters long.',
+      'string.empty': 'Please provide a name.',
+    }),
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca', 'gov', 'edu', 'co', 'org'] } })
+      .required()
+      .messages({
+        'string.email': 'Please provide a valid email address.',
+        'string.empty': 'Please provide an email.',
+      }),
+  }).options({ allowUnknown: true });
+
+  try {
+    // validate input
+    const { name, email } = await schema.validateAsync(req.body, { abortEarly: false });
+  
+    // update user
+    const updatedUser = await usersModel.findOneAndUpdate(
+      { username: req.session.loggedUsername },
+      { $set: { name: name, email: email } },
+      { new: true }
+    );
+    console.log(updatedUser);
+  
+    // update session data
+    req.session.loggedName = name;
+    req.session.loggedEmail = email;
+  
+    // redirect to profile page
+    res.redirect('/profile');
+  } catch (err) {
+    console.log(err);
+    // pass error messages to response locals
+    res.locals.errors = err.details.map((error) => ({
+      message: error.message,
+    }));
+    // render the profile page with errors
+    res.render('profile', { title: 'My Account', session: req.session, disableFields: false });
+  }
+  
+});
+
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
 });
