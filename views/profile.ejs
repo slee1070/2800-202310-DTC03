@@ -42,14 +42,17 @@
   function toggleFields() {
     // if edit's innerhtml is edit, change it to cancel and enable all fields except username
     // else, change it to edit and disable all fields except username
-    if (document.getElementById("edit").innerHTML == "Edit") {
-      document.getElementById("edit").innerHTML = "Cancel";
-      document.getElementById("edit").classList.remove("btn-warning");
-      document.getElementById("edit").classList.add("btn-outline-warning");
+    const editButton = document.getElementById("edit");
+    if (editButton.innerHTML === "Edit") {
+      editButton.innerHTML = "Cancel";
+      editButton.classList.remove("btn-warning");
+      editButton.classList.add("btn-outline-warning");
       document.getElementById("floatingName").disabled = false;
       document.getElementById("floatingEmail").disabled = false;
     } else {
-      document.getElementById("edit").innerHTML = "Edit";
+      editButton.innerHTML = "Edit";
+      editButton.classList.remove("btn-outline-warning");
+      editButton.classList.add("btn-warning");
       document.getElementById("floatingName").disabled = true;
       document.getElementById("floatingEmail").disabled = true;
     }
