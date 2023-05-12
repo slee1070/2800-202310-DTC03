@@ -230,7 +230,6 @@ app.post('/submit_security_answer', async (req, res) => {
     const user = await usersModel.findOne({ _id: req.body.userId });
     if ( user && req.body.securityAnswer && user.securityAnswer &&bcrypt.compareSync(req.body.securityAnswer, user.securityAnswer)
     ) {
-      req.session.GLOBAL_AUTHENTICATED = true;
       req.session.loggedName = user.name;
       req.session.loggedUsername = user.username;
       req.session.loggedEmail = user.email;
@@ -249,6 +248,7 @@ app.post('/submit_security_answer', async (req, res) => {
     console.log(error);
   }
 });
+
 
 app.get('/enter_security_question', (req, res) => {
   res.render('enter_security_question');
