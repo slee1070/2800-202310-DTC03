@@ -6,6 +6,7 @@ const usersSchema = new mongoose.Schema({
   password: String,
   securityQuestion: String,
   securityAnswer: String,
+  pantry: Array,
   type: {
     type: String,
     default: 'user'
