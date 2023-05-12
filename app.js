@@ -228,8 +228,7 @@ app.post('/submit_security_question', async (req, res) => {
 app.post('/submit_security_answer', async (req, res) => {
   try {
     const user = await usersModel.findOne({ _id: req.body.userId });
-    if (
-      user && req.body.securityAnswer && user.securityAnswer && bcrypt.compareSync(req.body.securityAnswer, user.securityAnswer)
+    if ( user && req.body.securityAnswer && user.securityAnswer &&bcrypt.compareSync(req.body.securityAnswer, user.securityAnswer)
     ) {
       req.session.GLOBAL_AUTHENTICATED = true;
       req.session.loggedName = user.name;
@@ -238,6 +237,10 @@ app.post('/submit_security_answer', async (req, res) => {
       req.session.loggedPassword = user.password;
       req.session.securityQuestion = user.securityQuestion;
       req.session.securityAnswer = user.securityAnswer;
+
+      // Set the req.session.user object
+      req.session.user = { _id: user._id };
+
       res.render('create_new_password', { user: user, securityAnswer: user.securityAnswer });
     } else {
       res.render('security_question_error');
@@ -245,6 +248,52 @@ app.post('/submit_security_answer', async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+app.get('/enter_security_question', (req, res) => {
+  res.render('enter_security_question');
+});
+
+app.post('/reset_password', async (req, res) => {
+  try {
+    const { password, confirmPassword } = req.body;
+    const schema = Joi.object({
+      password: Joi.string().min(5).max(30).required().messages({
+        'string.max': 'Password must be between 5 and 30 characters long.',
+        'string.min': 'Password must be between 5 and 30 characters long.',
+        'string.empty': 'Please provide a password.',
+      }),
+      confirmPassword: Joi.string()
+        .valid(Joi.ref('password'))
+        .required()
+        .messages({
+          'any.only': 'Passwords do not match.',
+        }),
+    });
+
+    const { error } = await schema.validate({ password, confirmPassword });
+    if (error) {
+      const errorMessage = error.details[0].message;
+      res.render('reset_password_error', {
+        errorMessage: errorMessage,
+      });
+    } else {
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await usersModel.updateOne(
+        { _id: req.session.user._id },
+        { password: hashedPassword }
+      );
+      res.redirect('/login');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get('/create_new_password', (req, res) => {
+  res.render('create_new_password');
 });
 
 app.get('/profile', (req, res) => {
