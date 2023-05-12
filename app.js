@@ -285,7 +285,7 @@ app.post('/reset_password', async (req, res) => {
         { _id: req.session.user._id },
         { password: hashedPassword }
       );
-      res.redirect('/login');
+      res.render('reset_password_success')
     }
   } catch (error) {
     console.log(error);
@@ -345,6 +345,45 @@ app.post('/profileSubmit', async (req, res) => {
     res.render('profile', { title: 'My Account', session: req.session, disableFields: false });
   }
   
+});
+
+app.get('/profile_change_password', (req, res) => {
+  res.render('profile_change_password', {session: req.session});
+});
+
+app.post('/profile_change_password', async (req, res) => {
+  const { password, confirmPassword} = req.body;
+  const schema = Joi.object({
+    password: Joi.string().min(5).max(30).required().messages({
+      'string.max': 'Password must be between 5 and 30 characters long.',
+      'string.min': 'Password must be between 5 and 30 characters long.',
+      'string.empty': 'Please provide a password.',
+    }),
+    confirmPassword: Joi.string()
+      .valid(Joi.ref('password'))
+      .required()
+      .messages({
+        'any.only': 'Passwords do not match.',
+      }),
+  });
+
+  const { error } = await schema.validate({ password, confirmPassword });
+  if (error) {
+    res.locals.errors = error.details.map((error) => ({
+      message: error.message,
+    }));
+    // render the profile page with errors
+    res.render('profile_change_password', { session: req.session});
+  } else {
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await usersModel.updateOne(
+      { username: req.session.loggedUsername },
+      { password: hashedPassword }
+    );
+    res.redirect('/profile');
+  }
 });
 
 app.get('/does_not_exist', (req, res) => {
