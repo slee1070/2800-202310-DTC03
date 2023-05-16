@@ -1,0 +1,59 @@
+<%- include("templates/header") %>
+    <div class="container text-center">
+        <!-- <br>
+        <br>
+        <img src="/images/logo.png" alt="Logo" width="200px"> -->
+        <% if (!session.GLOBAL_AUTHENTICATED) { %>
+            <br>
+            <br>
+            <button type="button" class="mt-3 w-50 btn btn-lg btn-warning" onclick="location.href='/signup';">Sign
+                up</button>
+            <br>
+            <button type="button" class="mt-3 w-50 btn btn-lg btn-warning mb-5" onclick="location.href='/login';">Log
+                in</button>
+            <% } else { %>
+                <br>
+                <br>
+                <h2>Account preference</h2>
+                <br>
+                <div class="form-group">
+                    <h3> Preferred Cuisine</h3>
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> European
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Mexican
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Chinese
+                        <br>
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Korean
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Thai
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Brazilian
+                        <br>
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Greek
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Indian
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Japanese
+                    </label>
+                </div>
+                <br>
+                <div class="form-group">
+                    <h3> Dietary Restriction</h3>
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Animal Free
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Lactose Free
+                        <br>
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Yeast Free
+                        <input class="form-check-input" type="radio" name="cuisinePreference" value="on"> Nut Free
+                    </label>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="featurePreference">
+                        <h3>Cooking Assistant</h3>
+                    </label>
+                    <select class="form-control" id="featurePreference">
+                        <option value="option1">AI Option 1</option>
+                        <option value="option2">AI Option 2</option>
+                        <option value="option3">AI Option 3</option>
+                    </select>
+                </div>
+                <% } %>
+    </div>
+    <%- include("templates/footer") %>
