@@ -400,6 +400,12 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
+app.get('/preference', (req, res) => {
+  res.render('preference', {session: req.session, disableFields: true});
+});
+
+
+
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
 });
