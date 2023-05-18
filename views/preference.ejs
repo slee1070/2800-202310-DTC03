@@ -1,8 +1,5 @@
 <%- include("templates/header") %>
     <div class="container text-center">
-        <!-- <br>
-        <br>
-        <img src="/images/logo.png" alt="Logo" width="200px"> -->
         <% if (!session.GLOBAL_AUTHENTICATED) { %>
             <br>
             <br>
@@ -15,65 +12,32 @@
                 <br>
                 <h2>Account preference</h2>
                 <br>
-                <div class="col-sm-6 mb-3 mb-sm-0">
-                    <div class="card text-bg-light mb-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <h4> Preferred Cuisine</h4>
-                                <div class="container text-centre">
-                                    <div class="row ">
-                                        <div class="col">
-                                            <div class="text-start">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="European">
-                                                    European
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Korean">
-                                                    Korean
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Greek">
-                                                    Greek
-                                                </label>
-                                                <br>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="text-start">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Mexican">
-                                                    Mexican
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Thai">
-                                                    Thai
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Indian">
-                                                    Indian
-                                                </label>
-                                                <br>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="text-start">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Chinese">
-                                                    Chinese
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Brazilian">
-                                                    Brazilian
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Japanese">
-                                                    Japanese
-                                                </label>
-                                                <br>
+                <form id="preferenceForm" action="/preference_update" method="POST">
+                    <input type="hidden" name="userId" value="<%= user._id %>">
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 mb-3 mb-sm-0">
+                            <div class="card text-bg-light mb-3">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <h4>Preferred Cuisine</h4>
+                                        <div class="container text-centre">
+                                            <div class="row cuisine-pref-container">
+                                                <% cuisineOptions.forEach(function(option, index) { %>
+                                                    <div class="col-4 col-md-4">
+                                                        <div class="text-start">
+                                                            <label class="form-check-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="cuisinePreference" value="<%= option %>" <% if
+                                                                    (user && user.cuisinePreference &&
+                                                                    user.cuisinePreference.includes(option)) { %>checked
+                                                                <% } %> disabled>
+                                                                    <!-- Add disabled attribute here -->
+                                                                    <%= option %>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <% }); %>
                                             </div>
                                         </div>
                                     </div>
@@ -81,42 +45,31 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <br>
+                    <br>
 
-                <div class="col-sm-6 mb-3 mb-sm-0">
-                    <div class="card text-bg-light mb-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <h4> Dietary Restriction</h4>
-                                <div class="container text-centre">
-                                    <div class="row ">
-                                        <div class="col">
-                                            <div class="text-start">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="Vegan">
-                                                    Vegan
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="YeastFree">
-                                                    Yeast Free
-                                                </label>
-                                                <br>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="text-start">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="lactoFree">
-                                                    Lactose Free
-                                                    <br>
-                                                    <input class="form-check-input" type="radio"
-                                                        name="cuisinePreference" value="nutFree">
-                                                    Nut Free
-                                                </label>
-                                                <br>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 mb-3 mb-sm-0">
+                            <div class="card text-bg-light mb-3">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <h4>Dietary Restriction</h4>
+                                        <div class="container text-centre">
+                                            <div class="row dietary-res-container">
+                                                <% dietaryOptions.forEach(function(option, index) { %>
+                                                    <div class="col-6 col-md-6">
+                                                        <div class="text-start">
+                                                            <label class="form-check-label">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="dietaryRestrictions" value="<%= option %>" <%
+                                                                    if (user && user.dietaryRestrictions &&
+                                                                    user.dietaryRestrictions.includes(option)) {
+                                                                    %>checked<% } %> disabled>
+                                                                    <!-- Add disabled attribute here -->
+                                                                    <%= option %>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <% }); %>
                                             </div>
                                         </div>
                                     </div>
@@ -124,26 +77,47 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <br>
+                    <br>
 
-                <div class="col-sm-6 mb-3 mb-sm-0">
-                    <div class="card text-bg-light mb-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="featurePreference">
-                                    <h4>Cooking Assistant</h4>
-                                </label>
-                                <select class="form-select" name="AIPersona" data-placeholder="Click to choose">
-                                    <!-- <option value="option0">Click to choose </option> -->
-                                    <option value="option1">AI Option 1</option>
-                                    <option value="option2">AI Option 2</option>
-                                    <option value="option3">AI Option 3</option>
-                                </select>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 mb-3 mb-sm-0">
+                            <div class="card text-bg-light mb-3">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="featurePreference">
+                                            <h4>Cooking Assistant</h4>
+                                        </label>
+                                        <select class="form-select" name="AIPersona" data-placeholder="Click to choose"
+                                            disabled>
+                                            <!-- Add disabled attribute to select element -->
+                                            <option value="option1">AI Option 1</option>
+                                            <option value="option2">AI Option 2</option>
+                                            <option value="option3">AI Option 3</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <button id="edit" class="w-25 btn btn-lg btn-warning mt-3" type="button">Edit</button>
+                    <button id="save" class="w-25 btn btn-lg btn-warning mt-3" type="submit" disabled>Save</button>
+                </form>
                 <% } %>
     </div>
+
+    <script>
+    document.getElementById('edit').addEventListener('click', function () {
+        // remove the disabled attribute and enable Save button
+        document.getElementById('save').removeAttribute('disabled');
+
+        // Enable all checkboxes and dropdown elements to allow editing
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.removeAttribute('disabled');
+        });
+        document.querySelector('select[name="AIPersona"]').removeAttribute('disabled');
+    });
+
+    </script>
     <%- include("templates/footer") %>
