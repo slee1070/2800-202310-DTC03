@@ -1,9 +1,81 @@
 <%- include("templates/header") %>
-    <form action="/recipe" method="GET">
-        <input type="text" name="search" placeholder="Search recipes...">
-        <button type="submit">Search</button>
-    </form>
 
-    
+    <head>
+        <meta charset="utf-8">
+        <title>Recipes</title>
+        <style>
+            .center {
+                text-align: center;
+            }
 
+            .card {
+                border: 1px solid #ececc3;
+                border-radius: 5px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            .card h2 {
+                margin-top: 0;
+            }
+
+            .card p {
+                margin: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <br>
+            <h1 class="center text-center">Recipes</h1>
+
+            <% for (let recipe of recipes) { %>
+                <div class="card">
+                    <h2 class="center text-center">
+                        <%= recipe.Name %>
+                    </h2>
+                    <!-- <p><strong>Cuisine:</strong>
+                        <%= recipe.Name %>
+                    </p> -->
+                    <p><strong>Ingredients:</strong></p>
+                    <ul>
+        <% const ingredients=recipe.RecipeIngredientParts.split(', ');
+                       for (let i = 0; i < ingredients.length; i++) {
+                         let ingredient = ingredients[i].replace(/"/g, '');
+                         if (i === 0) {
+                           // Remove the "c(" prefix from the first ingredient
+                           ingredient = ingredient.replace(/^c\(/, '');
+                         }
+                         if (i === ingredients.length - 1) {
+                           // Remove the ")" from the last ingredient
+                           ingredient = ingredient.replace(/\)$/, '');
+                         }
+                    %>
+                            <li>
+                                <%= ingredient %>
+                            </li>
+                            <% } %>
+                    </ul>
+                    <p><strong>Instructions:</strong></p>
+                    <ol>
+<% const instructions=recipe.RecipeInstructions.split(', ');
+               for (let i = 0; i < instructions.length; i++) {
+                 let instruction = instructions[i].replace(/"/g, '').replace(/\\n/g, '');
+                 if (i === 0) {
+                   // Remove the "c(" prefix from the first instruction
+                   instruction = instruction.replace(/^c\(/, '');
+                 }
+                 if (i === instructions.length - 1) {
+                   // Remove the ")" from the last instruction
+                   instruction = instruction.replace(/\)$/, '');
+                 }
+            %>
+            <li><%= instruction %></li>
+            <% } %>
+            </ol>
+        </div>
+        <% } %>
+    </body>
+    </div>
     <%- include("templates/footer") %>

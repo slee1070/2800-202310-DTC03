@@ -9,6 +9,7 @@ const url = require('url');
 // 1 - import
 let ejs = require('ejs');
 // 2 - set the view engine to ejs
+
 app.set('view engine', 'ejs');
 
 const navLinks = [
@@ -26,6 +27,10 @@ const dbStore = new MongoDBStore({
   collection: 'mySessions',
   expires: 1000 * 60 * 60, // 60 minutes
 });
+
+const MongoClient = require('mongodb').MongoClient;
+const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(
   session({
@@ -404,8 +409,14 @@ app.get('/preference', (req, res) => {
   res.render('preference', {session: req.session, disableFields: true});
 });
 
-app.get('/recipe', (req, res) => {
-  res.render('recipe', {session: req.session, disableFields: true});
+app.get('/recipe', async (req, res) => {
+  const collection = client.db('PantryMaster').collection('recipeTest2');
+  const cursor = collection.find();
+  const recipes = [];
+  await cursor.forEach(recipe => {
+    recipes.push(recipe);
+  });
+  res.render('recipe', { recipes });
 });
 
 
