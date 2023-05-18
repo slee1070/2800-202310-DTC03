@@ -404,6 +404,9 @@ app.get('/preference', (req, res) => {
   res.render('preference', {session: req.session, disableFields: true});
 });
 
+app.get('/recipe', (req, res) => {
+  res.render('recipe', {session: req.session, disableFields: true});
+});
 
 
 app.get('/does_not_exist', (req, res) => {
