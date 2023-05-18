@@ -1,0 +1,23 @@
+a#clickHere {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.cute-emojis {
+    color: rgb(60, 0, 60);
+    font-size: 25px;
+    position: absolute;
+    animation:  iconMove linear 1;
+    top: -10vh;
+    z-index: 0;
+}
+
+@keyframes iconMove {
+    0%{
+        transform: translateY(-10vh) ;
+    }
+    100%{
+        transform: translateY(110vh) ;
+    }
+}
