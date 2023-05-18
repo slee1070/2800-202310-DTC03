@@ -6,6 +6,10 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const url = require('url');
+const bodyParser = require('body-parser');
+// Add the body-parser middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 // 1 - import
 let ejs = require('ejs');
 // 2 - set the view engine to ejs
@@ -107,37 +111,92 @@ app.post('/signupSubmit', async (req, res) => {
   }).options({ allowUnknown: true });
 
   try {
-    const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
-    const hashedSecurityAnswer = await bcrypt.hash(securityAnswer, 10);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = {
-      username: username,
-      name: name,
-      password: hashedPassword,
-      email: email,
-      securityQuestion: securityQuestion,
-      securityAnswer: hashedSecurityAnswer,
-      type: 'user',
-    };
-    const result = await usersModel.create(user);
-    console.log(result);
-    // add some user created successfully message?
-  } catch (err) {
-    console.log(err);
-    // catch all errors and add to error message array
-    err.details.forEach(error => {
-      errorMessage.push(error.message);
-    });
-    // render the error page with the error message array
-    res.render('signup_submit_error', {
-      errorMessage: errorMessage,
-    });
-    return;
-  }
+  const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
+  const hashedSecurityAnswer = await bcrypt.hash(securityAnswer, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = {
+    username: username,
+    name: name,
+    password: hashedPassword,
+    email: email,
+    securityQuestion: securityQuestion,
+    securityAnswer: hashedSecurityAnswer,
+    type: 'user',
+  };
+  const result = await usersModel.create(user);
+  console.log(result);
+  // add some user created successfully message?
   req.session.GLOBAL_AUTHENTICATED = true;
   req.session.loggedUsername = req.body.username;
   req.session.loggedName = req.body.name;
-  res.redirect('/')
+  res.render('preference_cuisine', {
+    result: result,
+    session: req.session,
+  });
+} catch (err) {
+  console.log(err);
+  // catch all errors and add to error message array
+  err.details.forEach(error => {
+    errorMessage.push(error.message);
+  });
+  // render the error page with the error message array
+  res.render('signup_submit_error', {
+    errorMessage: errorMessage,
+  });
+  return;
+}
+});
+
+app.use(express.static('public'));
+// app.get('/preference_cuisine', (req, res) => {
+//   const user = req.session.user;
+//   res.render('preference_cuisine', { session: req.session });
+// });
+
+app.post('/preference_cuisine', async (req, res) => {
+  const userId = req.body.userId;
+  const preferredCuisines = req.body.preferredCuisines; 
+  
+  try {
+    const user = await usersModel.findOne({ _id: userId });
+    if (user) {
+      // Update user's cuisine preference
+      user.cuisinePreference = req.body.preferredCuisines;
+      await user.save();
+      req.session.user = user;
+      }
+    console.log("user's preferred cuisine", user.cuisinePreference);
+    res.render('preference_dietary_restriction', {
+      userId: userId,
+      session: req.session,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// app.get('/preference_dietary_restriction', (req, res) => {
+//   const user = req.session.user;
+//   res.render('preference_dietary_restriction', { session: req.session });
+// });
+
+app.post('/preference_dietary_restriction', async (req, res) => {
+  const userId = req.body.userId;
+  const dietaryRestrictions = req.body.dietaryRestrictions;
+
+  try {
+    const user = await usersModel.findOne({ _id: userId });
+    if (user) {
+      // Update user's cuisine preference
+      user.dietaryRestrictions = req.body.dietaryRestrictions;
+      await user.save();
+      req.session.user = user;
+    }
+    console.log("user's dietary restrictions", user.dietaryRestrictions);
+    res.redirect('/');
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.get('/login', (req, res) => {
