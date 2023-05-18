@@ -1,0 +1,43 @@
+<%- include("templates/header") %>
+  <link rel="stylesheet" href="/style/dietary_restriction.css">
+
+  <h1 class="text-center">Any dietary restriction?</h1>
+
+  <!-- dietary restriction buttons go here -->
+  <section>
+    <div class="tile">
+      <input type="checkbox" name="c" id="c1">
+      <label for="c1">
+        <img src="images/user_preference/vegan.png" class="rounded-circle" width="80" height="80">
+        <h6>Vegan</h6>
+      </label>
+    </div>
+    <div class="tile">
+      <input type="checkbox" name="c" id="c2">
+      <label for="c2">
+        <img src="images/user_preference/lactofree.png" class="rounded-circle" width="80" height="80">
+        <h6>Lactose free</h6>
+      </label>
+    </div>
+    <div class="tile">
+      <input type="checkbox" name="c" id="c6">
+      <label for="c6">
+        <img src="images/user_preference/yeastfree.png" class="rounded-circle" width="80" height="80">
+        <h6>Yeast free</h6>
+      </label>
+    </div>
+    <div class="tile">
+      <input type="checkbox" name="c" id="c5">
+      <label for="c5">
+        <img src="images/user_preference/nutfree.png" class="rounded-circle" width="80" height="80">
+        <h6>Nut free</h6>
+      </label>
+    </div>
+  </section>
+
+  <div class="container text-center">
+    <button class="btn btn-lg btn-warning mt-3" type="submit">Next</button><br>
+    <button class="btn btn-lg btn-light mt-2" type="submit">Skip</button>
+  </div>
+
+  <%- include("templates/footer") %>
