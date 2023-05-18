@@ -1,24 +1,23 @@
+// Array of emojis
 const emojis = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍍", "🥭", "🍎", "🍏", "🍐",
- "🍒", "🍓", "🥝", "🍅", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶️", "🥒", "🥬", "🥦", 
- "🧄", "🧅", "🍄", "🌰", "🍞", "🥐", "🥖", "🥨", "🥯", "🥞", "🧇", "🧀", "🍔", 
- "🍟", "🍕", "🌭", "🥪", "🌮", "🌯", "🥙", "🥚", "🍳", "🥘", "🍲", "🥗", "🍿", 
- "🧈", "🍱", "🍘", "🍙", "🍚", "🍛", "🍜", "🍝", "🍠", "🍢", "🍣", "🍥", "🥮", 
- "🍡", "🥟", "🥠", "🍦", "🍧", "🍨", "🍩", "🍪", "🍰", "🧁", "🥧", "🍮", "🍑", 
- "✨", "❤️", "🌈", "🎉", "🐱"]
+ "🍒", "🍓", "🥝", "🍅", "🥔", "🥕", "🌽", "🌶️", "🥒", "🥬", "🥦",  "🧄", 
+ "🧅", "🍄", "🌰", "🍞", "🥐", "🥖", "🥨", "🥯", "🥞", "🧇", "🧀", "🍔", 
+ "🍟", "🍕", "🌭", "🥪", "🌮", "🌯", "🥙", "🥚", "🍳", "🥘", "🍲", "🥗", 
+ "🍿", "🧈", "🍱", "🍘", "🍙", "🍚", "🍛", "🍜", "🍝", "🍠", "🍢", "🍣",
+ "🍥", "🥮", "🍡", "🥟", "🥠", "🍦", "🍧", "🍨", "🍩", "🍪", "🍰", "🧁", 
+ "🥧", "🍮", "🍑", "✨", "❤️", "🌈", "🎉", "🐱"]
 
+//  Get the body element and button
 const body = document.querySelector("body");
 const clickHere = document.getElementById("clickHere");
 
+// Get a random emoji from the emoji array
 function getRandomEmoji() {
   const randomIndex = Math.floor(Math.random() * emojis.length);
   return emojis[randomIndex];
 }
 
-function updateEmoji() {
-  var emojiElement = document.getElementById("emoji");
-  emojiElement.innerHTML = getRandomEmoji();
-}
-
+// Create an emoji and append it
 function createEmoji() {
   const emoji = document.createElement("div");
   emoji.className = "cute-emojis";
@@ -29,6 +28,7 @@ function createEmoji() {
   body.appendChild(emoji);
 }
 
+// Handle the click event
 function handleClick(event) {
   event.preventDefault();
   
@@ -41,4 +41,5 @@ function handleClick(event) {
   }
 }
 
+// Add event listener to the button
 clickHere.addEventListener("click", handleClick);
