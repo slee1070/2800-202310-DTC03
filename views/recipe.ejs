@@ -79,8 +79,7 @@
             <%= recipe.Name %>
         </p> -->
         <!-- More button that triggers the modal -->
-       <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>
-                    ').style.display='block'">More</button>
+       <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>').style.display='block'">More</button>
                     <!-- Modal that displays the ingredients and instructions -->
                     <div id="modal-<%= recipe.RecipeId %>" class="modal">
                         <div class="modal-content">
@@ -122,24 +121,18 @@
     </div>
     <% } %>
     <script>
-        // Get all modal elements
-        const modals = document.querySelectorAll(' .modal'); // Define the modal variable outside of the loop let
-        modal; // Loop through all modal elements modals.forEach(modalElement=> {
-        // Assign the current modal element to the modal variable
-        modal = modalElement;
+       const modals = document.querySelectorAll(' .modal'); 
+        let modal; 
+        modals.forEach(modalElement=> {
+         modal = modalElement;
 
-        // Get the close button for the modal
         const closeBtn = modal.querySelector('.close');
 
-        // Add a click event listener to the close button
         closeBtn.addEventListener('click', () => {
-            // Hide the modal when the close button is clicked
             modal.style.display = 'none';
         });
 
-        // Add a click event listener to the window object
         window.addEventListener('click', (event) => {
-            // Hide the modal when the user clicks outside the modal
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
