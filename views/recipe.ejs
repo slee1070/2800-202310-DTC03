@@ -1,4 +1,8 @@
 <%- include("templates/header") %>
+    <!-- recipe.ejs -->
+
+    <!DOCTYPE html>
+    <html>
 
     <head>
         <meta charset="utf-8">
@@ -9,7 +13,7 @@
             }
 
             .card {
-                border: 1px solid #ececc3;
+                border: 1px solid #ccc;
                 border-radius: 5px;
                 padding: 10px;
                 margin-bottom: 10px;
@@ -22,25 +26,73 @@
             .card p {
                 margin: 0;
             }
+
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
         </style>
     </head>
 
     <body>
-        <div class="container">
-            <br>
-            <h1 class="center text-center">Recipes</h1>
-
-            <% for (let recipe of recipes) { %>
-                <div class="card">
-                    <h2 class="center text-center">
-                        <%= recipe.Name %>
-                    </h2>
-                    <!-- <p><strong>Cuisine:</strong>
-                        <%= recipe.Name %>
-                    </p> -->
-                    <p><strong>Ingredients:</strong></p>
-                    <ul>
-        <% const ingredients=recipe.RecipeIngredientParts.split(', ');
+        <h1 class="center">Recipes</h1>
+        <% for (let recipe of recipes) { %>
+            <div class="card">
+                <% const images=recipe.Images.split(', ');
+           const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');
+        %>
+        <img src="<%= firstImage %>" alt="<%= recipe.Name %>">
+        <h2 class="center">
+            <%= recipe.Name %>
+        </h2>
+        <!-- <p><strong>Cuisine:</strong>
+            <%= recipe.Name %>
+        </p> -->
+        <!-- More button that triggers the modal -->
+       <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>
+                    ').style.display='block'">More</button>
+                    <!-- Modal that displays the ingredients and instructions -->
+                    <div id="modal-<%= recipe.RecipeId %>" class="modal">
+                        <div class="modal-content">
+                            <span class="close"
+                                onclick="document.getElementById('modal-<%= recipe.RecipeId %>').style.display='none'">&times;</span>
+                            <h2>
+                                <%= recipe.Name %>
+                            </h2>
+                            <p><strong>Ingredients:</strong></p>
+                            <ul>
+                                <% const
+                                    ingredients=recipe.RecipeIngredientParts.split(', ');
                        for (let i = 0; i < ingredients.length; i++) {
                          let ingredient = ingredients[i].replace(/"/g, '');
                          if (i === 0) {
@@ -52,30 +104,49 @@
                            ingredient = ingredient.replace(/\)$/, '');
                          }
                     %>
-                            <li>
-                                <%= ingredient %>
-                            </li>
-                            <% } %>
-                    </ul>
-                    <p><strong>Instructions:</strong></p>
-                    <ol>
-<% const instructions=recipe.RecipeInstructions.split(', ');
-               for (let i = 0; i < instructions.length; i++) {
-                 let instruction = instructions[i].replace(/"/g, '').replace(/\\n/g, '');
-                 if (i === 0) {
-                   // Remove the "c(" prefix from the first instruction
-                   instruction = instruction.replace(/^c\(/, '');
-                 }
-                 if (i === instructions.length - 1) {
-                   // Remove the ")" from the last instruction
-                   instruction = instruction.replace(/\)$/, '');
-                 }
-            %>
-            <li><%= instruction %></li>
-            <% } %>
-            </ol>
+                    <li><%= ingredient %></li>
+                    <% } %>
+                </ul>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <% const instructions=recipe.RecipeInstructions.replace(/\\n/g, '' ).replace(/^c\(/, '' ).replace(/\)$/, '' ).split(/", "/);
+                           for (let i = 0; i < instructions.length; i++) {
+                             let instruction = instructions[i].replace(/" /g, '' ); %>
+                        <li>
+                            <%= instruction %>
+                        </li>
+                        <% } %>
+                </ol>
+            </div>
         </div>
-        <% } %>
-    </body>
     </div>
+    <% } %>
+    <script>
+        // Get all modal elements
+        const modals = document.querySelectorAll(' .modal'); // Define the modal variable outside of the loop let
+        modal; // Loop through all modal elements modals.forEach(modalElement=> {
+        // Assign the current modal element to the modal variable
+        modal = modalElement;
+
+        // Get the close button for the modal
+        const closeBtn = modal.querySelector('.close');
+
+        // Add a click event listener to the close button
+        closeBtn.addEventListener('click', () => {
+            // Hide the modal when the close button is clicked
+            modal.style.display = 'none';
+        });
+
+        // Add a click event listener to the window object
+        window.addEventListener('click', (event) => {
+            // Hide the modal when the user clicks outside the modal
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+                                    });
+    </script>
+    </body>
+
+    </html>
     <%- include("templates/footer") %>
