@@ -31,6 +31,10 @@ const dbStore = new MongoDBStore({
   expires: 1000 * 60 * 60, // 60 minutes
 });
 
+const MongoClient = require('mongodb').MongoClient;
+const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
 app.use(
   session({
     secret: `${process.env.NODE_SESSION_SECRET}`,
@@ -518,6 +522,22 @@ app.post('/preference_update', async (req, res) => {
     console.log(error);
   }
 });
+
+app.get('/preference', (req, res) => {
+  res.render('preference', {session: req.session, disableFields: true});
+});
+
+app.get('/recipe', async (req, res) => {
+  const collection = client.db('PantryMaster').collection('recipeTest2');
+  const cursor = collection.find();
+  const recipes = [];
+  await cursor.forEach(recipe => {
+    recipes.push(recipe);
+  });
+  res.render('recipe', { recipes });
+});
+
+
 
 app.use(express.static('public'));
 
