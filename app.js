@@ -148,10 +148,10 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.use(express.static('public'));
-app.get('/preference_cuisine', (req, res) => {
-  const user = req.session.user;
-  res.render('preference_cuisine', { session: req.session });
-});
+// app.get('/preference_cuisine', (req, res) => {
+//   const user = req.session.user;
+//   res.render('preference_cuisine', { session: req.session });
+// });
 
 app.post('/preference_cuisine', async (req, res) => {
   const userId = req.body.userId;
@@ -163,33 +163,40 @@ app.post('/preference_cuisine', async (req, res) => {
       // Update user's cuisine preference
       user.cuisinePreference = req.body.preferredCuisines;
       await user.save();
-
-      // Update the req.session.user object
       req.session.user = user;
       }
-    console.log(user.cuisinePreference);
-
-    // Redirect to the index route
-    res.redirect('/');
+    console.log("user's preferred cuisine", user.cuisinePreference);
+    res.render('preference_dietary_restriction', {
+      userId: userId,
+      session: req.session,
+    });
   } catch (error) {
     console.log(error);
   }
 });
 
-app.get('/preference_dietary_restriction', (req, res) => {
-  const user = req.session.user; // Access the user data from req.session
+// app.get('/preference_dietary_restriction', (req, res) => {
+//   const user = req.session.user;
+//   res.render('preference_dietary_restriction', { session: req.session });
+// });
 
-  // Use the user data as needed
-  console.log(user.username);
-  console.log(user.name);
-  console.log(user.email);
-  console.log(user.cuisinePreference); // Access the stored cuisine preference
+app.post('/preference_dietary_restriction', async (req, res) => {
+  const userId = req.body.userId;
+  const dietaryRestrictions = req.body.dietaryRestrictions;
 
-  // Render the preference_dietary_restriction view and pass the user data
-  res.render('preference_dietary_restriction', {
-    session: req.session,
-    user: user,
-  });
+  try {
+    const user = await usersModel.findOne({ _id: userId });
+    if (user) {
+      // Update user's cuisine preference
+      user.dietaryRestrictions = req.body.dietaryRestrictions;
+      await user.save();
+      req.session.user = user;
+    }
+    console.log("user's dietary restrictions", user.dietaryRestrictions);
+    res.redirect('/');
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.get('/login', (req, res) => {

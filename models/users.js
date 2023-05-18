@@ -8,6 +8,7 @@ const usersSchema = new mongoose.Schema({
   securityAnswer: String,
   pantry: Array,
   cuisinePreference: Array,
+  dietaryRestrictions: Array,
   type: {
     type: String,
     default: 'user'
