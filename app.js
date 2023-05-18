@@ -13,7 +13,6 @@ app.use(bodyParser.json());
 // 1 - import
 let ejs = require('ejs');
 // 2 - set the view engine to ejs
-
 app.set('view engine', 'ejs');
 
 const navLinks = [
@@ -31,10 +30,6 @@ const dbStore = new MongoDBStore({
   collection: 'mySessions',
   expires: 1000 * 60 * 60, // 60 minutes
 });
-
-const MongoClient = require('mongodb').MongoClient;
-const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(
   session({
@@ -464,21 +459,6 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
-app.get('/preference', (req, res) => {
-  res.render('preference', {session: req.session, disableFields: true});
-});
-
-app.get('/recipe', async (req, res) => {
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  const cursor = collection.find();
-  const recipes = [];
-  await cursor.forEach(recipe => {
-    recipes.push(recipe);
-  });
-  res.render('recipe', { recipes });
-});
-
-
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
 });
@@ -496,6 +476,48 @@ app.get('/pantry', async (req, res) => {
   }
 });
 
+app.get('/preference', async (req, res) => {
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/');
+  } else {
+    const user = await usersModel.findOne({ username: req.session.loggedUsername });
+    const cuisineOptions = ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'];
+    const dietaryOptions = ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'];
+    res.render('preference', {
+      session: req.session,
+      user: user,
+      cuisineOptions: cuisineOptions,
+      dietaryOptions: dietaryOptions,
+    });
+  }
+});
+
+app.post('/preference_update', async (req, res) => {
+  const userId = req.body.userId;
+  const cuisinePreference = req.body.cuisinePreference;
+  const dietaryRestrictions = req.body.dietaryRestrictions;
+
+  try {
+    const user = await usersModel.findOne({ _id: userId });
+    if (user) {
+      // Update user's cuisine preference and dietary restrictions
+      user.cuisinePreference = cuisinePreference;
+      user.dietaryRestrictions = dietaryRestrictions;
+      await user.save();
+      req.session.user = user;
+    }
+    console.log(user);
+    console.log("User's cuisine preference:", user.cuisinePreference);
+    console.log("User's dietary restrictions:", user.dietaryRestrictions);
+    res.render('preference', {
+      session: req.session,
+      user: user,
+      cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
+      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'] });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.use(express.static('public'));
 
