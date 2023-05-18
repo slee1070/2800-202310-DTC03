@@ -71,7 +71,7 @@
                 <% const images=recipe.Images.split(', ');
            const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');
         %>
-        <img src="<%= firstImage %>" alt="<%= recipe.Name %>">
+        <img src="<%= firstImage %>" alt="<%= recipe.Name %>"> <br>
         <h2 class="center">
             <%= recipe.Name %>
         </h2>
