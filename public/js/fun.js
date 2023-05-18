@@ -20,13 +20,13 @@ function updateEmoji() {
 }
 
 function createEmoji() {
-  const icon = document.createElement("div");
-  icon.className = "cute-emojis";
-  const emoji = getRandomEmoji();
-  icon.innerHTML = emoji;
-  icon.style.left = Math.random() * 100 + "vw";
-  icon.style.animationDuration = Math.random() * 5 + 2 + "s";
-  body.appendChild(icon);
+  const emoji = document.createElement("div");
+  emoji.className = "cute-emojis";
+  const random_emoji = getRandomEmoji();
+  emoji.innerHTML = random_emoji;
+  emoji.style.left = Math.random() * 100 + "vw";
+  emoji.style.animationDuration = Math.random() * 5 + 2 + "s";
+  body.appendChild(emoji);
 }
 
 function handleClick(event) {
