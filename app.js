@@ -539,92 +539,69 @@ app.get('/all_recipe', async (req, res) => {
   res.render('recipe', { recipes });
 });
 
+// /*//Run both cuisinePreference and dietaryRestriction filters*/
+// app.get('/recipe', async (req, res) => {
+//   const userEmail = req.session.loggedEmail;
+//   const user = await usersModel.findOne({ email: userEmail });
+//   const cuisinePreference = user.cuisinePreference;
+//   const dietaryRestrictions = user.dietaryRestrictions;
+//   const collection = client.db('PantryMaster').collection('recipeTest2');
+//   let recipes;
+// if (cuisinePreference) {
+//   recipes = await collection.find({
+//     Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
+//   }).toArray();
+// } else {
+//   recipes = await recipeTest2.find().toArray();
+// }
+//   if (dietaryRestrictions) {
+//     const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
+//     recipes = recipes.filter(recipe => {
+//       return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
+//         || !recipe.Keywords.match(/Yeast Breads/i)
+//         && !recipe.Keywords.match(/Nuts/i);
+//     });
+//   }
+//   res.render('recipe_cuisine', { recipes });
+// });
 
-app.get('/recipe', async (req, res) => {
-  const userEmail = req.session.loggedEmail;
-  const user = await usersModel.findOne({ email: userEmail });
-  const cuisinePreference = user.cuisinePreference;
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  let recipes;
-  if (cuisinePreference) {
-    recipes = await collection.find({
-      Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
-    }).toArray();
-  } else {
-    recipes = await recipeTest2.find().toArray();
-  }
-  console.log('Recipes:', recipes);
-  res.render('recipe_cuisine', { recipes });
-});
-
-//console.log('User:', user);
-  // const collection = client.db('PantryMaster').collection('recipeTest2');
-  // const cursor = collection.find();
-  // const recipes = [];
-  // await cursor.forEach(recipe => {
-  //   recipes.push(recipe);
-  // });
+// /*Run cuisinePreference filter only */
+// app.get('/recipe', async (req, res) => {
+//   const userEmail = req.session.loggedEmail;
+//   const user = await usersModel.findOne({ email: userEmail });
+//   const cuisinePreference = user.cuisinePreference;
+//   const collection = client.db('PantryMaster').collection('recipeTest2');
+//   let recipes;
+//   if (cuisinePreference) {
+//     recipes = await collection.find({
+//       Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
+//     }).toArray();
+//   } else {
+//     recipes = await recipeTest2.find().toArray();
+//   }
+//   console.log('Recipes:', recipes);
 //   res.render('recipe_cuisine', { recipes });
 // });
 
 
-
-// console.log('Handling /cuisine request');
-// app.get('/cuisine', async (req, res) => {
-//   try {
-//     const userEmail = req.session.loggedEmail;
-//     console.log('User email:', userEmail);
-//      const user = await usersModel.findOne( {email: userEmail} );
-//    console.log('User:', user);
-
-//     const cuisinePreference = user.cuisinePreference || [];
-//     console.log('Cuisine preference:', cuisinePreference);
-//     let recipes;
-//     if (cuisinePreference) {
-//       recipes = await recipeTest2.find({
-//         Keywords: { $in: cuisinePreference }
-//       });
-//     } else {
-//       recipes = await recipeTest2.find();
-//     }
-//     console.log('Recipes:', recipes);
-//     res.render('recipe_cuisine', { recipes, selectedCuisine: cuisinePreference });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-// app.get('/cuisine', async (req, res) => {
-//   try {
-//     const userEmail = req.session.user.email;
-//     const user = await User.findOne({ email: userEmail });
-//     const cuisinePreference = user.cuisinePreference || [];
-//     const mealType = req.query.mealType || '';
-//     let recipes;
-//     if (cuisinePreference.length > 0 && mealType) {
-//       recipes = await recipeTest2.find({
-//         $and: [
-//           { Keywords: { $in: cuisinePreference } },
-//           { MealType: mealType }
-//         ]
-//       });
-//     } else if (cuisinePreference.length > 0) {
-//       recipes = await recipeTest2.find({
-//         Keywords: { $in: cuisinePreference }
-//       });
-//     } else if (mealType) {
-//       recipes = await recipeTest2.find({ MealType: mealType });
-//     } else {
-//       recipes = await recipeTest2.find();
-//     }
-//     res.render('recipe_cuisine', { recipes, selectedCuisine: cuisinePreference, selectedMealType: mealType });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
+// /*Run dietaryRestriction filter only */
+app.get('/recipe', async (req, res) => {
+  const userEmail = req.session.loggedEmail;
+  const user = await usersModel.findOne({ email: userEmail });
+  const dietaryRestrictions = user.dietaryRestrictions;
+  const collection = client.db('PantryMaster').collection('recipeTest2');
+  let recipes = await collection.find().toArray();
+  if (dietaryRestrictions) {
+    const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
+    recipes = recipes.filter(recipe => {
+      return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
+        || !recipe.Keywords.match(/Yeast Breads/i)
+        && !recipe.Keywords.match(/Nuts/i);
+    });
+  }
+  console.log('Recipes:', recipes);
+  res.render('recipe_cuisine', { recipes });
+});
 
 
 app.use(express.static('public'));
