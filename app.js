@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const chatbot = require('./controller/chatbot');
 const session = require('express-session');
 const usersModel = require('./models/users');
 const MongoDBStore = require('connect-mongodb-session')(session);
@@ -235,6 +236,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
+      req.session.save();
       res.redirect('/');
     } else {
       res.render('login_error', {});
@@ -478,11 +480,6 @@ app.get('/recipe', async (req, res) => {
   res.render('recipe', { recipes });
 });
 
-
-app.get('/does_not_exist', (req, res) => {
-  res.status(404).render('404', {session: req.session});
-});
-
 app.use(express.static('public'));
 app.get('/pantry', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
@@ -496,6 +493,32 @@ app.get('/pantry', async (req, res) => {
   }
 });
 
+app.get('/chat', async (req, res) => {
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/');
+  } else {
+      res.render('chat');
+  }
+});
+
+app.post('/chat', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const user = await usersModel.findOne({username: req.session.loggedUsername});
+  const pantryItems = user.pantry;
+  console.log(pantryItems);
+  let foodList = [];
+  for (items of pantryItems) {
+    foodList.push(items.food);
+  }
+  const query = `I have the following items in my pantry: ${foodList.toString()}.  ${req.body.query}`;
+  console.log(query);
+  res.send(await chatbot(query))
+
+});
+
+app.get('/does_not_exist', (req, res) => {
+  res.status(404).render('404', {session: req.session});
+});
 
 app.use(express.static('public'));
 
