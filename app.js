@@ -508,6 +508,30 @@ app.post('/update-pantry', async (req, res) => {
   }
 });
 
+app.post('/remove-from-pantry', async (req, res) => {
+  const { username, itemsToRemove } = req.body;
+  console.log("test");
+  console.log(itemsToRemove);
+  try {
+    // Retrieve user from the database
+    const user = await usersModel.findOne({ username: username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    console.log(itemsToRemove);
+    // Filter out the items to be removed
+    user.pantry = user.pantry.filter(item => !itemsToRemove.includes(item.food));
+
+    // Save updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Successfully removed items from pantry.' });
+  } catch (err) {
+    res.status(500).json({ message: 'An error occurred while removing items from pantry.', error: err });
+  }
+});
+
+
 app.use(express.static('public'));
 
 app.get('/logout', (req, res) => {
