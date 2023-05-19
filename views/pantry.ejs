@@ -1,5 +1,57 @@
+<style>
+  .my-primary {
+    background-color: rgb(255, 248, 235);
+  }
+
+  .close-button {
+    /* background-color: rgb(255, 99, 99) !important; */
+    background-color: rgb(149, 156, 161) !important;
+  }
+
+  .add-button {
+    background-color: rgb(79, 160, 102) !important;
+  }
+
+  .custom-ingredient-button {
+    background-color: rgb(242, 185, 156) !important;
+  }
+
+  .custom-showMore-button {
+    background-color: rgb(214, 222, 228) !important;
+  }
+
+  .modal-header-primary {
+    background-color: #dfc2c4 !important;
+  }
+
+  .modal-background-primary {
+    background-color: #f8f9fa !important;
+  }
+
+  .custom-border {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .custom-header-border {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  .custom-pad {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+</style>
+
 <%- include("templates/header") %>
-<h2 class="mt-4 mb-3 text-center">My Pantry </h2> <button id="modal-button"> icon </button>
+<div class="d-flex align-items-center">
+  <h2 class="mt-4 mb-3 flex-grow-1 custom-pad">My Pantry</h2>
+  <h6 class="mt-4 mb-3">Add items</h6>
+  <button id="modal-button" class="btn my-primary mt-2 custom-pad">
+    <img src="/images/icon_add.png" style="width:23px; height:auto">
+  </button>
+</div>
 <div class="table-responsive container">
   <table class="table table-sm table-light table-hover table-borderless text-center">
     <thead class="text-center table-danger">
@@ -14,7 +66,11 @@
         <tr>
           <td><%= pantryItems[i].food %></td>
           <td><%= pantryItems[i].bestBeforeDate %></td>
-          <td><img id="<%= pantryItems[i].food %>" data-itemid="<%= pantryItems[i]._id %>" src="/images/icon_remove.png" style="width:23px; height:auto"></td>
+          <td>
+            <button id="<% pantryItems[i] %>" class="btn modal-body">
+              <img id="<%= pantryItems[i]._id %>" data-itemid="<%= pantryItems[i]._id %>" src="/images/icon_remove.png" style="width:23px; height:auto">
+            </button>  
+            </td>
         </tr>
       <% } %>
     </tbody>
@@ -24,31 +80,41 @@
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header bg-body-tertiary background py-2">
         <h2 class="modal-title" id="exampleModalLabel">Ingredients</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body my-primary">
         <% ingredients.forEach((category) => { %>
-          <div class="container mt-2 mb-2">
-            <h5 style="border-bottom: solid black"><%= category.category %></h5>
-            <% for (let i = 0; i < Math.min(9, category.ingredients.length); i++) { %>
-              <button class="btn btn-primary rounded-pill mt-1 mb-1" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
-            <% } %>
-            <% if (category.ingredients.length > 9) { %>
-              <button class="btn btn-secondary show-more-btn rounded-pill">Show More</button>
-              <div class="hidden-ingredients" style="display: none;">
-                <% for (let i = 9; i < category.ingredients.length; i++) { %>
-                  <button class="btn btn-primary" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
+          <div class="container pb-2 px-0 mb-3 modal-background-primary custom-border">
+            <h5 class="modal-header-primary px-2 py-2 custom-header-border" style="border-bottom: solid black"><%= category.category %></h5>
+            <div class="container mx-2">
+              <% for (let i = 0; i < Math.min(9, category.ingredients.length); i++) { %>
+                
+                // display ingredient button only if it is not in the pantry
+                <% if (!pantryItems.some(item => item.food === category.ingredients[i])) { %>         
+                  <button class="btn custom-ingredient-button rounded-pill mt-1 mb-1" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
                 <% } %>
-              </div>
-            <% } %>
+              <% } %>
+              <% if (category.ingredients.length > 9) { %>
+                <button class="btn custom-showMore-button show-more-btn rounded-pill">Show More</button>
+                <div class="hidden-ingredients" style="display: none;">
+                  <% for (let i = 9; i < category.ingredients.length; i++) { %>
+
+                    // display ingredient button only if it is not in the pantry
+                    <% if (!pantryItems.some(item => item.food === category.ingredients[i])) { %>    
+                      <button class="btn custom-ingredient-button rounded-pill mt-1 mb-1" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
+                    <% } %>
+                  <% } %>
+                </div>
+              <% } %>
+            </div>
           </div>
         <% }) %>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="saveToPantry()">Add to Pantry</button>
+      <div class="modal-footer modal-header-primary">
+        <button type="button" class="btn close-button rounded-pill" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary add-button rounded-pill" onclick="saveToPantry()">Add to Pantry</button>
       </div>
     </div>
   </div>
@@ -61,13 +127,13 @@
   let selectedIngredients = [];
 
   function toggleSelection(element) {
-    if (element.classList.contains("btn-primary")) {
-      element.classList.remove("btn-primary");
+    if (element.classList.contains("custom-ingredient-button")) {
+      element.classList.remove("custom-ingredient-button");
       element.classList.add("btn-success");
       selectedIngredients.push(element.id);
     } else {
       element.classList.remove("btn-success");
-      element.classList.add("btn-primary");
+      element.classList.add("custom-ingredient-button");
       const index = selectedIngredients.indexOf(element.id);
       if (index > -1) {
         selectedIngredients.splice(index, 1);
@@ -89,8 +155,11 @@
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
-        username: username, // replace this with the actual username
-        pantryItems: selectedIngredients.map((ingredient) => ({ food: ingredient, bestBeforeDate: formattedDate }))
+        username: username, 
+        pantryItems: selectedIngredients.map((ingredient) => ({ 
+          food: ingredient, 
+          bestBeforeDate: formattedDate, 
+        }))
       }),
       success: function(response) {
         console.log(response);
