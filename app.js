@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const usersModel = require('./models/users');
+const ingredientsModel = require('./models/ingredients');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
@@ -475,13 +476,36 @@ app.get('/pantry', async (req, res) => {
     res.redirect('/');
   } else {
       const user = await usersModel.findOne({username: req.session.loggedUsername});
+      const ingredients = await ingredientsModel.find();
+      // console.log(ingredients)
       res.render('pantry', {
         session: req.session,
-        pantryItems: user.pantry
+        pantryItems: user.pantry,
+        username: req.session.loggedUsername,
+        ingredients: ingredients
       });
   }
 });
 
+app.post('/update-pantry', async (req, res) => {
+  const { username, pantryItems } = req.body;
+  console.log(pantryItems);
+  try {
+    const user = await usersModel.findOneAndUpdate(
+      {username: username}, 
+      { $push: { pantry: { $each: pantryItems } } },
+      { new: true }
+    );
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Pantry updated' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 app.use(express.static('public'));
 
