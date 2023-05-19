@@ -523,29 +523,30 @@ app.post('/preference', async (req, res) => {
   }
 });
 
-app.get('/preference', (req, res) => {
-  res.render('preference', {session: req.session, disableFields: true});
-});
+// app.get('/preference', (req, res) => {
+//   res.render('preference', {session: req.session, disableFields: true});
+// });
 
 app.get('/recipe', async (req, res) => {
-  const collection = client.db('PantryMaster').collection('recipeTest2');
+  const recipeCollection = client.db('PantryMaster').collection('recipeTest2');
   const query = {};
-
   // Check if query parameter for keywords exists
   if (req.query.keywords) {
     const keywords = req.query.keywords.split(',');
-
-    // Add $all operator to ensure all keywords are matched
     query.Keywords = { $all: keywords };
   }
-
-  const cursor = collection.find(query);
+  const cursor = recipeCollection.find(query);
   const recipes = [];
-
   await cursor.forEach((recipe) => {
     recipes.push(recipe);
   });
-  res.render('recipe', { recipes });
+  // Fetch the user's dietary restrictions from the 'users' collection
+  const user = await usersModel.findOne({
+    username: req.session.loggedUsername,
+  });
+  const userDietaryRestrictions = user ? user.dietaryRestrictions || [] : [];
+  console.log('User Dietary Restrictions:', userDietaryRestrictions);
+  res.render('recipe', { recipes, userDietaryRestrictions });
 });
 
 app.use(express.static('public'));
