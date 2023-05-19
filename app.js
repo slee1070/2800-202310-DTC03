@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const chatbot = require('./controller/chatbot');
 const session = require('express-session');
 const usersModel = require('./models/users');
 const MongoDBStore = require('connect-mongodb-session')(session);
@@ -234,6 +235,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
+      req.session.save();
       res.redirect('/');
     } else {
       res.render('login_error', {});
@@ -463,8 +465,18 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
-app.get('/does_not_exist', (req, res) => {
-  res.status(404).render('404', {session: req.session});
+app.get('/preference', (req, res) => {
+  res.render('preference', {session: req.session, disableFields: true});
+});
+
+app.get('/recipe', async (req, res) => {
+  const collection = client.db('PantryMaster').collection('recipeTest2');
+  const cursor = collection.find();
+  const recipes = [];
+  await cursor.forEach(recipe => {
+    recipes.push(recipe);
+  });
+  res.render('recipe', { recipes });
 });
 
 app.use(express.static('public'));
@@ -480,64 +492,32 @@ app.get('/pantry', async (req, res) => {
   }
 });
 
-app.get('/preference', async (req, res) => {
+app.get('/chat', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
   } else {
-    const user = await usersModel.findOne({ username: req.session.loggedUsername });
-    const cuisineOptions = ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'];
-    const dietaryOptions = ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'];
-    res.render('preference', {
-      session: req.session,
-      user: user,
-      cuisineOptions: cuisineOptions,
-      dietaryOptions: dietaryOptions,
-    });
+      res.render('chat');
   }
 });
 
-app.post('/preference_update', async (req, res) => {
-  const userId = req.body.userId;
-  const cuisinePreference = req.body.cuisinePreference;
-  const dietaryRestrictions = req.body.dietaryRestrictions;
-
-  try {
-    const user = await usersModel.findOne({ _id: userId });
-    if (user) {
-      // Update user's cuisine preference and dietary restrictions
-      user.cuisinePreference = cuisinePreference;
-      user.dietaryRestrictions = dietaryRestrictions;
-      await user.save();
-      req.session.user = user;
-    }
-    console.log(user);
-    console.log("User's cuisine preference:", user.cuisinePreference);
-    console.log("User's dietary restrictions:", user.dietaryRestrictions);
-    res.render('preference', {
-      session: req.session,
-      user: user,
-      cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
-      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'] });
-  } catch (error) {
-    console.log(error);
+app.post('/chat', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const user = await usersModel.findOne({username: req.session.loggedUsername});
+  const pantryItems = user.pantry;
+  console.log(pantryItems);
+  let foodList = [];
+  for (items of pantryItems) {
+    foodList.push(items.food);
   }
+  const query = `I have the following items in my pantry: ${foodList.toString()}.  ${req.body.query}`;
+  console.log(query);
+  res.send(await chatbot(query))
+
 });
 
-app.get('/preference', (req, res) => {
-  res.render('preference', {session: req.session, disableFields: true});
+app.get('/does_not_exist', (req, res) => {
+  res.status(404).render('404', {session: req.session});
 });
-
-app.get('/recipe', async (req, res) => {
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  const cursor = collection.find();
-  const recipes = [];
-  await cursor.forEach(recipe => {
-    recipes.push(recipe);
-  });
-  res.render('recipe', { recipes });
-});
-
-
 
 app.use(express.static('public'));
 
