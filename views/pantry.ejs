@@ -90,8 +90,6 @@
             <h5 class="modal-header-primary px-2 py-2 custom-header-border" style="border-bottom: solid black"><%= category.category %></h5>
             <div class="container mx-2">
               <% for (let i = 0; i < Math.min(9, category.ingredients.length); i++) { %>
-                
-                // display ingredient button only if it is not in the pantry
                 <% if (!pantryItems.some(item => item.food === category.ingredients[i])) { %>         
                   <button class="btn custom-ingredient-button rounded-pill mt-1 mb-1" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
                 <% } %>
@@ -100,8 +98,6 @@
                 <button class="btn custom-showMore-button show-more-btn rounded-pill">Show More</button>
                 <div class="hidden-ingredients" style="display: none;">
                   <% for (let i = 9; i < category.ingredients.length; i++) { %>
-
-                    // display ingredient button only if it is not in the pantry
                     <% if (!pantryItems.some(item => item.food === category.ingredients[i])) { %>    
                       <button class="btn custom-ingredient-button rounded-pill mt-1 mb-1" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
                     <% } %>
@@ -163,11 +159,12 @@
       }),
       success: function(response) {
         console.log(response);
-        // you may want to do something here, like showing a success message
+        console.log('success updating pantry')
+        window.location.href = '/pantry';
       },
       error: function(error) {
         console.log(error);
-        // you may want to do something here, like showing an error message
+        console.log('error updating pantry')
       }
     });
   }
