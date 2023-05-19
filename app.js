@@ -496,7 +496,7 @@ app.get('/preference', async (req, res) => {
   }
 });
 
-app.post('/preference_update', async (req, res) => {
+app.post('/preference', async (req, res) => {
   const userId = req.body.userId;
   const cuisinePreference = req.body.cuisinePreference;
   const dietaryRestrictions = req.body.dietaryRestrictions;
