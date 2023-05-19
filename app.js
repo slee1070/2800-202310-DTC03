@@ -477,7 +477,8 @@ app.get('/pantry', async (req, res) => {
   } else {
       const user = await usersModel.findOne({username: req.session.loggedUsername});
       const ingredients = await ingredientsModel.find();
-      // console.log(ingredients)
+      let lastCategory = ingredients.pop();
+      ingredients.unshift(lastCategory);
       res.render('pantry', {
         session: req.session,
         pantryItems: user.pantry,
