@@ -529,15 +529,24 @@ app.get('/preference', (req, res) => {
 
 app.get('/recipe', async (req, res) => {
   const collection = client.db('PantryMaster').collection('recipeTest2');
-  const cursor = collection.find();
+  const query = {};
+
+  // Check if query parameter for keywords exists
+  if (req.query.keywords) {
+    const keywords = req.query.keywords.split(',');
+
+    // Add $all operator to ensure all keywords are matched
+    query.Keywords = { $all: keywords };
+  }
+
+  const cursor = collection.find(query);
   const recipes = [];
-  await cursor.forEach(recipe => {
+
+  await cursor.forEach((recipe) => {
     recipes.push(recipe);
   });
   res.render('recipe', { recipes });
 });
-
-
 
 app.use(express.static('public'));
 
