@@ -4,3 +4,5 @@ node_modules/
 .vscode/
 package-lock.json
 .env
+python_chatbot/__pycache__/
+storage/
