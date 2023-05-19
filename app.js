@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const chatbot = require('./controller/chatbot');
 const session = require('express-session');
 const usersModel = require('./models/users');
 const Recipe = require('./models/recipe');
@@ -235,6 +236,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
+      req.session.save();
       res.redirect('/');
     } else {
       res.render('login_error', {});
@@ -464,23 +466,6 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
-app.get('/does_not_exist', (req, res) => {
-  res.status(404).render('404', {session: req.session});
-});
-
-app.use(express.static('public'));
-app.get('/pantry', async (req, res) => {
-  if (!req.session.GLOBAL_AUTHENTICATED) {
-    res.redirect('/');
-  } else {
-      const user = await usersModel.findOne({username: req.session.loggedUsername});
-      res.render('pantry', {
-        session: req.session,
-        pantryItems: user.pantry
-      });
-  }
-});
-
 app.get('/preference', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
@@ -497,7 +482,7 @@ app.get('/preference', async (req, res) => {
   }
 });
 
-app.post('/preference_update', async (req, res) => {
+app.post('/preference', async (req, res) => {
   const userId = req.body.userId;
   const cuisinePreference = req.body.cuisinePreference;
   const dietaryRestrictions = req.body.dietaryRestrictions;
@@ -524,9 +509,61 @@ app.post('/preference_update', async (req, res) => {
   }
 });
 
+
 app.get('/preference', (req, res) => {
   res.render('preference', {session: req.session, disableFields: true});
 });
+
+app.get('/recipe', async (req, res) => {
+  const collection = client.db('PantryMaster').collection('recipeTest2');
+  const cursor = collection.find();
+  const recipes = [];
+  await cursor.forEach(recipe => {
+    recipes.push(recipe);
+  });
+  res.render('recipe', { recipes });
+});
+
+app.use(express.static('public'));
+app.get('/pantry', async (req, res) => {
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/');
+  } else {
+      const user = await usersModel.findOne({username: req.session.loggedUsername});
+      res.render('pantry', {
+        session: req.session,
+        pantryItems: user.pantry
+      });
+  }
+});
+
+app.get('/chat', async (req, res) => {
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/');
+  } else {
+      res.render('chat');
+  }
+});
+
+app.post('/chat', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const user = await usersModel.findOne({username: req.session.loggedUsername});
+  const pantryItems = user.pantry;
+  console.log(pantryItems);
+  let foodList = [];
+  for (items of pantryItems) {
+    foodList.push(items.food);
+  }
+  const query = `I have the following items in my pantry: ${foodList.toString()}.  ${req.body.query}`;
+  console.log(query);
+  res.send(await chatbot(query))
+
+});
+
+app.get('/does_not_exist', (req, res) => {
+  res.status(404).render('404', {session: req.session});
+});
+
 
 //populate all recipes
 app.get('/all_recipe', async (req, res) => {
@@ -585,7 +622,7 @@ app.get('/all_recipe', async (req, res) => {
 
 
 // /*Run dietaryRestriction filter only */
-app.get('/recipe', async (req, res) => {
+app.get('/recipe_cuisine', async (req, res) => {
   const userEmail = req.session.loggedEmail;
   const user = await usersModel.findOne({ email: userEmail });
   const dietaryRestrictions = user.dietaryRestrictions;

@@ -12,7 +12,7 @@
                 <br>
                 <h2>Account preference</h2>
                 <br>
-                <form id="preferenceForm" action="/preference_update" method="POST">
+                <form id="preferenceForm" action="/preference" method="POST">
                     <input type="hidden" name="userId" value="<%= user._id %>">
 
                     <div class="row justify-content-center">
@@ -107,17 +107,17 @@
     </div>
 
     <script>
-    document.getElementById('edit').addEventListener('click', function () {
-        // remove the disabled attribute and enable Save button
-        document.getElementById('save').removeAttribute('disabled');
+        document.getElementById('edit').addEventListener('click', function () {
+            // remove the disabled attribute and enable Save button
+            document.getElementById('save').removeAttribute('disabled');
 
-        // Enable all checkboxes and dropdown elements to allow editing
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(function (checkbox) {
-            checkbox.removeAttribute('disabled');
+            // Enable all checkboxes and dropdown elements to allow editing
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.removeAttribute('disabled');
+            });
+            document.querySelector('select[name="AIPersona"]').removeAttribute('disabled');
         });
-        document.querySelector('select[name="AIPersona"]').removeAttribute('disabled');
-    });
 
     </script>
     <%- include("templates/footer") %>
