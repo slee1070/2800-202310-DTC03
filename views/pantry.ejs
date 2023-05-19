@@ -1,5 +1,5 @@
 <%- include("templates/header") %>
-<h2 class="mt-4 mb-3 text-center">My Pantry </h2>
+<h2 class="mt-4 mb-3 text-center">My Pantry </h2> <button id="modal-button"> icon </button>
 <div class="table-responsive container">
   <table class="table table-sm table-light table-hover table-borderless text-center">
     <thead class="text-center table-danger">
@@ -20,5 +20,104 @@
     </tbody>
   </table>
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ingredients</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% ingredients.forEach((category) => { %>
+          <div class="container mt-2 mb-2">
+            <h3><%= category.category %></h3>
+            <% for (let i = 0; i < Math.min(9, category.ingredients.length); i++) { %>
+              <button class="btn btn-primary rounded-pill mt-1 mb-1" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
+            <% } %>
+            <% if (category.ingredients.length > 9) { %>
+              <button class="btn btn-secondary show-more-btn rounded-pill">Show More</button>
+              <div class="hidden-ingredients" style="display: none;">
+                <% for (let i = 9; i < category.ingredients.length; i++) { %>
+                  <button class="btn btn-primary" id="<%= category.ingredients[i] %>" onclick="toggleSelection(this)"><%= category.ingredients[i] %></button>
+                <% } %>
+              </div>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveToPantry()">Add to Pantry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  let username = '<%= username %>'
+  let selectedIngredients = [];
+
+  function toggleSelection(element) {
+    if (element.classList.contains("btn-primary")) {
+      element.classList.remove("btn-primary");
+      element.classList.add("btn-success");
+      selectedIngredients.push(element.id);
+    } else {
+      element.classList.remove("btn-success");
+      element.classList.add("btn-primary");
+      const index = selectedIngredients.indexOf(element.id);
+      if (index > -1) {
+        selectedIngredients.splice(index, 1);
+      }
+    }
+  }
+
+  function saveToPantry() {
+    let date = new Date(); // Current date
+    let formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                    date.getDate().toString().padStart(2, '0') + '/' + 
+                    date.getFullYear().toString();
+    console.log(formattedDate);
+    console.log(username);
+    console.log(selectedIngredients);
+
+    $.ajax({
+      url: '/update-pantry',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        username: username, // replace this with the actual username
+        pantryItems: selectedIngredients.map((ingredient) => ({ food: ingredient, bestBeforeDate: formattedDate }))
+      }),
+      success: function(response) {
+        console.log(response);
+        // you may want to do something here, like showing a success message
+      },
+      error: function(error) {
+        console.log(error);
+        // you may want to do something here, like showing an error message
+      }
+    });
+  }
+
+  $(document).ready(function(){
+    $("#modal-button").click(function(){
+      $('#myModal').modal('show');
+    });
+
+  const showMoreButtons = document.querySelectorAll('.show-more-btn');
+
+  showMoreButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const hiddenIngredients = button.nextElementSibling;
+      hiddenIngredients.style.display = 'block';
+      button.style.display = 'none';
+      });
+    });
+  });
+</script>
 
 <%- include("templates/footer") %>

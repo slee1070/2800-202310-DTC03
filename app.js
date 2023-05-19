@@ -4,6 +4,7 @@ const chatbot = require('./controller/chatbot');
 const session = require('express-session');
 const usersModel = require('./models/users');
 const Recipe = require('./models/recipe');
+const ingredientsModel = require('./models/ingredients');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
@@ -524,18 +525,118 @@ app.get('/recipe', async (req, res) => {
   res.render('recipe', { recipes });
 });
 
+app.get('/recipe2', async (req, res) => {
+  const recipeCollection = client.db('PantryMaster').collection('recipeTest2');
+  const query = {};
+  // Check if query parameter for keywords exists
+  if (req.query.keywords) {
+    const keywords = req.query.keywords.split(',');
+    query.Keywords = { $all: keywords };
+  }
+  const cursor = recipeCollection.find(query);
+  const recipes = [];
+  await cursor.forEach((recipe) => {
+    recipes.push(recipe);
+  });
+  // Fetch the user's dietary restrictions from the 'users' collection
+  const user = await usersModel.findOne({
+    username: req.session.loggedUsername,
+  });
+  const userCuisinePreference = user ? user.cuisinePreference || [] : [];
+  console.log('User Cuisine Preference:', userCuisinePreference);
+  res.render('recipe2', { recipes, userCuisinePreference });
+});
+
+
 app.use(express.static('public'));
 app.get('/pantry', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
   } else {
       const user = await usersModel.findOne({username: req.session.loggedUsername});
+      const ingredients = await ingredientsModel.find();
+      let lastCategory = ingredients.pop();
+      ingredients.unshift(lastCategory);
       res.render('pantry', {
         session: req.session,
-        pantryItems: user.pantry
+        pantryItems: user.pantry,
+        username: req.session.loggedUsername,
+        ingredients: ingredients
       });
   }
 });
+
+app.post('/update-pantry', async (req, res) => {
+  const { username, pantryItems } = req.body;
+  console.log(pantryItems);
+  try {
+    const user = await usersModel.findOneAndUpdate(
+      {username: username}, 
+      { $push: { pantry: { $each: pantryItems } } },
+      { new: true }
+    );
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Pantry updated' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+app.post('/remove-from-pantry', async (req, res) => {
+  const { username, itemsToRemove } = req.body;
+  console.log("test");
+  console.log(itemsToRemove);
+  try {
+    // Retrieve user from the database
+    const user = await usersModel.findOne({ username: username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    console.log(itemsToRemove);
+    // Filter out the items to be removed
+    user.pantry = user.pantry.filter(item => !itemsToRemove.includes(item.food));
+
+    // Save updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Successfully removed items from pantry.' });
+  } catch (err) {
+    res.status(500).json({ message: 'An error occurred while removing items from pantry.', error: err });
+  }
+});
+
+app.post('/update-best-before-date', async (req, res) => {
+  const { username, foodName, bestBeforeDate } = req.body;
+
+  try {
+    // Retrieve user from the database
+    const user = await usersModel.findOne({ username: username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Update the best before date of the specified food item
+    for (let item of user.pantry) {
+      if (item.food === foodName) {
+        item.bestBeforeDate = bestBeforeDate;
+        break;
+      }
+    }
+
+    // Save updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Successfully updated best before date.' });
+  } catch (err) {
+    res.status(500).json({ message: 'An error occurred while updating best before date.', error: err });
+  }
+});
+
 
 app.get('/chat', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
@@ -639,6 +740,7 @@ app.get('/recipe_cuisine', async (req, res) => {
   console.log('Recipes:', recipes);
   res.render('recipe_cuisine', { recipes });
 });
+
 
 
 app.use(express.static('public'));
