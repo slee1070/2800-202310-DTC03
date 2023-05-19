@@ -1,4 +1,10 @@
 const mongoose = require('mongoose');
+
+const pantryItemSchema = new mongoose.Schema({
+  food: String,
+  bestBeforeDate: Date,
+}, {_id: false});
+
 const usersSchema = new mongoose.Schema({
   username: String,
   name: String,
@@ -6,7 +12,7 @@ const usersSchema = new mongoose.Schema({
   password: String,
   securityQuestion: String,
   securityAnswer: String,
-  pantry: Array,
+  pantry: [pantryItemSchema],
   cuisinePreference: Array,
   dietaryRestrictions: Array,
   type: {
