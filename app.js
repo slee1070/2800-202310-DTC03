@@ -162,7 +162,6 @@ app.use(express.static('public'));
 
 app.post('/preference_cuisine', async (req, res) => {
   const userId = req.body.userId;
-  const preferredCuisines = req.body.preferredCuisines; 
   
   try {
     const user = await usersModel.findOne({ _id: userId });
@@ -170,6 +169,7 @@ app.post('/preference_cuisine', async (req, res) => {
       // Update user's cuisine preference
       user.cuisinePreference = req.body.preferredCuisines;
       await user.save();
+      console.log(user);
       req.session.user = user;
       }
     console.log("user's preferred cuisine", user.cuisinePreference);
