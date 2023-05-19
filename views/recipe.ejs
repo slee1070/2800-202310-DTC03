@@ -4,6 +4,7 @@
 
     <head>
         <meta charset="utf-8">
+        <br>
         <title>Recipes</title>
         <style>
             .center {
@@ -63,10 +64,11 @@
     </head>
 
     <body>
-        <h1 class="center">Recipes</h1>
-        <% for (let recipe of recipes) { %>
-            <div class="card">
-                <% const images=recipe.Images.split(', ');
+        <div class="container">
+            <h1 class="center">Recipes</h1>
+            <% for (let recipe of recipes) { %>
+                <div class="card">
+                    <% const images=recipe.Images.split(', ');
            const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');
         %>
         <img src="<%= firstImage %>" alt="<%= recipe.Name %>"> <br>
@@ -74,19 +76,20 @@
             <%= recipe.Name %>
         </h2>
         <!-- Button that triggers the modal -->
-       <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>').style.display='block'">More</button>
-                    <!-- Modal that displays the ingredients and instructions -->
-                    <div id="modal-<%= recipe.RecipeId %>" class="modal">
-                        <div class="modal-content">
-                            <span class="close"
-                                onclick="document.getElementById('modal-<%= recipe.RecipeId %>').style.display='none'">&times;</span>
-                            <h2>
-                                <%= recipe.Name %>
-                            </h2>
-                            <p><strong>Ingredients:</strong></p>
-                            <ul>
-                                <% const
-                                    ingredients=recipe.RecipeIngredientParts.split(', ');
+        <button class="w-100 btn btn-lg btn-warning mt-3"
+            onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>').style.display='block'">More</button>
+                        <!-- Modal that displays the ingredients and instructions -->
+                        <div id="modal-<%= recipe.RecipeId %>" class="modal">
+                            <div class="modal-content">
+                                <span class="close"
+                                    onclick="document.getElementById('modal-<%= recipe.RecipeId %>').style.display='none'">&times;</span>
+                                <h2>
+                                    <%= recipe.Name %>
+                                </h2>
+                                <p><strong>Ingredients:</strong></p>
+                                <ul>
+                                    <% const
+                                        ingredients=recipe.RecipeIngredientParts.split(', ');
                        for (let i = 0; i < ingredients.length; i++) {
                          let ingredient = ingredients[i].replace(/"/g, '');
                          if (i === 0) {
@@ -106,33 +109,35 @@
                     <% const instructions=recipe.RecipeInstructions.replace(/\\n/g, '' ).replace(/^c\(/, '' ).replace(/\)$/, '' ).split(/", "/);
                            for (let i = 0; i < instructions.length; i++) {
                              let instruction = instructions[i].replace(/" /g, '' ); %>
-                        <li>
-                            <%= instruction %>
-                        </li>
-                        <% } %>
+                    <li>
+                        <%= instruction %>
+                    </li>
+                    <% } %>
                 </ol>
             </div>
         </div>
     </div>
     <% } %>
-    <script>
-        const modals = document.querySelectorAll(' .modal'); let modal; modals.forEach(modalElement => {
-            modal = modalElement;
+</body>
+</div>
+<%- include("templates/footer") %>
 
-            const closeBtn = modal.querySelector('.close');
+<script>
+    const modals = document.querySelectorAll(' .modal'); let modal; modals.forEach(modalElement => {
+        modal = modalElement;
 
-            closeBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
+        const closeBtn = modal.querySelector('.close');
 
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
         });
-    </script>
-    </body>
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
 
     </html>
-    <%- include("templates/footer") %>
