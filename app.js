@@ -531,6 +531,33 @@ app.post('/remove-from-pantry', async (req, res) => {
   }
 });
 
+app.post('/update-best-before-date', async (req, res) => {
+  const { username, foodName, bestBeforeDate } = req.body;
+
+  try {
+    // Retrieve user from the database
+    const user = await usersModel.findOne({ username: username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Update the best before date of the specified food item
+    for (let item of user.pantry) {
+      if (item.food === foodName) {
+        item.bestBeforeDate = bestBeforeDate;
+        break;
+      }
+    }
+
+    // Save updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Successfully updated best before date.' });
+  } catch (err) {
+    res.status(500).json({ message: 'An error occurred while updating best before date.', error: err });
+  }
+});
+
 
 app.use(express.static('public'));
 

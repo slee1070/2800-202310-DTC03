@@ -73,7 +73,20 @@
       <% for (var i = 0; i < pantryItems.length; i++) { %>
         <tr>
           <td><%= pantryItems[i].food %></td>
-          <td><%= pantryItems[i].bestBeforeDate %></td>
+          <td>
+            <% 
+              let bestBeforeDate = pantryItems[i].bestBeforeDate;
+              let formattedDate;
+              if (bestBeforeDate) {
+                let date = pantryItems[i].bestBeforeDate; 
+                let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                let day = date.getDate().toString().padStart(2, '0');
+                let year = date.getFullYear();
+                formattedDate = year + '-' + month + '-' + day;
+              }
+            %>
+            <input type="date" id="date-<%= pantryItems[i].food %>" value="<%= formattedDate %>" onchange="updateBestBeforeDate('<%= pantryItems[i].food %>', this)">
+          </td>
           <td>
             <button id="<% pantryItems[i].food %>" data-itemid="<%= pantryItems[i].food %>" class="btn modal-body custom-remove-button" onclick="toggleSelection(this)">
               <img src="/images/icon_remove.png" style="width:23px; height:auto">
@@ -162,12 +175,38 @@
     console.log(selectedItemsToRemove);
   }
 
+  function updateBestBeforeDate(foodName, dateInput) {
+    // Convert the selected date to the format MM-DD-YYYY
+    var dateParts = dateInput.value.split("-");
+    var formattedDate = dateParts[1] + '/' + dateParts[2] + '/' + dateParts[0];
+
+    // Send an AJAX request to the server to update the best before date
+    $.ajax({
+      url: '/update-best-before-date',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        username: username, 
+        foodName: foodName,
+        bestBeforeDate: formattedDate
+      }),
+      success: function(response) {
+        console.log('Successfully updated best before date');
+      },
+      error: function(error) {
+        console.log('Error updating best before date', error);
+      }
+    });
+  }
+
+
+
   function saveToPantry() {
-    let date = new Date(); // Current date
-    let formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + 
-                    date.getDate().toString().padStart(2, '0') + '/' + 
-                    date.getFullYear().toString();
-    console.log(formattedDate);
+    // let date = new Date(); // Current date
+    // let formattedDate = date.getFullYear().toString() + '-' +
+    //                     (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+    //                     date.getDate().toString().padStart(2, '0');
+    // console.log(formattedDate);
     console.log(username);
     console.log(selectedIngredients);
 
@@ -179,7 +218,7 @@
         username: username, 
         pantryItems: selectedIngredients.map((ingredient) => ({ 
           food: ingredient, 
-          bestBeforeDate: formattedDate, 
+          // bestBeforeDate: formattedDate, 
         }))
       }),
       success: function(response) {
