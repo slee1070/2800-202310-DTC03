@@ -6,6 +6,11 @@
         <meta charset="utf-8">
         <title>Recipes</title>
         <style>
+            .card img {
+                width: 100%;
+                height: auto;
+            }
+
             .center {
                 text-align: center;
             }
@@ -64,22 +69,45 @@
 
     <body>
         <h1 class="center">Recipes</h1>
+
+        <!-- Filter buttons -->
+        <div class="center">
+            <label>
+                <input type="checkbox" name="keywords" id="veganCheckbox" value="Vegan" onchange="filterRecipes()">
+                Vegan
+            </label>
+            <label>
+                <input type="checkbox" name="keywords" id="lactoseFreeCheckbox" value="Lactose Free"
+                    onchange="filterRecipes()">
+                Lactose Free
+            </label>
+            <label>
+                <input type="checkbox" name="keywords" id="yeastFreeCheckbox" value="Yeast Free"
+                    onchange="filterRecipes()">
+                Yeast Free
+            </label>
+            <label>
+                <input type="checkbox" name="keywords" id="nutFreeCheckbox" value="Nut Free" onchange="filterRecipes()">
+                Nut Free
+            </label>
+        </div>
+
         <% for (let recipe of recipes) { %>
-            <div class="card">
+            <div class="card" data-keywords="<%= recipe.Keywords %>">
                 <% const images=recipe.Images.split(', ');
-           const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');
-        %>
-        <img src="<%= firstImage %>" alt="<%= recipe.Name %>"> <br>
-        <h2 class="center">
-            <%= recipe.Name %>
-        </h2>
-        <!-- Button that triggers the modal -->
-       <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>').style.display='block'">More</button>
+               const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');
+            %>
+            <img src="<%= firstImage %>" alt="<%= recipe.Name %>"> <br>
+            <h2 class="center">
+                <%= recipe.Name %>
+            </h2>
+            <!-- Button that triggers the modal -->
+            <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe._id %>').style.display='block'">More</button>
                     <!-- Modal that displays the ingredients and instructions -->
-                    <div id="modal-<%= recipe.RecipeId %>" class="modal">
+                    <div id="modal-<%= recipe._id %>" class="modal">
                         <div class="modal-content">
                             <span class="close"
-                                onclick="document.getElementById('modal-<%= recipe.RecipeId %>').style.display='none'">&times;</span>
+                                onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
                             <h2>
                                 <%= recipe.Name %>
                             </h2>
@@ -87,38 +115,91 @@
                             <ul>
                                 <% const
                                     ingredients=recipe.RecipeIngredientParts.split(', ');
-                       for (let i = 0; i < ingredients.length; i++) {
-                         let ingredient = ingredients[i].replace(/"/g, '');
-                         if (i === 0) {
-                           // Remove the "c(" prefix from the first ingredient
-                           ingredient = ingredient.replace(/^c\(/, '');
-                         }
-                         if (i === ingredients.length - 1) {
-                           // Remove the ")" from the last ingredient
-                           ingredient = ingredient.replace(/\)$/, '');
-                         }
-                    %>
-                    <li><%= ingredient %></li>
-                    <% } %>
-                </ul>
-                <p><strong>Instructions:</strong></p>
-                <ol>
-                    <% const instructions=recipe.RecipeInstructions.replace(/\\n/g, '' ).replace(/^c\(/, '' ).replace(/\)$/, '' ).split(/", "/);
-                           for (let i = 0; i < instructions.length; i++) {
-                             let instruction = instructions[i].replace(/" /g, '' ); %>
-                        <li>
-                            <%= instruction %>
-                        </li>
+                           for (let i = 0; i < ingredients.length; i++) {
+                               let ingredient = ingredients[i].replace(/"/g, '');
+                               if (i === 0) {
+                                   // Remove the "c(" prefix from the first ingredient
+                                   ingredient = ingredient.replace(/^c\(/, '');
+                               }
+                               if (i === ingredients.length - 1) {
+                                   // Remove the ")" from the last ingredient
+                                   ingredient = ingredient.replace(/\)$/, '');
+                               }
+                        %>
+                        <li><%= ingredient %></li>
                         <% } %>
-                </ol>
+                    </ul>
+                    <p><strong>Instructions:</strong></p>
+                    <ol>
+                        <% const instructions = recipe.RecipeInstructions.replace(/\\n/g, '').replace(/^c\(/, '').replace(/\)$/, '').split(/", "/);
+                           for (let i = 0; i < instructions.length; i++) {
+                               let instruction = instructions[i].replace(/" /g, '');
+                        %>
+                        <li><%= instruction %></li>
+                        <% } %>
+                    </ol>
+                </div>
             </div>
         </div>
-    </div>
     <% } %>
-    <script>
-        const modals = document.querySelectorAll(' .modal'); let modal; modals.forEach(modalElement => {
-            modal = modalElement;
 
+    <script>
+        function filterRecipes() {
+            const veganCheckbox = document.getElementById("veganCheckbox");
+            const lactoseFreeCheckbox = document.getElementById("lactoseFreeCheckbox");
+            const yeastFreeCheckbox = document.getElementById("yeastFreeCheckbox");
+            const nutFreeCheckbox = document.getElementById("nutFreeCheckbox");
+            const cards = document.getElementsByClassName("card");
+
+            // Show all cards by default
+            Array.from(cards).forEach((card) => {
+                card.style.display = "block";
+            });
+
+            // Check if Vegan checkbox is selected
+            if (veganCheckbox.checked) {
+                Array.from(cards).forEach((card) => {
+                    const recipeKeywords = card.getAttribute("data-keywords");
+                    if (!recipeKeywords.includes("Vegan")) {
+                        card.style.display = "none";
+                    }
+                });
+            }
+
+            // Check if Lactose Free checkbox is selected
+            if (lactoseFreeCheckbox.checked) {
+                Array.from(cards).forEach((card) => {
+                    const recipeKeywords = card.getAttribute("data-keywords");
+                    if (!recipeKeywords.includes("Lactose Free")) {
+                        card.style.display = "none";
+                    }
+                });
+            }
+
+            // Check if Yeast Free checkbox is selected
+            if (yeastFreeCheckbox.checked) {
+                Array.from(cards).forEach((card) => {
+                    const recipeKeywords = card.getAttribute("data-keywords");
+                    if (recipeKeywords.includes("Yeast Breads")) {
+                        card.style.display = "none";
+                    }
+                });
+            }
+
+            // Check if Nut Free checkbox is selected
+            if (nutFreeCheckbox.checked) {
+                Array.from(cards).forEach((card) => {
+                    const recipeKeywords = card.getAttribute("data-keywords");
+                    if (recipeKeywords.includes("Nuts")) {
+                        card.style.display = "none";
+                    }
+                });
+            }
+        }
+
+
+        const modals = document.querySelectorAll(' .modal'); modals.forEach((modalElement) => {
+            const modal = modalElement;
             const closeBtn = modal.querySelector('.close');
 
             closeBtn.addEventListener('click', () => {
@@ -132,6 +213,7 @@
             });
         });
     </script>
+
     </body>
 
     </html>
