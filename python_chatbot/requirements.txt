@@ -1,0 +1,7 @@
+python-dotenv
+langchain
+llama-index
+openai
+pymongo
+Flask==2.0.1
+Flask-Cors==3.0.10
