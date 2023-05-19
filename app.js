@@ -544,9 +544,9 @@ app.get('/recipe', async (req, res) => {
   const user = await usersModel.findOne({
     username: req.session.loggedUsername,
   });
-  const userDietaryRestrictions = user ? user.dietaryRestrictions || [] : [];
-  console.log('User Dietary Restrictions:', userDietaryRestrictions);
-  res.render('recipe', { recipes, userDietaryRestrictions });
+  const userCuisinePreference = user ? user.cuisinePreference || [] : [];
+  console.log('User Dietary Restrictions:', userCuisinePreference);
+  res.render('recipe', { recipes, userCuisinePreference });
 });
 
 app.use(express.static('public'));

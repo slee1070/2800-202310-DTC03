@@ -5,24 +5,49 @@
     <!-- Filter buttons -->
     <div class="center">
         <label>
-            <input type="checkbox" name="keywords" id="veganCheckbox" value="Vegan" onchange="filterRecipes()" <% if
-                (userDietaryRestrictions.includes('Vegan')) { %>checked<% } %>>
-                Vegan
+            <input type="checkbox" name="keywords" id="europeanCheckbox" value="European" onchange="filterRecipes()" <%
+                if (userCuisinePreference.includes('European')) { %>checked<% } %>>
+                European
         </label>
         <label>
-            <input type="checkbox" name="keywords" id="lactoseFreeCheckbox" value="Lactose Free"
-                onchange="filterRecipes()" <% if (userDietaryRestrictions.includes('Lactose Free')) { %>checked<% } %>>
-                Lactose Free
+            <input type="checkbox" name="keywords" id="mexicanCheckbox" value="Mexican" onchange="filterRecipes()" <% if
+                (userCuisinePreference.includes('Mexican')) { %>checked<% } %>>
+                Mexican
         </label>
         <label>
-            <input type="checkbox" name="keywords" id="yeastFreeCheckbox" value="Yeast Breads"
-                onchange="filterRecipes()" <% if (userDietaryRestrictions.includes('Yeast Breads')) { %>checked<% } %>>
-                Yeast Free
+            <input type="checkbox" name="keywords" id="koreanCheckbox" value="Korean" onchange="filterRecipes()" <% if
+                (userCuisinePreference.includes('Korean')) { %>checked<% } %>>
+                Korean
         </label>
         <label>
-            <input type="checkbox" name="keywords" id="nutFreeCheckbox" value="Nuts" onchange="filterRecipes()" <% if
-                (userDietaryRestrictions.includes('Nuts')) { %>checked<% } %>>
-                Nut Free
+            <input type="checkbox" name="keywords" id="chineseCheckbox" value="Chinese" onchange="filterRecipes()" <% if
+                (userCuisinePreference.includes('Chinese')) { %>checked<% } %>>
+                Chinese
+        </label>
+        <label>
+            <input type="checkbox" name="keywords" id="japaneseCheckbox" value="Japanese" onchange="filterRecipes()" <%
+                if (userCuisinePreference.includes('Japanese')) { %>checked<% } %>>
+                Japanese
+        </label>
+        <label>
+            <input type="checkbox" name="keywords" id="indianCheckbox" value="Indian" onchange="filterRecipes()" <% if
+                (userCuisinePreference.includes('Indian')) { %>checked<% } %>>
+                Indian
+        </label>
+        <label>
+            <input type="checkbox" name="keywords" id="greekCheckbox" value="Greek" onchange="filterRecipes()" <% if
+                (userCuisinePreference.includes('Greek')) { %>checked<% } %>>
+                Greek
+        </label>
+        <label>
+            <input type="checkbox" name="keywords" id="brazilianCheckbox" value="Brazilian" onchange="filterRecipes()"
+                <% if (userCuisinePreference.includes('Brazilian')) { %>checked<% } %>>
+                Brazilian
+        </label>
+        <label>
+            <input type="checkbox" name="keywords" id="thaiCheckbox" value="Thai" onchange="filterRecipes()" <% if
+                (userCuisinePreference.includes('Thai')) { %>checked<% } %>>
+                Thai
         </label>
     </div>
 
@@ -37,18 +62,17 @@
         <h2 class="center"><%= recipe.Name %></h2>
         <!-- Button that triggers the modal -->
         <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe._id %>').style.display='block'">More</button>
-            <!-- Modal that displays the ingredients and instructions -->
-                <div id="modal-<%= recipe._id %>" class="modal">
-                    <div class="modal-content">
-                        <span class="close"
-                            onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
-                        <h2>
-                            <%= recipe.Name %>
-                        </h2>
-                        <p><strong>Ingredients:</strong></p>
-                        <ul>
-                            <% const
-                                ingredients=recipe.RecipeIngredientParts.split(', ');
+                        <!-- Modal that displays the ingredients and instructions -->
+                        <div id="modal-<%= recipe._id %>" class="modal">
+                            <div class="modal-content">
+                                <span class="close"
+                                    onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
+                                <h2>
+                                    <%= recipe.Name %>
+                                </h2>
+                                <p><strong>Ingredients:</strong></p>
+                                <ul>
+                                    <% const ingredients=recipe.RecipeIngredientParts.split(', ');
         for (let i = 0; i < ingredients.length; i++) {
             let ingredient = ingredients[i].replace(/"/g, '');
             if (i === 0) {
