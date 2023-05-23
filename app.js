@@ -238,6 +238,11 @@ app.post('/login', async (req, res) => {
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
       req.session.save();
+
+      const checkDatesResult = await checkDates(result);
+      req.session.hasOutdatedItems = checkDatesResult.hasOutdatedItems;
+      req.session.outdatedItemsMessage = checkDatesResult.message
+      // Redirect the user to the home page
       res.redirect('/');
     } else {
       res.render('login_error', {});
@@ -246,6 +251,25 @@ app.post('/login', async (req, res) => {
     console.log(error);
   }
 });
+
+async function checkDates(currentUser) {
+  console.log(currentUser);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (currentUser.pantry && Array.isArray(currentUser.pantry)) {
+    const expiredItems = currentUser.pantry.filter(item => {
+      const bestBeforeDate = new Date(item.bestBeforeDate);
+      bestBeforeDate.setHours(0, 0, 0, 0);
+      console.log(bestBeforeDate < today)
+      return bestBeforeDate < today;
+    });
+
+    return { hasExpiredItems: expiredItems.length > 0, message: "You have outdated items in your pantry!" };
+  } else {
+    return { hasExpiredItems: false, message: "" };
+  }
+}
 
 app.get('/username_retreival', (req, res) => {
   res.render('username_retreival', { session: req.session });
