@@ -18,12 +18,6 @@ let ejs = require('ejs');
 // 2 - set the view engine to ejs
 app.set('view engine', 'ejs');
 
-const navLinks = [
-  { label: 'Home', path: '/' },
-  { label: 'Sign Up', path: '/signup' },
-  { label: 'Login', path: '/login' },
-];
-
 const dotenv = require('dotenv');
 const { error } = require('console');
 dotenv.config();
@@ -52,7 +46,6 @@ app.use(express.json());
 
 app.use('/', (req, res, next) => {
   res.locals.session = req.session;
-  app.locals.navLinks = navLinks;
   app.locals.currentURL = url.parse(req.url).pathname;
   next();
 });
@@ -237,8 +230,9 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
-      req.session.save();
-      res.redirect('/');
+      req.session.save(() => {
+        res.redirect('/');
+      });
     } else {
       res.render('login_error', {});
     }
