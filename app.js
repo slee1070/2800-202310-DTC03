@@ -504,22 +504,11 @@ app.post('/preference', async (req, res) => {
   }
 });
 
-
 app.get('/preference', (req, res) => {
   res.render('preference', {session: req.session, disableFields: true});
 });
 
-// app.get('/recipe', async (req, res) => {
-//   const collection = client.db('PantryMaster').collection('recipeTest2');
-//   const cursor = collection.find();
-//   const recipes = [];
-//   await cursor.forEach(recipe => {
-//     recipes.push(recipe);
-//   });
-//   res.render('recipe', { recipes });
-// });
-
-app.get('/recipe2', async (req, res) => {
+app.get('/recipe', async (req, res) => {
   const recipeCollection = client.db('PantryMaster').collection('recipeTest2');
   const query = {};
   // Check if query parameter for keywords exists
@@ -538,7 +527,7 @@ app.get('/recipe2', async (req, res) => {
   });
   const userCuisinePreference = user ? user.cuisinePreference || [] : [];
   console.log('User Cuisine Preference:', userCuisinePreference);
-  res.render('recipe2', { recipes, userCuisinePreference });
+  res.render('recipe', { recipes, userCuisinePreference });
 });
 
 
@@ -658,83 +647,6 @@ app.post('/chat', async (req, res) => {
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
 });
-
-
-//populate all recipes
-app.get('/all_recipe', async (req, res) => {
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  const cursor = collection.find();
-  const recipes = [];
-  await cursor.forEach(recipe => {
-    recipes.push(recipe);
-  });
-  res.render('recipe', { recipes });
-});
-
-/*//Run both cuisinePreference and dietaryRestriction filters*/
-app.get('/recipe', async (req, res) => {
-  const userEmail = req.session.loggedEmail;
-  const user = await usersModel.findOne({ email: userEmail });
-  const cuisinePreference = user.cuisinePreference;
-  const dietaryRestrictions = user.dietaryRestrictions;
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  let recipes;
-if (cuisinePreference) {
-  recipes = await collection.find({
-    Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
-  }).toArray();
-} else {
-  recipes = await recipeTest2.find().toArray();
-}
-  if (dietaryRestrictions) {
-    const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
-    recipes = recipes.filter(recipe => {
-      return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
-        || !recipe.Keywords.match(/Yeast Breads/i)
-        && !recipe.Keywords.match(/Nuts/i);
-    });
-  }
-  res.render('recipe_cuisine', { recipes });
-});
-
-// /*Run cuisinePreference filter only */
-// app.get('/recipe', async (req, res) => {
-//   const userEmail = req.session.loggedEmail;
-//   const user = await usersModel.findOne({ email: userEmail });
-//   const cuisinePreference = user.cuisinePreference;
-//   const collection = client.db('PantryMaster').collection('recipeTest2');
-//   let recipes;
-//   if (cuisinePreference) {
-//     recipes = await collection.find({
-//       Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
-//     }).toArray();
-//   } else {
-//     recipes = await recipeTest2.find().toArray();
-//   }
-//   console.log('Recipes:', recipes);
-//   res.render('recipe_cuisine', { recipes });
-// });
-
-
-// // /*Run dietaryRestriction filter only */
-// app.get('/recipe_cuisine', async (req, res) => {
-//   const userEmail = req.session.loggedEmail;
-//   const user = await usersModel.findOne({ email: userEmail });
-//   const dietaryRestrictions = user.dietaryRestrictions;
-//   const collection = client.db('PantryMaster').collection('recipeTest2');
-//   let recipes = await collection.find().toArray();
-//   if (dietaryRestrictions) {
-//     const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
-//     recipes = recipes.filter(recipe => {
-//       return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
-//         || !recipe.Keywords.match(/Yeast Breads/i)
-//         && !recipe.Keywords.match(/Nuts/i);
-//     });
-//   }
-//   console.log('Recipes:', recipes);
-//   res.render('recipe_cuisine', { recipes });
-// });
-
 
 app.use(express.static('public'));
 
