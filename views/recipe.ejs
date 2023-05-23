@@ -12,7 +12,7 @@
     }
 
     .card {
-      border: 1px solid #ccc;
+      background-color: bisque;
       border-radius: 5px;
       padding: 10px;
       margin-bottom: 10px;
@@ -45,6 +45,7 @@
       padding: 20px;
       border: 1px solid #888;
       width: 80%;
+      text-align: left;
     }
 
     .close {
@@ -60,6 +61,76 @@
       text-decoration: none;
       cursor: pointer;
     }
+
+
+    .recipe-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .recipe-image-container {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .recipe-image {
+      width: 100%;
+      height: auto;
+    }
+
+    .more-button {
+      width: 100%;
+    }
+
+    .pagination {
+      text-align: center;
+    }
+
+    .current-page {
+      font-weight: bold;
+      color: red;
+    }
+
+    /* Hide the previous and next buttons when there is no previous or next page */
+    .pagination .btn-disabled {
+      display: none;
+    }
+
+    .numberedButtons {
+            color: black;
+           width: 60px;
+      height: 40px;
+      font-size: 20px;
+      padding: 0;
+      margin: 0 5px;
+    }
+
+    .numberedButtons:hover,
+    .numberedButtons.active {
+      background-color: #ffffff;
+      }
+
+
+    /* Responsive styles */
+    /* @media (min-width: 576px) {
+        .recipe-card {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .recipe-image-container {
+          width: 40%;
+          margin-right: 10px;
+        }
+
+        .more-button {
+          width: 30%;
+        } */
+    /* } */
   </style>
   <h1 class="center">Recipes</h1>
 
@@ -110,30 +181,36 @@
         (userCuisinePreference.includes('Thai')) { %>checked<% } %>>
         Thai
     </label>
-  </div>
 
-  <div id="recipeCards container">
-    <% for (let recipe of recipes) { %>
-      <div class="card" data-keywords="<%= recipe.Keywords %>">
-        <% if (recipe.Images) { %>
-          <% const images=recipe.Images.split(', ');
+
+    <div id="recipeCards container">
+      <% for (let recipe of recipes) { %>
+        <div class="card" data-keywords="<%= recipe.Keywords %>">
+          <% if (recipe.Images) { %>
+            <% const images=recipe.Images.split(', ');
                     const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');%>
-        <img src="<%= firstImage %>" alt="<%= recipe.Name %>" class="recipe-image"> <br>
+    <div class="recipe-card">
+      <div class="recipe-image-container">
+        <img src="<%= firstImage %>" alt="<%= recipe.Name %>" class="recipe-image">
+      </div>
+      <br>
+      <h2 class="center"><%= recipe.Name %></h2>
+      <!-- Button that triggers the modal -->
+      <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe._id %>').style.display='block'">More</button>
+        </div>
         <% } %>
-        <h2 class="center"><%= recipe.Name %></h2>
-        <!-- Button that triggers the modal -->
-        <button class="w-100 btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe._id %>').style.display='block'">More</button>
-            <!-- Modal that displays the ingredients and instructions -->
-            <div id="modal-<%= recipe._id %>" class="modal">
-              <div class="modal-content">
-                <span class="close"
-                  onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
-                <h2>
-                  <%= recipe.Name %>
-                </h2>
-                <p><strong>Ingredients:</strong></p>
-                <ul>
-                  <% const ingredients=recipe.RecipeIngredientParts.split(', ');
+
+          <!-- Modal that displays the ingredients and instructions -->
+          <div id="modal-<%= recipe._id %>" class="modal">
+            <div class="modal-content">
+              <span class="close"
+                onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
+              <h2>
+                <%= recipe.Name %>
+              </h2>
+              <p><strong>Ingredients:</strong></p>
+              <ul>
+                <% const ingredients=recipe.RecipeIngredientParts.split(', ');
         for (let i = 0; i < ingredients.length; i++) {
             let ingredient = ingredients[i].replace(/"/g, '');
             if (i === 0) {
@@ -160,6 +237,32 @@
         </div>
     </div>
 <% } %>
+</div>
+<br>
+<div class="pagination">
+  <% if (currentPage> 1) { %>
+    <a href="/recipe?page=<%= currentPage - 1 %>" class="btn btn-warning page ml-1 numberedButtons">Prev</a>
+    <% } %>
+
+      <% const startPage=Math.max(1, currentPage - 2); const endPage=Math.min(totalPages, startPage + 4); for (let
+        i=startPage; i <=endPage; i++) { %>
+        <% if (i===currentPage) { %>
+          <button class="btn btn-warning page ml-1 numberedButtons active" value="<%= i %>">
+            <%= i %>
+          </button>
+          <% } else { %>
+            <a href="/recipe?page=<%= i %>" class="btn btn-warning page ml-1 numberedButtons" value="<%= i %>">
+              <%= i %>
+            </a>
+            <% } %>
+              <% } %>
+
+                <% if (currentPage < totalPages) { %>
+                  <a href="/recipe?page=<%= currentPage + 1 %>" class="btn btn-warning page ml-1 numberedButtons">Next</a>
+                  <% } %>
+</div>
+
+
 </div>
 <script src="js/recipe2.js"></script>
 <%- include("templates/footer") %>
