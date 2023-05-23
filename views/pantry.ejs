@@ -52,7 +52,17 @@
   }
 </style>
 
-<%- include("templates/header") %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <title>Document</title>
+</head>
+<body>
+  <%- include("templates/header") %>
 <div class="d-flex align-items-center">
   <h2 class="mt-4 mb-3 flex-grow-1 custom-pad">My Pantry</h2>
   <h6 class="mt-4 mb-3">Add items</h6>
@@ -82,10 +92,10 @@
                 let month = (date.getMonth() + 1).toString().padStart(2, '0');
                 let day = date.getDate().toString().padStart(2, '0');
                 let year = date.getFullYear();
-                formattedDate = year + '-' + month + '-' + day;
+                formattedDate = month + '-' + day + '-' + year;
               }
             %>
-            <input type="date" id="date-<%= pantryItems[i].food %>" value="<%= formattedDate %>" onchange="updateBestBeforeDate('<%= pantryItems[i].food %>', this)">
+            <input id="date-<%= pantryItems[i].food %>" value="<%= formattedDate %>" onchange="updateBestBeforeDate('<%= pantryItems[i].food %>', this)">
           </td>
           <td>
             <button id="<% pantryItems[i].food %>" data-itemid="<%= pantryItems[i].food %>" class="btn modal-body custom-remove-button" onclick="toggleSelection(this)">
@@ -141,7 +151,9 @@
   </div>
 </div>
 
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script>
   let username = '<%= username %>'
@@ -174,6 +186,18 @@
     }
     console.log(selectedItemsToRemove);
   }
+
+  $(function() {
+    $("input[id^='date-']").datepicker({
+        minDate: 0,
+        dateFormat: 'mm/dd/yy',
+        onSelect: function(dateText) {
+            updateBestBeforeDate(this.id.substring(5), { value: dateText }); // Call update function with selected date
+        }
+      });
+  });
+
+
 
   function updateBestBeforeDate(foodName, dateInput) {
     // Convert the selected date to the format MM-DD-YYYY
@@ -274,3 +298,5 @@
 </script>
 
 <%- include("templates/footer") %>
+</body>
+</html>
