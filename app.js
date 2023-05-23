@@ -509,25 +509,40 @@ app.get('/preference', (req, res) => {
 });
 
 app.get('/recipe', async (req, res) => {
-  const recipeCollection = client.db('PantryMaster').collection('recipeTest2');
+  const recipeCollection = client.db('PantryMaster').collection('recipesWithKeywords');
   const query = {};
+
   // Check if query parameter for keywords exists
   if (req.query.keywords) {
     const keywords = req.query.keywords.split(',');
     query.Keywords = { $all: keywords };
   }
-  const cursor = recipeCollection.find(query);
+
+  // Pagination variables
+  const page = parseInt(req.query.page) || 1;
+  const recipesPerPage = 10;
+  const skip = (page - 1) * recipesPerPage;
+
+  const cursor = recipeCollection.find(query).skip(skip).limit(recipesPerPage);
   const recipes = [];
   await cursor.forEach((recipe) => {
     recipes.push(recipe);
   });
+
   // Fetch the user's dietary restrictions from the 'users' collection
   const user = await usersModel.findOne({
     username: req.session.loggedUsername,
   });
   const userCuisinePreference = user ? user.cuisinePreference || [] : [];
+
   console.log('User Cuisine Preference:', userCuisinePreference);
-  res.render('recipe', { recipes, userCuisinePreference });
+
+  res.render('recipe', {
+    recipes,
+    userCuisinePreference,
+    currentPage: page,
+    totalPages: Math.ceil(await recipeCollection.countDocuments(query) / recipesPerPage),
+  });
 });
 
 
