@@ -12,6 +12,7 @@ const usersSchema = new mongoose.Schema({
   password: String,
   securityQuestion: String,
   securityAnswer: String,
+  persona: String,
   pantry: [pantryItemSchema],
   cuisinePreference: Array,
   dietaryRestrictions: Array,
