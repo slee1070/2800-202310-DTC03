@@ -516,6 +516,7 @@ app.post('/preference', async (req, res) => {
 });
 
 app.get('/recipe', async (req, res) => {
+  try {
   const userEmail = req.session.loggedEmail;
   const user = await usersModel.findOne({ email: userEmail });
   const cuisinePreference = user.cuisinePreference;
@@ -550,12 +551,11 @@ app.get('/recipe', async (req, res) => {
 
   res.render('recipe', {paginatedRecipes, currentPage: page, totalPages
   });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('An error occurred while retrieving recipes.');
+  }
 });
-
-
-
-
-
 
 
 app.use(express.static('public'));
