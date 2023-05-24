@@ -187,17 +187,37 @@ app.post('/preference_dietary_restriction', async (req, res) => {
   try {
     const user = await usersModel.findOne({ _id: userId });
     if (user) {
-      // Update user's cuisine preference
-      user.dietaryRestrictions = req.body.dietaryRestrictions;
+      // Update user's dietary restrictions
+      user.dietaryRestrictions = dietaryRestrictions;
       await user.save();
       req.session.user = user;
     }
     console.log("user's dietary restrictions", user.dietaryRestrictions);
+    res.render('choose_persona', { userId: userId, session: req.session });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post('/choose_persona', async (req, res) => {
+  const userId = req.body.userId;
+  const persona = req.body.persona;
+
+  try {
+    const user = await usersModel.findOne({ _id: userId });
+    if (user) {
+      // Update user's persona preference in the database
+      user.persona = persona;
+      await user.save();
+      req.session.user = user;
+    }
+    console.log("user's persona preference: ", user.persona);
     res.redirect('/');
   } catch (error) {
     console.log(error);
   }
 });
+
 
 app.get('/login', (req, res) => {
   res.render('login', {session: req.session});
@@ -481,24 +501,28 @@ app.post('/preference', async (req, res) => {
   const userId = req.body.userId;
   const cuisinePreference = req.body.cuisinePreference;
   const dietaryRestrictions = req.body.dietaryRestrictions;
+  const persona = req.body.persona; 
 
   try {
     const user = await usersModel.findOne({ _id: userId });
     if (user) {
-      // Update user's cuisine preference and dietary restrictions
+      // Update user's persona, cuisine preference, and dietary restrictions
       user.cuisinePreference = cuisinePreference;
       user.dietaryRestrictions = dietaryRestrictions;
+      user.persona = persona; 
       await user.save();
       req.session.user = user;
     }
     console.log(user);
     console.log("User's cuisine preference:", user.cuisinePreference);
     console.log("User's dietary restrictions:", user.dietaryRestrictions);
+    console.log("User's persona:", user.persona); 
     res.render('preference', {
       session: req.session,
       user: user,
-      cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
-      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'] });
+      cuisineOptions: [ 'European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese' ],
+      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'],
+    });
   } catch (error) {
     console.log(error);
   }
