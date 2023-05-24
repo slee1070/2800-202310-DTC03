@@ -92,13 +92,15 @@
                                         <label for="featurePreference">
                                             <h4>Cooking Assistant</h4>
                                         </label>
-                                        <select class="form-select" name="AIPersona" data-placeholder="Click to choose"
+                                        <select class="form-select" name="persona" data-placeholder="Click to choose"
                                             disabled>
                                             <!-- Add disabled attribute to select element -->
-                                            <option value="option1">AI Option 1</option>
-                                            <option value="option2">AI Option 2</option>
-                                            <option value="option3">AI Option 3</option>
+                                            <option value="Whiskers" <%=(user && user.persona==='Whiskers') ? 'selected' : '' %>>Whiskers</option>
+                                            <option value="Remy" <%=(user && user.persona==='Remy') ? 'selected' : '' %>>Remy</option>
+                                            <option value="Chef" <%=(user && user.persona==='Chef') ? 'selected' : '' %>>Chef</option>
+                                            <option value="Grandma" <%=(user && user.persona==='Grandma') ? 'selected' : '' %>>Grandma</option>
                                         </select>
+
                                     </div>
                                 </div>
                             </div>
@@ -121,8 +123,9 @@
             checkboxes.forEach(function (checkbox) {
                 checkbox.removeAttribute('disabled');
             });
-            document.querySelector('select[name="AIPersona"]').removeAttribute('disabled');
+            document.querySelector('select[name="persona"]').removeAttribute('disabled');
         });
     </script>
+
 
     <%- include("templates/footer") %>
