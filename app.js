@@ -516,54 +516,59 @@ app.post('/preference', async (req, res) => {
 });
 
 app.get('/recipe', async (req, res) => {
-  const recipeCollection = client.db('PantryMaster').collection('recipesWithKeywords');
+  try {
+    const recipeCollection = client.db('PantryMaster').collection('recipesWithKeywords');
 
-  // Fetch the user's dietary restrictions from the 'users' collection
-  const user = await usersModel.findOne({ email: req.session.loggedEmail });
-  const dietaryRestrictions = user ? user.dietaryRestrictions || [] : [];
+    // Fetch the user's dietary restrictions from the 'users' collection
+    const user = await usersModel.findOne({ email: req.session.loggedEmail });
+    const dietaryRestrictions = user ? user.dietaryRestrictions || [] : [];
 
-  // Check if query parameter for keywords exists
-  const query = {};
-  if (req.query.keywords) {
-    const keywords = req.query.keywords.split(',');
-    query.Keywords = { $all: keywords };
+    // Check if query parameter for keywords exists
+    const query = {};
+    if (req.query.keywords) {
+      const keywords = req.query.keywords.split(',');
+      query.Keywords = { $all: keywords };
+    }
+
+    // Apply dietary restrictions filter
+    if (dietaryRestrictions.length > 0) {
+      const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
+      query.$or = [
+        { Keywords: { $in: dietaryRestrictionsRegex } },
+        { Keywords: { $nin: [/Yeast Breads/i, /Nuts/i] } }
+        // recipe.Keywords.match(/Vegan/i) &&
+        // !recipe.Keywords.match(/Lactose Free/i)
+      ];
+    }
+
+    // Pagination variables
+    const page = parseInt(req.query.page) || 1;
+    const recipesPerPage = 10;
+    const skip = (page - 1) * recipesPerPage;
+
+    const totalRecipesCount = await recipeCollection.countDocuments(query);
+    const totalPages = Math.ceil(totalRecipesCount / recipesPerPage);
+
+    let recipes = await recipeCollection.find(query)
+      .skip(skip)
+      .limit(recipesPerPage)
+      .toArray();
+
+    // Fetch the user's cuisine preference from the 'users' collection
+    const userCuisinePreference = user ? user.cuisinePreference || [] : [];
+    console.log('User Cuisine Preference:', userCuisinePreference);
+
+    res.render('recipe', {
+      recipes,
+      userCuisinePreference,
+      currentPage: page,
+      totalPages,
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('An error occurred while retrieving recipes.');
   }
-
-  let recipes = await recipeCollection.find(query).toArray();
-
-  // Apply dietary restrictions filter
-  if (dietaryRestrictions.length > 0) {
-  const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
-  recipes = recipes.filter(recipe => {
-    return (
-      dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword)) ||
-      !recipe.Keywords.match(/Yeast Breads/i) &&
-      !recipe.Keywords.match(/Nuts/i) 
-      // recipe.Keywords.match(/Vegan/i) &&
-      // !recipe.Keywords.match(/Lactose Free/i)
-    );
-  });
-}
-
-  // Pagination variables
-  const page = parseInt(req.query.page) || 1;
-  const recipesPerPage = 10;
-  const skip = (page - 1) * recipesPerPage;
-
-  const paginatedRecipes = recipes.slice(skip, skip + recipesPerPage);
-
-  // Fetch the user's cuisine preference from the 'users' collection
-  const userCuisinePreference = user ? user.cuisinePreference || [] : [];
-  console.log('User Cuisine Preference:', userCuisinePreference);
-
-  res.render('recipe', {
-    recipes: paginatedRecipes,
-    userCuisinePreference,
-    currentPage: page,
-    totalPages: Math.ceil(recipes.length / recipesPerPage),
-  });
 });
-
 
 app.use(express.static('public'));
 app.get('/pantry', async (req, res) => {
