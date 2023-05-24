@@ -461,6 +461,11 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
+app.get('/aboutus', (req, res) => {
+  const user = req.session.user;
+  res.render('about_us', { session: req.session });
+});
+
 app.get('/preference', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
