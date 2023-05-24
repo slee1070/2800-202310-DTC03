@@ -92,12 +92,13 @@
                                         <label for="featurePreference">
                                             <h4>Cooking Assistant</h4>
                                         </label>
-                                        <select class="form-select" name="AIPersona" data-placeholder="Click to choose"
-                                            disabled>
-                                            <!-- Add disabled attribute to select element -->
-                                            <option value="option1">AI Option 1</option>
-                                            <option value="option2">AI Option 2</option>
-                                            <option value="option3">AI Option 3</option>
+                                        <select class="form-select" name="persona" data-placeholder="Click to choose">
+                                        <% persona.forEach(function(option) { %>
+                                            <option value="<%= option %>" <% if (user && user.persona === option) 
+                                                { %>selected<% } %>>
+                                            <%= option %>
+                                            </option>
+                                        <% }); %>
                                         </select>
                                     </div>
                                 </div>
@@ -116,13 +117,17 @@
             // remove the disabled attribute and enable Save button
             document.getElementById('save').removeAttribute('disabled');
 
+            // Disable the Edit button
+            this.setAttribute('disabled', 'disabled');
+
             // Enable all checkboxes and dropdown elements to allow editing
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(function (checkbox) {
                 checkbox.removeAttribute('disabled');
             });
-            document.querySelector('select[name="AIPersona"]').removeAttribute('disabled');
+            document.querySelector('select[name="persona"]').removeAttribute('disabled');
         });
     </script>
+    
 
     <%- include("templates/footer") %>
