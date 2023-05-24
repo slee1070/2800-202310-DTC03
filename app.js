@@ -504,44 +504,52 @@ app.post('/preference', async (req, res) => {
   }
 });
 
-app.get('/preference', (req, res) => {
-  res.render('preference', {session: req.session, disableFields: true});
-});
-
 app.get('/recipe', async (req, res) => {
   const recipeCollection = client.db('PantryMaster').collection('recipesWithKeywords');
-  const query = {};
+
+  // Fetch the user's dietary restrictions from the 'users' collection
+  const user = await usersModel.findOne({ email: req.session.loggedEmail });
+  const dietaryRestrictions = user ? user.dietaryRestrictions || [] : [];
 
   // Check if query parameter for keywords exists
+  const query = {};
   if (req.query.keywords) {
     const keywords = req.query.keywords.split(',');
     query.Keywords = { $all: keywords };
   }
+
+  let recipes = await recipeCollection.find(query).toArray();
+
+  // Apply dietary restrictions filter
+  if (dietaryRestrictions.length > 0) {
+  const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
+  recipes = recipes.filter(recipe => {
+    return (
+      dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword)) ||
+      !recipe.Keywords.match(/Yeast Breads/i) &&
+      !recipe.Keywords.match(/Nuts/i) 
+      // recipe.Keywords.match(/Vegan/i) &&
+      // !recipe.Keywords.match(/Lactose Free/i)
+    );
+  });
+}
 
   // Pagination variables
   const page = parseInt(req.query.page) || 1;
   const recipesPerPage = 10;
   const skip = (page - 1) * recipesPerPage;
 
-  const cursor = recipeCollection.find(query).skip(skip).limit(recipesPerPage);
-  const recipes = [];
-  await cursor.forEach((recipe) => {
-    recipes.push(recipe);
-  });
+  const paginatedRecipes = recipes.slice(skip, skip + recipesPerPage);
 
-  // Fetch the user's dietary restrictions from the 'users' collection
-  const user = await usersModel.findOne({
-    username: req.session.loggedUsername,
-  });
+  // Fetch the user's cuisine preference from the 'users' collection
   const userCuisinePreference = user ? user.cuisinePreference || [] : [];
-
   console.log('User Cuisine Preference:', userCuisinePreference);
 
   res.render('recipe', {
-    recipes,
+    recipes: paginatedRecipes,
     userCuisinePreference,
     currentPage: page,
-    totalPages: Math.ceil(await recipeCollection.countDocuments(query) / recipesPerPage),
+    totalPages: Math.ceil(recipes.length / recipesPerPage),
   });
 });
 
