@@ -15,6 +15,7 @@ const usersSchema = new mongoose.Schema({
   pantry: [pantryItemSchema],
   cuisinePreference: Array,
   dietaryRestrictions: Array,
+  persona: String,
   type: {
     type: String,
     default: 'user'

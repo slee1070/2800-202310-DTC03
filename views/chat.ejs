@@ -2,7 +2,16 @@
 <link rel="stylesheet" href="/style/chatbot.css">
 
 <div class="container">
-  <h1 class="mt-3 chatbot-title">Chef's Chatroom🧑‍🍳</h1>
+    <div class="chatbot-header">
+        <% if (persona) { %>
+            <h1 class="mt-3 chatbot-title">
+              <%= persona %>'s Kitchen
+              <img class="profile-image" src="/images/<%= encodeURIComponent(persona) %>.png" alt="🧑‍🍳">
+            </h1>
+        <% } else { %>
+          <h1 class="mt-3 chatbot-title">Chef's Kitchen🧑‍🍳</h1>
+        <% } %>
+      </div>
   <pre id="chat-container" class="mt-3 resizeable">
       <div id="chat-log"></div>
   </pre>
@@ -16,9 +25,18 @@
   <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'Who are you?';">Who are you?</button>
   <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'What\'s in my pantry?';">What's in my pantry?</button>
   <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'What can I cook?';">What can I cook?</button>
-  </div>
+  <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'I want recipes outside of my pantry';">I want recipes outside of my pantry</button>
+  <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'Give me vegan recipes';">Give me vegan recipes</button>
+  <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'Tell me a joke';">Tell me a joke</button>
 </div>
-
+</div>
+<% if (persona) { %>
+    <script>
+       let persona = '<%= persona %>'            
+    </script>
+<% } %>
 <script src="/js/chatbot_script.js"></script>
 
 <%- include("templates/footer") %>
+
+
