@@ -467,12 +467,14 @@ app.get('/preference', async (req, res) => {
   } else {
     const user = await usersModel.findOne({ username: req.session.loggedUsername });
     const cuisineOptions = ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'];
-    const dietaryOptions = ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'];
+    const dietaryOptions = ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads',];
+    const persona = ["Whisker", "Grandma", "Chef Ramsay", "Remy"]
     res.render('preference', {
       session: req.session,
       user: user,
       cuisineOptions: cuisineOptions,
       dietaryOptions: dietaryOptions,
+      persona: persona
     });
   }
 });
@@ -481,6 +483,7 @@ app.post('/preference', async (req, res) => {
   const userId = req.body.userId;
   const cuisinePreference = req.body.cuisinePreference;
   const dietaryRestrictions = req.body.dietaryRestrictions;
+  const updatedPersona = req.body.persona;
 
   try {
     const user = await usersModel.findOne({ _id: userId });
@@ -488,17 +491,20 @@ app.post('/preference', async (req, res) => {
       // Update user's cuisine preference and dietary restrictions
       user.cuisinePreference = cuisinePreference;
       user.dietaryRestrictions = dietaryRestrictions;
+      user.persona = updatedPersona;
       await user.save();
       req.session.user = user;
     }
     console.log(user);
     console.log("User's cuisine preference:", user.cuisinePreference);
     console.log("User's dietary restrictions:", user.dietaryRestrictions);
+    console.log("User's persona:", user.persona);
     res.render('preference', {
       session: req.session,
       user: user,
       cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
-      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'] });
+      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'],
+      persona: ["Whisker", "Grandma", "Chef Ramsay", "Remy"] });
   } catch (error) {
     console.log(error);
   }
@@ -625,7 +631,9 @@ app.get('/chat', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
   } else {
-      res.render('chat');
+      // res.render('chat', {persona: "Whisker"});
+      const user = await usersModel.findOne({ username: req.session.loggedUsername });
+      res.render('chat', {persona: user.persona})
   }
 });
 
@@ -639,10 +647,12 @@ app.post('/chat', async (req, res) => {
     foodList.push(items.food);
   }
   const query = `I have the following items in my pantry: ${foodList.toString()}.  ${req.body.query}`;
+  const persona = req.body.persona;
   console.log(query);
-  res.send(await chatbot(query))
+  res.send(await chatbot(persona, query))
 
 });
+
 
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
