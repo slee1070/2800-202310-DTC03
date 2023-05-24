@@ -1,0 +1,143 @@
+<%- include("templates/header") %>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    .btn {
+      width: 50%
+    }
+
+    section {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      justify-items: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .tile {
+      height: 200px;
+      width: 200px;
+      position: relative;
+    }
+
+    input[type="radio"] {
+      -webkit-appearance: none;
+      position: relative;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: #ffffff;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      outline: none;
+      box-shadow: 15px 15px 25px rgba(2, 28, 53, 0.05);
+    }
+
+    input[type="radio"]:after {
+      position: absolute;
+      content: "\f111";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 400;
+      font-size: 15px;
+      top: 10px;
+      left: 10px;
+      color: #e2e6f3;
+    }
+
+    input[type="radio"]:checked {
+      border: 2px solid #84c9b2;
+    }
+
+    input[type="radio"]:checked:after {
+      font-weight: 900;
+      content: "\f058";
+      color: #84c9b2;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      height: 80%;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      cursor: pointer;
+    }
+
+    label h6 {
+      font-family: "Poppins", sans-serif;
+      font-size: 15px;
+      color: black;
+      font-weight: 400;
+    }
+
+    /* mobile screen */
+    @media (max-width: 768px) {
+      .tile {
+        height: 130px;
+        width: 110px;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <h2 class="text-center mt-4">Who do you want to talk with?</h2>
+
+  <!-- dietary restriction buttons go here -->
+  <form id="choosePersonaForm" action="choose_persona" method="post">
+    <input type="hidden" name="userId" value="<%= userId %>">
+    <section>
+      <div class="tile">
+        <input type="radio" name="persona" id="Whiskers" value="Whiskers" class="radio" checked>
+        <label for="Whiskers">
+          <img src="images/user_preference/persona_cat.png" class="rounded-circle" width="80" height="80">
+          <h6>Whiskers</h6>
+        </label>
+      </div>
+      <div class="tile">
+        <input type="radio" name="persona" id="Remy" value="Remy" class="radio">
+        <label for="Remy">
+          <img src="images/user_preference/persona_mouse.jpg" class="rounded-circle" width="80" height="80">
+          <h6>Remy</h6>
+        </label>
+      </div>
+      <div class="tile">
+        <input type="radio" name="persona" id="Grandma" value="Grandma" class="radio">
+        <label for="Grandma">
+          <img src="images/user_preference/persona_grandma.jpg" class="rounded-circle" width="80" height="80">
+          <h6>Grandma</h6>
+        </label>
+      </div>
+      <div class="tile">
+        <input type="radio" name="persona" id="Chef" value="Chef" class="radio">
+        <label for="Chef">
+          <img src="images/user_preference/persona_chef.jpg" class="rounded-circle" width="80" height="80">
+          <h6>Chef</h6>
+        </label>
+      </div>
+    </section>
+    <div class="container text-center">
+      <button class="w-75 btn btn-lg btn-warning mt-3" type="submit" name="submit">Let's start!</button>
+    </div>
+  </form>
+
+  <%- include("templates/footer") %>
