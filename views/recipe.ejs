@@ -132,59 +132,19 @@
         } */
     /* } */
   </style>
+  <br>
   <h1 class="center">Recipes</h1>
-
-  <!-- Filter buttons -->
+  <br>
   <div class="center container">
-    <label>
-      <input type="checkbox" name="keywords" id="europeanCheckbox" value="European" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('European')) { %>checked<% } %>>
-        European
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="mexicanCheckbox" value="Mexican" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Mexican')) { %>checked<% } %>>
-        Mexican
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="koreanCheckbox" value="Korean" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Korean')) { %>checked<% } %>>
-        Korean
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="chineseCheckbox" value="Chinese" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Chinese')) { %>checked<% } %>>
-        Chinese
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="japaneseCheckbox" value="Japanese" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Japanese')) { %>checked<% } %>>
-        Japanese
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="indianCheckbox" value="Indian" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Indian')) { %>checked<% } %>>
-        Indian
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="greekCheckbox" value="Greek" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Greek')) { %>checked<% } %>>
-        Greek
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="brazilianCheckbox" value="Brazilian" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Brazilian')) { %>checked<% } %>>
-        Brazilian
-    </label>
-    <label>
-      <input type="checkbox" name="keywords" id="thaiCheckbox" value="Thai" onchange="filterRecipes()" <% if
-        (userCuisinePreference.includes('Thai')) { %>checked<% } %>>
-        Thai
-    </label>
-
-
+    <form action="/recipe" method="GET">
+      <input type="text" name="search" placeholder="Search recipes...">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <br>
+  <div class="center container">
     <div id="recipeCards container">
-      <% for (let recipe of recipes) { %>
+      <% for (let recipe of paginatedRecipes) { %>
         <div class="card" data-keywords="<%= recipe.Keywords %>">
           <% if (recipe.Images) { %>
             <% const images=recipe.Images.split(', ');
@@ -261,8 +221,5 @@
                   <a href="/recipe?page=<%= currentPage + 1 %>" class="btn btn-warning page ml-1 numberedButtons">Next</a>
                   <% } %>
 </div>
-
-
 </div>
-<script src="js/recipe2.js"></script>
 <%- include("templates/footer") %>

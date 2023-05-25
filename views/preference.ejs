@@ -21,6 +21,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <h4>Preferred Cuisine</h4>
+                                        <p> Please select at least one cuisine type </p>
                                         <div class="container text-centre">
                                             <div class="row cuisine-pref-container">
                                                 <% cuisineOptions.forEach(function(option, index) { %>
@@ -129,7 +130,6 @@
             document.querySelector('select[name="persona"]').removeAttribute('disabled');
         });
     </script>
-
 
 
     <%- include("templates/footer") %>
