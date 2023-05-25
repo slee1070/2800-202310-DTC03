@@ -1,4 +1,8 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+const moment = require('moment');
+const cron = require('node-cron');
 const app = express();
 const chatbot = require('./controller/chatbot');
 const session = require('express-session');
@@ -32,6 +36,57 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+
+cron.schedule("03 1 * * *", async function() {
+  console.log("Checking all users' pantries for expired items...");
+
+  try {
+    const users = await usersModel.find(
+      { emailNotifications: 'checked' },
+    );
+
+    for (let user of users) {
+      const expiredItems = [];
+
+      for (let item of user.pantry) {
+        if (moment().isAfter(item.bestBeforeDate)) {
+          expiredItems.push(item);
+        }
+      }
+
+      if (expiredItems.length > 0) {
+        await sendMail(user, expiredItems);
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+async function sendMail(user, expiredItems) {
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: process.env.NODE_EMAIL_ADDRESS,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+      // accessToken: process.env.ACCESS_TOKEN,
+    },
+  });
+  console.log('Transporter created')
+
+  let info = await transporter.sendMail({
+    from: process.env.NODE_EMAIL_ADDRESS,
+    to: 'alfreychan@gmail.com',
+    subject: 'Pantry Master - Expired Items in Your Pantry',
+    text: `Dear ${user.name},\n\nThe following items in your pantry have expired:\n\n${expiredItems.map(item => `${item.food} - Best before: ${new Date(item.bestBeforeDate).toLocaleDateString('en-US')}`) .join('\n')}\n\nBest regards,\n\nPantryMaster\n\nThis is an automated message. Please do not reply to this email.\n\nDreamCrafters Team, creators of PantryMaster ©2023\nVisit our website: www.pantrymaster.cyclic.app`,
+  });
+
+   console.log('Message sent: %s', info.messageId)
+}
+
 app.use(
   session({
     secret: `${process.env.NODE_SESSION_SECRET}`,
@@ -51,9 +106,26 @@ app.use('/', (req, res, next) => {
 });
 
 // public routes
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  if (req.session.GLOBAL_AUTHENTICATED) {
+    const checkDatesResult = await checkDates(req.session.loggedUsername);
+    req.session.hasOutdatedItems = checkDatesResult.hasOutdatedItems;
+    req.session.outdatedItemsMessage = checkDatesResult.message;
+
+    await usersModel.updateOne(
+      { username: req.session.loggedUsername },
+      { $set: { hasOutdatedItems: checkDatesResult.hasOutdatedItems } }
+    );
+
+    req.session.save();
+  }
+  const user = await usersModel.findOne({
+    username: req.session.loggedUsername,
+  });
+
   res.render('index', {
     session: req.session,
+    user: user,
   });
 });
 
@@ -250,9 +322,9 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
-      req.session.save(() => {
-        res.redirect('/');
-      });
+      req.session.emailNotifications = result.emailNotifications;
+      req.session.save();
+      res.redirect('/');
     } else {
       res.render('login_error', {});
     }
@@ -260,6 +332,26 @@ app.post('/login', async (req, res) => {
     console.log(error);
   }
 });
+
+async function checkDates(currentUser) {
+  const user = await usersModel.findOne({ username: currentUser });
+  console.log(currentUser);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (user.pantry && Array.isArray(user.pantry)) {
+    const outdatedItems = user.pantry.filter(item => {
+      const bestBeforeDate = new Date(item.bestBeforeDate);
+      bestBeforeDate.setHours(0, 0, 0, 0);
+      console.log(`${item.food}, Outdated: ${bestBeforeDate < today}`)
+      return bestBeforeDate < today;
+    });
+
+    return { hasOutdatedItems: outdatedItems.length > 0, message: "You have outdated items in your pantry!" };
+  } else {
+    return { hasOutdatedItems: false, message: "" };
+  }
+}
 
 app.get('/username_retreival', (req, res) => {
   res.render('username_retreival', { session: req.session });
@@ -479,6 +571,21 @@ app.post('/profile_change_password', async (req, res) => {
       res.redirect('/profile');
     }
   }
+});
+
+app.post('/update-user-setting', async (req, res) => {
+  const { emailNotifications } = req.body;
+
+  await usersModel.updateOne(
+    { username: req.session.loggedUsername },
+    { $set: { emailNotifications: emailNotifications } }
+  );
+  console.log('Updated user email preferences.')
+
+  // update session emailNotifications value
+  req.session.emailNotifications = emailNotifications;
+
+  res.status(200).send();
 });
 
 app.get('/aboutus', (req, res) => {
