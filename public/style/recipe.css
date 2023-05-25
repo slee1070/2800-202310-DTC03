@@ -1,0 +1,122 @@
+.recipe-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.card {
+  background-color: bisque;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.card p {
+  margin: 0;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  text-align: left;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-image-container {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.recipe-image {
+  width: 100%;
+  height: auto;
+}
+
+.more-button {
+  width: 100%;
+}
+
+.pagination {
+  text-align: center;
+}
+
+.current-page {
+  font-weight: bold;
+  color: red;
+}
+
+/* Hide the previous and next buttons when there is no previous or next page */
+.pagination .btn-disabled {
+  display: none;
+}
+
+.numberedButtons {
+  color: black;
+  width: 60px;
+  height: 40px;
+  font-size: 20px;
+  padding: 0;
+  margin: 0 5px;
+}
+
+.numberedButtons:hover,
+.numberedButtons.active {
+  background-color: #ffffff;
+}
+
+.recipe-cards {
+  display: grid;
+  gap: 20px;
+}
+
+/* Responsive styles for full screen*/
+@media (min-width: 800px) {
+  .recipe-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
