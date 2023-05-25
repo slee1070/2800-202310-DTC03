@@ -189,9 +189,14 @@ app.post('/signupSubmit', async (req, res) => {
   try {
     const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
     const existingUser = await usersModel.findOne({ username: username });
+    const existingEmail = await usersModel.findOne({ email: email });
 
     if (existingUser) {
-      errorMessage.push('Username already exists.');
+      errorMessage.push('Username is already taken.');
+    }
+
+    if (existingEmail) {
+      errorMessage.push('Email address is already taken.');
     }
 
     if (errorMessage.length > 0) {
