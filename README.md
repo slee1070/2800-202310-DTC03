@@ -1,5 +1,5 @@
 # Project Title
-PantryMaster
+PantryMaster - Empowering Home Cooks for Flavorful and Convenient Meals
 
 ## 1. Project Description
 Our project, PantryMaster, is a recipe recommendation app aimed at helping busy home cooks. Our team believes that everyone deserves convenient access to flavorful meals that can be prepared with ease. Our goal is to empower home cooks by leveraging advanced technology to recommend recipes tailored to their specific ingredients, preferences, and dietary needs. PantryMaster is designed to save time, reduce waste, and inspire culinary creativity, offering a personalized and engaging cooking journey. With a focus on quality, convenience, and sustainability, we strive to make meal planning and preparation an enjoyable and fulfilling experience for all.
