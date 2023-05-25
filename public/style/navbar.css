@@ -6,15 +6,32 @@
   text-align: right;
 }
 
-.navbar {
+.navbar-nav .nav-link  {
   font-family: "quicksand", sans-serif;
-  font-weight: 500;
+  font-weight: 700;
   font-style: normal;
+  color: #1e2d28;
+  font-size: 0.9em;
 }
 
 .navbar-brand {
   font-family: "quicksand", sans-serif;
   font-weight: 700;
   font-style: normal;
-  color: #2c423a!important;
+  color: #1e2d28;
+  font-size: 1.2em;
+}
+
+.container-fluid {
+  margin: 0 5px;
+}
+
+/* Mobile size */
+@media (max-width: 990px) {
+  .navbar-brand {
+    font-size: 1.2em;
+  }
+  .navbar-nav .nav-link  {
+    font-size: 1.1em;
+  }
 }
