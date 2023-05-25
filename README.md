@@ -2,10 +2,11 @@
 PantryMaster
 
 ## 1. Project Description
-Our project is developing a recipe recommendation app, PantryMaster, to help busy home cooks by recommending delicious recipes based on the ingredients that they already have in their pantry and refrigerator.
+Our project, PantryMaster, is a recipe recommendation app aimed at helping busy home cooks. Our team believes that everyone deserves convenient access to flavorful meals that can be prepared with ease. Our goal is to empower home cooks by leveraging advanced technology to recommend recipes tailored to their specific ingredients, preferences, and dietary needs. PantryMaster is designed to save time, reduce waste, and inspire culinary creativity, offering a personalized and engaging cooking journey. With a focus on quality, convenience, and sustainability, we strive to make meal planning and preparation an enjoyable and fulfilling experience for all.
 
-## 2. Collaborator List
-Dream Crafters
+## 2. About us 
+We are a team of developers - Dream Crafters. We are tech experts dedicated to revolutionizing the way busy home cooks plan and prepare meals. We understand the challenges faced by individuals striving to balance their busy lifestyles with the desire to enjoy delicious, home-cooked meals. Our mission for this project is to provide an innovative and user-friendly app that simplifies the recipe search process, reduces food waste, and enhances the overall cooking experience. 
+### Collaborator List
 1. Alfrey Chan
 2. Diane Choi
 3. Sung Lee
@@ -44,7 +45,7 @@ Dream Crafters
 8. Deploy your app: To deploy your app, go to your project dashboard on Cyclic, click on the "Deployments" tab, and then click on the "New Deployment" button. Here, you can configure your deployment settings, such as the name of the deployment, the Docker image to use, and the environment variables to set.
 9. In the "Environment Variables" section, you can add any environment variables that your app needs to run. To add a variable, click on the "Add Variable" button and enter the variable name and value.
 10. Once you have configured your deployment settings, click on the "Deploy" button to start the deployment process. Cyclic will build and deploy your app in a container with your environment variables configured.
-11. Your web app should now be live and accessible via a URL provided by Cyclic. You can monitor the status of your deployment and view logs in the Cyclic dashboard.
+11. The web app should now be live and accessible via a URL provided by Cyclic. You can monitor the status of your deployment and view logs in the Cyclic dashboard.
 
 ## 5. Known Bugs and Limitations
 
