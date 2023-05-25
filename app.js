@@ -564,9 +564,6 @@ app.get('/recipe', async (req, res) => {
     const searchQuery = req.query.search;
     if (searchQuery) {
       const searchFilter = { Name: { $regex: new RegExp(searchQuery, 'i') } };
-      if (!filter.$or) {
-        filter.$or = [];
-      }
       filter.$or.unshift(searchFilter);
     }
 
@@ -578,23 +575,26 @@ app.get('/recipe', async (req, res) => {
     const startIndex = (page - 1) * pageSize;
     const endIndex = page * pageSize;
     const totalPages = Math.ceil(recipes.length / pageSize);
-    const paginatedRecipes = recipes.slice(startIndex, endIndex);
 
-    // If on the first page and search query exists, move search result to the first item
-    if (page === 1 && searchQuery && paginatedRecipes.length > 1) {
-      const searchResultIndex = paginatedRecipes.findIndex(recipe => recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
-      if (searchResultIndex !== -1) {
-        const searchResult = paginatedRecipes.splice(searchResultIndex, 1)[0];
-        paginatedRecipes.unshift(searchResult);
-      }
+    // If on the first page and search query exists, move all search results to the first page
+    if (page === 1 && searchQuery && recipes.length > 1) {
+      const searchResults = recipes.filter(recipe => recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
+      const nonSearchResults = recipes.filter(recipe => !recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
+      const paginatedSearchResults = searchResults.slice(0, pageSize);
+      const remainingSpace = pageSize - paginatedSearchResults.length;
+      const paginatedNonSearchResults = nonSearchResults.slice(0, remainingSpace);
+      const paginatedRecipes = paginatedSearchResults.concat(paginatedNonSearchResults);
+      res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
+    } else {
+      const paginatedRecipes = recipes.slice(startIndex, endIndex);
+      res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
     }
-
-    res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('An error occurred while retrieving recipes.');
   }
 });
+
 
 
 app.use(express.static('public'));
