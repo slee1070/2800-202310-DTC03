@@ -37,11 +37,13 @@ const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PAS
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-cron.schedule("40 19 * * *", async function() {
+cron.schedule("03 1 * * *", async function() {
   console.log("Checking all users' pantries for expired items...");
 
   try {
-    const users = await usersModel.find();
+    const users = await usersModel.find(
+      { emailNotifications: 'checked' },
+    );
 
     for (let user of users) {
       const expiredItems = [];
