@@ -1,5 +1,4 @@
 <%- include("templates/header") %>
-  <!-- <link rel="stylesheet" href="/style/recipe.css">-->
   <style>
     .recipe-image {
       max-width: 100%;
@@ -62,7 +61,6 @@
       cursor: pointer;
     }
 
-
     .recipe-card {
       display: flex;
       flex-direction: column;
@@ -113,24 +111,17 @@
       background-color: #ffffff;
     }
 
+    .recipe-cards {
+      display: grid;
+      gap: 20px;
+    }
 
-    /* Responsive styles */
-    /* @media (min-width: 576px) {
-        .recipe-card {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: flex-start;
-        }
-
-        .recipe-image-container {
-          width: 40%;
-          margin-right: 10px;
-        }
-
-        .more-button {
-          width: 30%;
-        } */
-    /* } */
+    /* Responsive styles for full screen*/
+    @media (min-width: 800px) {
+      .recipe-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
   </style>
   <br>
   <h1 class="center">Recipes</h1>
