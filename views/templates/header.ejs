@@ -53,45 +53,47 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="/"><img src="images/icon_home.png"
-                style="margin-right: 10px; width:20px; height:auto"></img>Home</a>
+            <a class="nav-link" href="/"><img src="images/svg/icon_home.svg"
+                style="margin-right: 10px; width:15px; height:auto"></img>Home</a>
           </li>
           <% if (session.GLOBAL_AUTHENTICATED) { %>
             <li class="nav-item">
-              <a class="nav-link" href="/chat"><img src="images/icon_chat.png"
+              <a class="nav-link" href="/chat"><img src="images/svg/icon_chat.svg"
                   style="margin-right: 10px; width:20px; height:auto"></img>Chat</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/recipe"><img src="images/icon_recipe.png"
-                  style="margin-right: 10px; width:20px; height:auto"></img>Recipe</a>
+              <a class="nav-link" href="/recipe"><img src="images/svg/icon_recipe.svg"
+                  style="margin-right: 10px; width:16px; height:auto"></img>Recipe</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/pantry"><img src="images/icon_fridge.png"
-                  style="margin-right: 10px; width:20px; height:auto"></img>My Pantry</a>
+              <a class="nav-link" href="/pantry"><img src="images/svg/icon_fridge.svg"
+                  style="margin-right: 10px; width:12.8px; height:auto"></img>My Pantry</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/preference"><img src="images/icon_favorite.png"
+              <a class="nav-link" href="/preference"><img src="images/svg/icon_favorite.svg"
                   style="margin-right: 10px; width:20px; height:auto">Preference</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/profile"><img src="images/icon_account.png"
+              <a class="nav-link" href="/profile"><img src="images/svg/icon_account.svg"
                   style="margin-right: 10px; width:20px; height:auto">Account</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/aboutus"><img src="images/icon_info.png"
+              <a class="nav-link" href="/aboutus"><img src="images/svg/icon_info.svg"
                   style="margin-right: 10px; width:20px; height:auto">About Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/logout"><img src="images/icon_logout.png"
+              <a class="nav-link" href="/logout"><img src="images/svg/icon_logout.svg"
                   style="margin-right: 10px; width:20px; height:auto">Log Out</a>
             </li>
             <% } else { %>
               <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-              </li>
+                <a class="nav-link" href="/login"><img src="images/svg/icon_login.svg"
+                  style="margin-right: 10px; width:20px; height:auto">Login</a>
+            </li>
               <li class="nav-item">
-                <a class="nav-link" href="/signup">Sign Up</a>
-              </li>
+                <a class="nav-link" href="/signup"><img src="images/svg/icon_signup.svg"
+                  style="margin-right: 10px; width:20px; height:auto">Sign Up</a>
+            </li>
               <% } %>
         </ul>
       </div>
