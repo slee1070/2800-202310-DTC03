@@ -92,15 +92,15 @@
                                         <label for="featurePreference">
                                             <h4>Cooking Assistant</h4>
                                         </label>
-                                        <select class="form-select" name="persona" data-placeholder="Click to choose">
-                                        <% persona.forEach(function(option) { %>
-                                            <option value="<%= option %>" <% if (user && user.persona === option) 
-                                                { %>selected<% } %>>
-                                            <%= option %>
-                                            </option>
-                                        <% }); %>
+                                        <select class="form-select" name="persona" data-placeholder="Click to choose"
+                                            disabled>
+                                            <% persona.forEach(function(option) { %>
+                                                <option value="<%= option %>" <% if (user && user.persona===option) 
+                                                    { %>selected<% } %>>
+                                                        <%= option %>
+                                                </option>
+                                                <% }); %>
                                         </select>
-
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
             document.querySelector('select[name="persona"]').removeAttribute('disabled');
         });
     </script>
-    
+
 
 
     <%- include("templates/footer") %>
