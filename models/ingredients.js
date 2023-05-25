@@ -14,7 +14,7 @@ const ingredientSchema = new mongoose.Schema({
 });
 
 // Create a model using the ingredient schema
-const ingredientsModel = mongoose.model('ingredients2', ingredientSchema);
+const ingredientsModel = mongoose.model('all_ingredients', ingredientSchema);
 
 // Export the model for use in other parts of the app
 module.exports = ingredientsModel;

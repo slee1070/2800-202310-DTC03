@@ -64,11 +64,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <title>Document</title>
+  <title>My Pantry</title>
 </head>
 <body>
   <%- include("templates/header") %>
-<div class="d-flex align-items-center">
+<div class="container d-flex align-items-center">
   <h2 class="mt-4 mb-3 flex-grow-1 custom-pad" id="my_pantry_title">My Pantry</h2>
   <h6 class="mt-4 mb-3">Add items</h6>
   <button id="modal-button" class="btn my-primary mt-2 custom-pad">
@@ -126,7 +126,38 @@
       <div class="modal-body my-primary">
         <% ingredients.forEach((category) => { %>
           <div class="container pb-2 px-0 mb-3 modal-background-primary custom-border">
-            <h5 class="modal-header-primary px-2 py-2 custom-header-border" style="border-bottom: solid black"><%= category.category %></h5>
+            <h5 class="modal-header-primary px-2 py-2 custom-header-border" style="border-bottom: solid black">
+              <%= category.category %>
+              <% if (category.category === "Fruits & Vegetables") { %>
+                <img src="/images/icon_fruitVege.png" style="width:23px; height:auto;">
+              <% } else if (category.category === "Eggs/Dairy & Alternatives") { %>
+                <img src="/images/icon_dairy.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Meats & Seafood") { %>
+                <img src="/images/icon_proteins.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Grains & Pasta") { %>
+                <img src="/images/icon_grains.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Sauces & Condiments") { %>
+                <img src="/images/icon_condiments.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Sweeteners") { %>
+                <img src="/images/icon_sugars.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Oils & Fat") { %>
+                <img src="/images/icon_oils.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Beverages") { %>
+                <img src="/images/icon_drinks.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Herbs & Spices") { %>
+                <img src="/images/icon_herbs.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Canned Goods") { %>
+                <img src="/images/icon_canned.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Beans") { %>
+                <img src="/images/icon_beans.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Nuts & Seeds") { %>
+                <img src="/images/icon_nuts.png" style="width:23px; height:auto">
+              <% } else if (category.category === "Miscellaneous") { %>
+                <img src="/images/icon_misc.png" style="width:23px; height:auto">
+              <% }
+              %>
+
+            </h5>
             <div class="container mx-2">
               <% for (let i = 0; i < Math.min(9, category.ingredients.length); i++) { %>
                 <% if (!pantryItems.some(item => item.food === category.ingredients[i])) { %>         
