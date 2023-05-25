@@ -69,7 +69,7 @@ We are a team of developers - Dream Crafters. We are tech experts dedicated to r
 ├── package-lock.json                   # Json file used for package version locking
 ├── package.json                        # Json file used by npm to specify the metadata and dependencies 
 ├── public                              # Folder that contains images, javascript, and style folders
-│   ├── images                              # Folder that contains all images 
+│   ├── images                              # Folder that contains images 
 │   │   ├── Chef Ramsay.png                     / Image file for AI persona
 │   │   ├── Grandma.png                         / Image file for AI persona
 │   │   ├── Whisker.png                         / Image file for AI persona
@@ -144,7 +144,7 @@ We are a team of developers - Dream Crafters. We are tech experts dedicated to r
     ├── username_retreival_view.ejs             / ejs file for username_retreival_view page
     ├── user_account.ejs                        / ejs file for user_account page
     ├── user_not_found.ejs                       ejs file for user_not_found page
-    └── templates                       # Template folder for header and footers 
+    └── templates                           # Template folder for header and footers 
         ├── footer.ejs                          / ejs file for footer for all pages
         ├── footer_home.ejs                     / ejs file for footer for home page    
         ├── header.ejs                          / ejs file for header for all pages
