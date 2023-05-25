@@ -201,10 +201,16 @@ app.post('/signupSubmit', async (req, res) => {
   };
   const result = await usersModel.create(user);
   console.log(result);
-  // add some user created successfully message?
+  //  Set user authentication status and session data
   req.session.GLOBAL_AUTHENTICATED = true;
   req.session.loggedUsername = req.body.username;
   req.session.loggedName = req.body.name;
+  req.session.loggedEmail = req.body.email;
+  req.session.loggedCuisinePreference = req.body.cuisinePreference;
+  req.session.loggedDietaryRestrictions = req.body.dietaryRestrictions;
+  req.session.loggedPersona = req.body.persona;
+  req.session.save();
+  
   res.render('preference_cuisine', {
     result: result,
     session: req.session,
@@ -702,7 +708,7 @@ app.get('/recipe', async (req, res) => {
 
     // Pagination
     const page = parseInt(req.query.page) || 1;
-    const pageSize = 10;
+    const pageSize = 12;
     const startIndex = (page - 1) * pageSize;
     const endIndex = page * pageSize;
     const totalPages = Math.ceil(recipes.length / pageSize);
