@@ -1,31 +1,29 @@
+// Import required modules
 const express = require('express');
 const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
 const moment = require('moment');
 const cron = require('node-cron');
-const app = express();
 const chatbot = require('./controller/chatbot');
 const session = require('express-session');
 const usersModel = require('./models/users');
-const recipe = require('./models/recipe');
 const ingredientsModel = require('./models/ingredients');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const url = require('url');
 const bodyParser = require('body-parser');
-// Add the body-parser middleware
+
+// Set up express application
+const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// 1 - import
-let ejs = require('ejs');
-// 2 - set the view engine to ejs
 app.set('view engine', 'ejs');
 
+// Environment configuration
 const dotenv = require('dotenv');
-const { error } = require('console');
 dotenv.config();
 
+// Database connection
 const dbStore = new MongoDBStore({
   uri: `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`,
   collection: 'mySessions',
