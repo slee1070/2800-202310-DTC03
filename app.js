@@ -109,13 +109,17 @@ app.use('/', (req, res, next) => {
 app.get('/', async (req, res) => {
   if (req.session.GLOBAL_AUTHENTICATED) {
     const checkDatesResult = await checkDates(req.session.loggedUsername);
-    req.session.hasOutdatedItems = checkDatesResult.hasOutdatedItems;
     req.session.outdatedItemsMessage = checkDatesResult.message;
 
-    await usersModel.updateOne(
-      { username: req.session.loggedUsername },
-      { $set: { hasOutdatedItems: checkDatesResult.hasOutdatedItems } }
-    );
+    console.log(checkDatesResult.hasOutdatedItems);
+    try{
+      await usersModel.updateOne(
+        { username: req.session.loggedUsername },
+        { $set: { hasOutdatedItems: checkDatesResult.hasOutdatedItems } }
+      );
+    } catch (err) {
+      console.log(err);
+    }
 
     req.session.save();
   }

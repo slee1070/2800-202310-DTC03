@@ -12,19 +12,23 @@ const usersSchema = new mongoose.Schema({
   password: String,
   securityQuestion: String,
   securityAnswer: String,
-  emailNotifications: {
-    type: String,
-    default: 'checked'
-  },
   persona: String,
   pantry: [pantryItemSchema],
   cuisinePreference: Array,
   dietaryRestrictions: Array,
   persona: String,
+  hasOutdatedItems: {
+    type: Boolean,
+    default: false
+  },
   type: {
     type: String,
     default: 'user'
-  }
+  },
+  emailNotifications: {
+    type: String,
+    default: 'checked'
+  },
 });
 
 
