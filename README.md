@@ -140,7 +140,6 @@ As part of our future plans for PantryMaster, we are considering exciting featur
     ├── profile.ejs                             / ejs file for profile page
     ├── profile_change_password.ejs             / ejs file for profile_change_password page
     ├── recipe.ejs                              / ejs file for recipe page
-    ├── recipe_cuisine.ejs                      / ejs file for recipe_cuisine page
     ├── reset_password_error.ejs                / ejs file for reset_password_error page
     ├── reset_password_success.ejs              / ejs file for reset_password_success page
     ├── security_answer_submit.ejs              / ejs file for security_answer_submit page
@@ -149,7 +148,6 @@ As part of our future plans for PantryMaster, we are considering exciting featur
     ├── signup_submit_error.ejs                 / ejs file for signup_submit_error page
     ├── username_retreival.ejs                  / ejs file for username_retreival page    
     ├── username_retreival_view.ejs             / ejs file for username_retreival_view page
-    ├── user_account.ejs                        / ejs file for user_account page
     ├── user_not_found.ejs                       ejs file for user_not_found page
     └── templates                           # Template folder for header and footers 
         ├── footer.ejs                          / ejs file for footer for all pages
