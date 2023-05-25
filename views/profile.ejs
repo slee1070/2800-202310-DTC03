@@ -5,6 +5,18 @@
     color: #e94a94;
     font-weight: bold;
   }
+  /* #flexSwitchCheckDefault {
+    float: right;
+  } */
+  .form-check-label {
+    font-size: 0.9em;
+    margin-right: 45px;
+    color: rgb(83, 83, 83);
+  }
+  .form-check-input {
+    background-color: #eaecee;
+  }
+
 </style>
 <div class="container">
   <% if (!session.GLOBAL_AUTHENTICATED) { %>
@@ -16,12 +28,12 @@
     <main class="form-signiin w-75 m-auto">
       <div class="d-flex gap-2 justify-content-center py-5">
         <form class="text-left" action="/profileSubmit" method="post">
-          <h2 class="mb-4 text-center">My Account</h2>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <%= session.emailNotifications === 'checked' ? 'checked' : '' %>>
-            <label class="form-check-label mb-2" for="flexSwitchCheckDefault">
+          <h2 class="mb-3 text-center">My Account</h2>
+          <div class="form-check form-switch d-flex justify-content-end">
+            <label class="form-check-label mb-3" for="flexSwitchCheckDefault">
               <%= session.emailNotifications === 'checked' ? 'Email Notifications: ON' : 'Email Notifications: OFF' %>  
             </label>
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <%= session.emailNotifications === 'checked' ? 'checked' : '' %>>
           </div>
           <% if (locals.errors) { %>
             <div class="alert alert-danger">
