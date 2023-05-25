@@ -472,7 +472,7 @@ app.get('/preference', async (req, res) => {
   } else {
     const user = await usersModel.findOne({ username: req.session.loggedUsername });
     const cuisineOptions = ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'];
-    const dietaryOptions = ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast Free',];
+    const dietaryOptions = ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast-Free',];
     const persona = ["Whisker", "Grandma", "Chef Ramsay", "Remy"]
     res.render('preference', {
       session: req.session,
@@ -508,7 +508,7 @@ app.post('/preference', async (req, res) => {
       session: req.session,
       user: user,
       cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
-      dietaryOptions: ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast Free'],
+      dietaryOptions: ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast-Free'],
       persona: ["Whisker", "Grandma", "Chef Ramsay", "Remy"] });
   } catch (error) {
     console.log(error);
@@ -533,10 +533,10 @@ app.get('/recipe', async (req, res) => {
           { Keywords: new RegExp(keyword, 'i') },
           {
             $or: [
-              { Keywords: { $regex: /Nut Free/i } },
+              { Keywords: { $regex: /Nut-Free/i } },
               { Keywords: { $regex: /Lacto Free/i } },
               { Keywords: { $regex: /Vegan/i } },
-              { Keywords: { $regex: /Yeast Free/i } }
+              { Keywords: { $regex: /Yeast-Free/i } }
             ]
           }
         ]
@@ -575,15 +575,6 @@ app.get('/recipe', async (req, res) => {
     res.status(500).send('An error occurred while retrieving recipes.');
   }
 });
-
-
-
-
-
-
-
-
-
 
 
 app.use(express.static('public'));
