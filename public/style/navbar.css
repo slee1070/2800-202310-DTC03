@@ -5,3 +5,21 @@
 .nav-link {
   text-align: right;
 }
+
+.navbar {
+  font-family: "quicksand", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.navbar-brand {
+  font-family: "quicksand", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #2c423a!important;
+}
+
+
+.svg-icon {
+  fill: #ffffff;
+}
