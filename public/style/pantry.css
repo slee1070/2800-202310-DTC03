@@ -1,0 +1,56 @@
+.my-primary {
+  background-color: rgb(255, 248, 235);
+}
+
+.custom-remove-button {
+  background-color: rgb(255, 248, 235) !important;
+}
+
+.btn-danger {
+  background-color: rgb(255, 99, 99) !important;
+}
+
+.close-button {
+  /* background-color: rgb(255, 99, 99) !important; */
+  background-color: rgb(149, 156, 161) !important;
+}
+
+.add-button {
+  background-color: rgb(79, 160, 102) !important;
+}
+
+.custom-ingredient-button {
+  background-color: rgb(242, 185, 156) !important;
+}
+
+.custom-showMore-button {
+  background-color: rgb(214, 222, 228) !important;
+}
+
+.modal-header-primary {
+  background-color: #dfc2c4 !important;
+}
+
+.modal-background-primary {
+  background-color: #f8f9fa !important;
+}
+
+.custom-border {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-header-border {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.custom-pad {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+#my_pantry_title {
+  font-family: 'museo-sans-rounded', sans-serif;
+  color: #e94a94;
+  font-weight: bold;
+}
