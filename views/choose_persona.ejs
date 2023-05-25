@@ -1,3 +1,4 @@
+<!-- Choose cooking assistant persona during signup process -->
 <%- include("templates/header") %>
   <style>
     * {
@@ -102,7 +103,7 @@
 
   <h2 class="text-center mt-4">Who do you want to talk with?</h2>
 
-  <!-- dietary restriction buttons go here -->
+  <!-- Choose persona -->
   <form id="choosePersonaForm" action="choose_persona" method="post">
     <input type="hidden" name="userId" value="<%= userId %>">
     <section>

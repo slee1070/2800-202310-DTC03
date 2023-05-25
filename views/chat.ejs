@@ -1,8 +1,10 @@
+<!-- Page for chat bar -->
 <%- include("templates/header") %>
 <link rel="stylesheet" href="/style/chatbot.css">
 
 <div class="container">
     <div class="chatbot-header">
+        <!-- Choose persona -->
         <% if (persona) { %>
             <h1 class="mt-3 chatbot-title">
               <%= persona %>'s Kitchen
@@ -15,12 +17,14 @@
   <pre id="chat-container" class="mt-3 resizeable">
       <div id="chat-log"></div>
   </pre>
+  <!-- Input box -->
   <div id="input-container" class="mb-5">
       <div class="input-group">
           <input type="text" id="user-input" class="form-control" placeholder="Type your message...">
           <button id="send-btn" class="btn btn-primary">Send</button>
       </div>
   </div>
+  <!-- pre-made prompts -->
   <div id = "input-example" class="mb-5">
   <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'Who are you?';">Who are you?</button>
   <button class="btn rounded-pill btn_input_example" onclick="document.getElementById('user-input').value = 'What\'s in my pantry?';">What's in my pantry?</button>

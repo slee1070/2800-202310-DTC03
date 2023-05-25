@@ -15,7 +15,23 @@ Dream Crafters
 1. Embedded Javascript (EJS), Cascading Style Sheets (CSS), JavaScript (JS), Python (PY)
 2. Bootstrap 5.0 (Frontend library)
 3. MongoDB 6.0 (Database)
-4. 
+4. Google icons (Material design)
+5. Dependencies
+    - axios (1.4.0)
+    - bcrypt (5.1.0)
+    - connect-mongodb-session (3.1.1)
+    - cron (2.3.0)
+    - dotenv (16.0.3)
+    - ejs (3.1.9)
+    - express (4.18.2)
+    - express-session (1.17.3)
+    - googleapis (118.0.0)
+    - joi (17.9.2)
+    - moment (2.29.4)
+    - mongoose (7.1.1)
+    - node-cron (3.0.2)
+    - nodemailer (6.9.2)
+    - nodemon (2.0.22)
 
 ## 4. Complete setup/installion/usage
 1. Clone the project repository from our GitHub repository.
