@@ -136,14 +136,16 @@
   <h1 class="center">Recipes</h1>
   <br>
   <div class="center container">
-    <form action="/recipe" method="GET">
-      <input type="text" name="search" placeholder="Search recipes...">
-      <button type="submit">Search</button>
+    <form action="/recipe" method="GET" class="d-flex justify-content-center">
+      <div class="d-flex align-items-center">
+        <input type="text" name="search" placeholder="Search recipes..." class="form-control">
+        <button type="submit" class="btn btn-warning ms-2">Search</button>
+      </div>
     </form>
   </div>
   <br>
   <div class="center container">
-    <div id="recipeCards container">
+    <div id="recipeCards container" class="recipe-cards">
       <% for (let recipe of paginatedRecipes) { %>
         <div class="card" data-keywords="<%= recipe.Keywords %>">
           <% if (recipe.Images) { %>
@@ -153,7 +155,6 @@
       <div class="recipe-image-container">
         <img src="<%= firstImage %>" alt="<%= recipe.Name %>" class="recipe-image">
       </div>
-      <br>
       <h2 class="center"><%= recipe.Name %></h2>
       <!-- Button that triggers the modal -->
       <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe._id %>').style.display='block'">More</button>
@@ -199,7 +200,7 @@
 <% } %>
 </div>
 <br>
-<div class="pagination">
+<div class="pagination justify-content-center">
   <% if (currentPage> 1) { %>
     <a href="/recipe?page=<%= currentPage - 1 %>" class="btn btn-warning page ml-1 numberedButtons">Prev</a>
     <% } %>
@@ -218,8 +219,10 @@
               <% } %>
 
                 <% if (currentPage < totalPages) { %>
-                  <a href="/recipe?page=<%= currentPage + 1 %>" class="btn btn-warning page ml-1 numberedButtons">Next</a>
+                  <a href="/recipe?page=<%= currentPage + 1 %>"
+                    class="btn btn-warning page ml-1 numberedButtons">Next</a>
                   <% } %>
 </div>
+
 </div>
 <%- include("templates/footer") %>
