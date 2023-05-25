@@ -515,6 +515,7 @@ app.post('/preference', async (req, res) => {
   }
 });
 
+// Route for recipe page
 app.get('/recipe', async (req, res) => {
   try {
     const userEmail = req.session.loggedEmail;
@@ -559,6 +560,16 @@ app.get('/recipe', async (req, res) => {
       filter.$or.push({ 'RecipeIngredientParts.food': { $in: pantryItems.map(item => new RegExp(item, 'i')) } });
     }
 
+    // Check if there is a search query parameter
+    const searchQuery = req.query.search;
+    if (searchQuery) {
+      const searchFilter = { Name: { $regex: new RegExp(searchQuery, 'i') } };
+      if (!filter.$or) {
+        filter.$or = [];
+      }
+      filter.$or.unshift(searchFilter);
+    }
+
     const recipes = await collection.find(filter).toArray();
 
     // Pagination
@@ -568,6 +579,15 @@ app.get('/recipe', async (req, res) => {
     const endIndex = page * pageSize;
     const totalPages = Math.ceil(recipes.length / pageSize);
     const paginatedRecipes = recipes.slice(startIndex, endIndex);
+
+    // If on the first page and search query exists, move search result to the first item
+    if (page === 1 && searchQuery && paginatedRecipes.length > 1) {
+      const searchResultIndex = paginatedRecipes.findIndex(recipe => recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
+      if (searchResultIndex !== -1) {
+        const searchResult = paginatedRecipes.splice(searchResultIndex, 1)[0];
+        paginatedRecipes.unshift(searchResult);
+      }
+    }
 
     res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
   } catch (error) {
@@ -595,9 +615,6 @@ app.get('/pantry', async (req, res) => {
       });
   }
 });
-
-
-
 
 app.post('/update-pantry', async (req, res) => {
   const { username, pantryItems } = req.body;

@@ -132,7 +132,16 @@
         } */
     /* } */
   </style>
+  <br>
   <h1 class="center">Recipes</h1>
+  <br>
+  <div class="center container">
+    <form action="/recipe" method="GET">
+      <input type="text" name="search" placeholder="Search recipes...">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <br>
   <div class="center container">
     <div id="recipeCards container">
       <% for (let recipe of paginatedRecipes) { %>
