@@ -472,7 +472,7 @@ app.get('/preference', async (req, res) => {
   } else {
     const user = await usersModel.findOne({ username: req.session.loggedUsername });
     const cuisineOptions = ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'];
-    const dietaryOptions = ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads',];
+    const dietaryOptions = ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast Free',];
     const persona = ["Whisker", "Grandma", "Chef Ramsay", "Remy"]
     res.render('preference', {
       session: req.session,
@@ -508,7 +508,7 @@ app.post('/preference', async (req, res) => {
       session: req.session,
       user: user,
       cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
-      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'],
+      dietaryOptions: ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast Free'],
       persona: ["Whisker", "Grandma", "Chef Ramsay", "Remy"] });
   } catch (error) {
     console.log(error);
@@ -527,16 +527,16 @@ app.get('/recipe', async (req, res) => {
     const filter = {};
 
     // Filter by dietary restrictions
-    if (dietaryRestrictions) {
+    if (dietaryRestrictions && dietaryRestrictions.length > 0) {
       filter.$and = dietaryRestrictions.map(keyword => ({
         $and: [
           { Keywords: new RegExp(keyword, 'i') },
           {
             $or: [
-              { Keywords: new RegExp('Vegan', 'i') },
-              { Keywords: new RegExp('Lacto Free', 'i') },
-              { Keywords: { $not: new RegExp('Nuts', 'i') } },
-              { Keywords: { $not: new RegExp('Yeast Breads', 'i') } }
+              { Keywords: { $regex: /Nut Free/i } },
+              { Keywords: { $regex: /Lacto Free/i } },
+              { Keywords: { $regex: /Vegan/i } },
+              { Keywords: { $regex: /Yeast Free/i } }
             ]
           }
         ]
@@ -573,6 +573,35 @@ app.get('/recipe', async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('An error occurred while retrieving recipes.');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+app.use(express.static('public'));
+
+app.get('/pantry', async (req, res) => {
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/');
+  } else {
+      const user = await usersModel.findOne({username: req.session.loggedUsername});
+      const ingredients = await ingredientsModel.find();
+      let lastCategory = ingredients.pop();
+      ingredients.unshift(lastCategory);
+      res.render('pantry', {
+        session: req.session,
+        pantryItems: user.pantry,
+        username: req.session.loggedUsername,
+        ingredients: ingredients
+      });
   }
 });
 
