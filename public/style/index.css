@@ -21,3 +21,11 @@ a#clickHere {
         transform: translateY(110vh) ;
     }
 }
+
+
+h1 {
+    font-family: "museo-sans-rounded", sans-serif;
+    font-style: normal;
+    color: #e94a94;
+    font-weight: bold;
+}
