@@ -1,219 +1,101 @@
 <%- include("templates/header") %>
-  <style>
-    .recipe-image {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 10px;
-    }
+<link rel="stylesheet" href="/style/recipe.css">
 
-    .center {
-      text-align: center;
-    }
-
-    .card {
-      background-color: bisque;
-      border-radius: 5px;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    .card h2 {
-      margin-top: 0;
-    }
-
-    .card p {
-      margin: 0;
-    }
-
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-      text-align: left;
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .recipe-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .recipe-image-container {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 10px;
-    }
-
-    .recipe-image {
-      width: 100%;
-      height: auto;
-    }
-
-    .more-button {
-      width: 100%;
-    }
-
-    .pagination {
-      text-align: center;
-    }
-
-    .current-page {
-      font-weight: bold;
-      color: red;
-    }
-
-    /* Hide the previous and next buttons when there is no previous or next page */
-    .pagination .btn-disabled {
-      display: none;
-    }
-
-    .numberedButtons {
-      color: black;
-      width: 60px;
-      height: 40px;
-      font-size: 20px;
-      padding: 0;
-      margin: 0 5px;
-    }
-
-    .numberedButtons:hover,
-    .numberedButtons.active {
-      background-color: #ffffff;
-    }
-
-    .recipe-cards {
-      display: grid;
-      gap: 20px;
-    }
-
-    /* Responsive styles for full screen*/
-    @media (min-width: 800px) {
-      .recipe-cards {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-  </style>
-  <br>
-  <h1 class="center">Recipes</h1>
-  <br>
-  <div class="center container">
-    <form action="/recipe" method="GET" class="d-flex justify-content-center">
-      <div class="d-flex align-items-center">
-        <input type="text" name="search" placeholder="Search recipes..." class="form-control">
-        <button type="submit" class="btn btn-warning ms-2">Search</button>
+<h1 class="center m-4">Recipes</h1>
+<!-- search bar -->
+<div class="center container mb-4">
+  <form action="/recipe" method="GET" class="d-flex justify-content-center">
+    <div class="d-flex align-items-center">
+      <input type="text" name="search" placeholder="Search recipes..." class="form-control">
+      <button type="submit" class="btn btn-warning ms-2">Search</button>
+    </div>
+  </form>
+</div>
+<!-- EJS template rendering for recipe cards -->
+<div class="center container">
+  <div id="recipeCards container" class="recipe-cards">
+    <% for (let recipe of paginatedRecipes) { %>
+      <!-- Start of individual recipe card -->
+      <div class="card" data-keywords="<%= recipe.Keywords %>">
+        <% if (recipe.Images) { %>
+          <% const images=recipe.Images.split(', ');
+                const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');%>
+        <div class="recipe-card">
+          <!-- Recipe image container -->
+          <div class="recipe-image-container">
+            <img src="<%= firstImage %>" alt="<%= recipe.Name %>" class="recipe-image">
+          </div>
+          <!-- Recipe name -->
+          <h2 class="center"><%= recipe.Name %></h2>
+          <!-- Button that triggers the modal -->
+          <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector('#modal-<%=recipe._id %>').style.display='block'">
+            More
+            </button>
       </div>
-    </form>
-  </div>
-  <br>
-  <div class="center container">
-    <div id="recipeCards container" class="recipe-cards">
-      <% for (let recipe of paginatedRecipes) { %>
-        <div class="card" data-keywords="<%= recipe.Keywords %>">
-          <% if (recipe.Images) { %>
-            <% const images=recipe.Images.split(', ');
-                    const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');%>
-    <div class="recipe-card">
-      <div class="recipe-image-container">
-        <img src="<%= firstImage %>" alt="<%= recipe.Name %>" class="recipe-image">
-      </div>
-      <h2 class="center"><%= recipe.Name %></h2>
-      <!-- Button that triggers the modal -->
-      <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector(' #modal-<%=recipe._id %>').style.display='block'">More</button>
-        </div>
-        <% } %>
+      <% } %>
 
-          <!-- Modal that displays the ingredients and instructions -->
-          <div id="modal-<%= recipe._id %>" class="modal">
-            <div class="modal-content">
-              <span class="close"
-                onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
-              <h2>
-                <%= recipe.Name %>
-              </h2>
-              <p><strong>Ingredients:</strong></p>
-              <ul>
-                <% const ingredients=recipe.RecipeIngredientParts.split(', ');
-        for (let i = 0; i < ingredients.length; i++) {
-            let ingredient = ingredients[i].replace(/"/g, '');
-            if (i === 0) {
-            // Remove the "c(" prefix from the first ingredient
-                ingredient = ingredient.replace(/^c\(/, '');
-            }
-            if (i === ingredients.length - 1) {
-            // Remove the ")" from the last ingredient
-                ingredient = ingredient.replace(/\)$/, '');
-            }
-            %>
-            <li><%= ingredient %></li>
+        <!-- Modal that displays the ingredients and instructions -->
+        <div id="modal-<%= recipe._id %>" class="modal">
+          <div class="modal-content">
+            <span class="close"
+              onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
+            <h2><%= recipe.Name %></h2>
+            <!-- Ingredients list -->
+            <p><strong>Ingredients:</strong></p>
+            <ul>
+              <% const ingredients=recipe.RecipeIngredientParts.split(', ');
+              for (let i = 0; i < ingredients.length; i++) {
+                let ingredient = ingredients[i].replace(/"/g, '');
+                if (i === 0) { 
+                  ingredient = ingredient.replace(/^c\(/, ''); // Remove the "c(" prefix from the first ingredient
+                }
+                if (i === ingredients.length - 1) { 
+                  ingredient = ingredient.replace(/\)$/, ''); // Remove the ")" from the last ingredient
+                }
+              %>
+              <li><%= ingredient %></li>
             <% } %>
             </ul>
+            <!-- Instructions list --> 
             <p><strong>Instructions:</strong></p>
             <ol>
-            <% const instructions = recipe.RecipeInstructions.replace(/\\n/g, '').replace(/^c\(/, '').replace(/\)$/, '').split(/", "/);
-            for (let i = 0; i < instructions.length; i++) {
-                let instruction = instructions[i].replace(/" /g, ''); %>
-            <li><%= instruction %></li>
-            <% } %>
-            </ol>
-        </div>
-        </div>
-    </div>
-<% } %>
-</div>
-<br>
-<div class="pagination justify-content-center">
-  <% if (currentPage> 1) { %>
-    <a href="/recipe?page=<%= currentPage - 1 %>" class="btn btn-warning page ml-1 numberedButtons">Prev</a>
-    <% } %>
-
-      <% const startPage=Math.max(1, currentPage - 2); const endPage=Math.min(totalPages, startPage + 4); for (let
-        i=startPage; i <=endPage; i++) { %>
-        <% if (i===currentPage) { %>
-          <button class="btn btn-warning page ml-1 numberedButtons active" value="<%= i %>">
-            <%= i %>
-          </button>
-          <% } else { %>
-            <a href="/recipe?page=<%= i %>" class="btn btn-warning page ml-1 numberedButtons" value="<%= i %>">
-              <%= i %>
-            </a>
-            <% } %>
+              <% const instructions = recipe.RecipeInstructions.replace(/\\n/g,'').replace(/^c\(/, '').replace(/\)$/, '').split(/", "/);
+                for (let i = 0; i < instructions.length; i++) {
+                  let instruction = instructions[i].replace(/" /g, '');%>
+              <li><%= instruction %></li>
               <% } %>
+            </ol>
+          </div>
+        </div>
+      </div>
+  <% } %>
+</div>
+  <br />
 
-                <% if (currentPage < totalPages) { %>
-                  <a href="/recipe?page=<%= currentPage + 1 %>"
-                    class="btn btn-warning page ml-1 numberedButtons">Next</a>
-                  <% } %>
+  <!-- Pagination section -->
+  <div class="pagination justify-content-center">
+    <!-- Previous page button -->
+    <% if (currentPage> 1) { %>
+    <a href="/recipe?page=<%= currentPage - 1 %>" class="btn btn-warning page ml-1 numberedButtons">Prev</a> <% } %>
+
+    <!-- Page number buttons -->
+    <%const startPage=Math.max(1, currentPage - 2);
+      const endPage=Math.min(totalPages, startPage + 4);
+      for (let i=startPage; i<=endPage; i++) {
+        if (i===currentPage) { 
+          %>
+    <button class="btn btn-warning page ml-1 numberedButtons active" value="<%= i %>"><%= i %></button>
+    <% } else { %>
+      <!-- Inactive page button -->
+    <a href="/recipe?page=<%= i %>" class="btn btn-warning page ml-1 numberedButtons" value="<%= i %>"><%= i %></a>
+    <% }
+  } %>
+
+    <!-- Next page button -->
+    <% if (currentPage < totalPages) { %>
+    <a href="/recipe?page=<%= currentPage + 1 %>" class="btn btn-warning page ml-1 numberedButtons">Next</a>
+    <% } %>
+  </div>
 </div>
 
-</div>
 <%- include("templates/footer") %>
