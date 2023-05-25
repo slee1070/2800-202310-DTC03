@@ -1,6 +1,7 @@
 let selectedIngredients = [];
 let selectedItemsToRemove = [];
 
+// Function to toggle selection of ingredients and items to remove
 function toggleSelection(element) {
   if (element.classList.contains('custom-ingredient-button')) {
     element.classList.remove('custom-ingredient-button');
@@ -31,6 +32,7 @@ function toggleSelection(element) {
 }
 
 $(function () {
+  // Initialize datepicker for best before dates
   $("input[id^='date-']").datepicker({
     minDate: 0,
     dateFormat: 'mm/dd/yy',
@@ -40,6 +42,7 @@ $(function () {
   });
 });
 
+// Function to update the best before date
 function updateBestBeforeDate(foodName, dateInput) {
   // Convert the selected date to the format MM-DD-YYYY
   var dateParts = dateInput.value.split('-');
@@ -64,10 +67,12 @@ function updateBestBeforeDate(foodName, dateInput) {
   });
 }
 
+// Function to save selected ingredients to the pantry
 function saveToPantry() {
   console.log(username);
   console.log(selectedIngredients);
 
+  // Send an AJAX request to the server to update the pantry
   $.ajax({
     url: '/update-pantry',
     method: 'POST',
@@ -80,18 +85,20 @@ function saveToPantry() {
     }),
     success: function (response) {
       console.log(response);
-      console.log('success updating pantry');
+      console.log('Success updating pantry');
       window.location.href = '/pantry';
     },
     error: function (error) {
       console.log(error);
-      console.log('error updating pantry');
+      console.log('Error updating pantry');
     },
   });
 }
 
+// Function to remove selected items from the pantry
 function removeFromPantry() {
   console.log(selectedItemsToRemove);
+  // Send an AJAX request to the server to remove items from the pantry
   $.ajax({
     url: '/remove-from-pantry',
     method: 'POST',
@@ -102,12 +109,12 @@ function removeFromPantry() {
     }),
     success: function (response) {
       console.log(response);
-      console.log('success removing from pantry');
+      console.log('Success removing from pantry');
       window.location.href = '/pantry';
     },
     error: function (error) {
       console.log(error);
-      console.log('error removing from pantry');
+      console.log('Error removing from pantry');
     },
   });
 }

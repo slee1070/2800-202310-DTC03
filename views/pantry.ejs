@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/style/pantry.css">
 
+<!-- pantry ingredients list table -->
 <div class="container d-flex align-items-center">
   <h2 class="mt-4 mb-3 flex-grow-1 custom-pad" id="my_pantry_title">My Pantry</h2>
   <h6 class="mt-4 mb-3">Add items</h6>
@@ -49,7 +50,7 @@
 </div>
 
 
-
+<!-- Modal to add ingredients to pantry list -->
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -90,8 +91,9 @@
                 <img src="/images/icon_misc.png" style="width:23px; height:auto">
               <% }
               %>
-
             </h5>
+            
+            <!-- button to display more ingredients for each food category -->
             <div class="container mx-2">
               <% for (let i = 0; i < Math.min(9, category.ingredients.length); i++) { %>
                 <% if (!pantryItems.some(item => item.food === category.ingredients[i])) { %>         
