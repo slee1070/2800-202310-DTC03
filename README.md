@@ -37,11 +37,11 @@ We are a team of developers - Dream Crafters. We are tech experts dedicated to r
 ## 4. Complete setup/installion/usage
 1. Clone the project repository from our GitHub repository.
 2. Install necessary dependancies listed in package.json file. 
-3. Sign up for a Cyclic account: To use Cyclic to host your web app, you'll need to sign up for an account on their website. Go to https://cyclic.sh/ and create a new account by clicking on the "Sign Up" button.
-4. Create a new project: Once you're signed in to your Cyclic account, click on the "Create a new project" button. You'll be prompted to enter a name for your project.
-5. Connect your Git repository: After creating your project, connect your Git repository with Cyclic. To do this, go to your project dashboard, click on the "Connect Git Repository" button, and follow the instructions to connect your repository.
-6. Install dependencies: Before deploying your app, make sure to install all necessary dependencies. Open a terminal in your local project directory and run the following command to install all the required dependencies: npm i
-7. Configure your environment variables: Cyclic allows you to add environment variables to your deployment to securely store and manage your app's configuration. To add environment variables locally, create a file called .env in your project directory and add your variables.
+3. Sign up for a Cyclic account.
+4. Once you're signed in to your Cyclic account, click on the "Create a new project" button. You'll be prompted to enter a name for your project.
+5. After creating your project, connect your Git repository with Cyclic. To do this, go to your project dashboard, click on the "Connect Git Repository" button, and follow the instructions to connect your repository.
+6. Before deploying your app, make sure to install all necessary dependencies. Open a terminal in your local project directory and run the following command to install all the required dependencies: npm i
+7. Cyclic allows you to add environment variables to your deployment to securely store and manage your app's configuration. To add environment variables locally, create a file called .env in your project directory and add your variables.
 8. Deploy your app: To deploy your app, go to your project dashboard on Cyclic, click on the "Deployments" tab, and then click on the "New Deployment" button. Here, you can configure your deployment settings, such as the name of the deployment, the Docker image to use, and the environment variables to set.
 9. In the "Environment Variables" section, you can add any environment variables that your app needs to run. To add a variable, click on the "Add Variable" button and enter the variable name and value.
 10. Once you have configured your deployment settings, click on the "Deploy" button to start the deployment process. Cyclic will build and deploy your app in a container with your environment variables configured.
