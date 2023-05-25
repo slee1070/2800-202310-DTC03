@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
+// list of pantry item schema
 const pantryItemSchema = new mongoose.Schema({
   food: String,
   bestBeforeDate: Date,
 }, {_id: false});
 
+// list of users schema
 const usersSchema = new mongoose.Schema({
   username: String,
   name: String,

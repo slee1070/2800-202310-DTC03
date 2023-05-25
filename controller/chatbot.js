@@ -4,9 +4,9 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 dotenv.config();
 
+//  defines an asynchronous function getChatbotResponse
 async function getChatbotResponse(persona, userQuery) {
     const personaDetails = getPersonaDetails(persona);
-    // Local: http://127.0.0.1:5000/chat  
     try {
         let response = await axios.post(process.env.CHATBOT_REMOTE_SERVER_URL, {
             query: userQuery,
@@ -22,6 +22,7 @@ async function getChatbotResponse(persona, userQuery) {
     }   
 }
 
+// defines a function to set persona details
 function getPersonaDetails(persona) {
     switch(persona) {
         case "Whisker": return {

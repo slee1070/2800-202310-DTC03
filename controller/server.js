@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 main().catch(err => console.log(err));
 
+// asynchronous function to connect the MongoDB server
 async function main() {
   await mongoose.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`);
 

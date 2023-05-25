@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// list of recipeSchema constant 
 const recipeSchema = new mongoose.Schema({
   RecipeId: Number,
   Name: String,
