@@ -50,6 +50,11 @@
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
+  #my_pantry_title {
+    font-family: 'museo-sans-rounded', sans-serif;
+    color: #e94a94;
+    font-weight: bold;
+  }
 </style>
 
 <!DOCTYPE html>
@@ -64,7 +69,7 @@
 <body>
   <%- include("templates/header") %>
 <div class="d-flex align-items-center">
-  <h2 class="mt-4 mb-3 flex-grow-1 custom-pad">My Pantry</h2>
+  <h2 class="mt-4 mb-3 flex-grow-1 custom-pad" id="my_pantry_title">My Pantry</h2>
   <h6 class="mt-4 mb-3">Add items</h6>
   <button id="modal-button" class="btn my-primary mt-2 custom-pad">
     <img src="/images/icon_add.png" style="width:23px; height:auto">

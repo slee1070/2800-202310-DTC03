@@ -1,4 +1,11 @@
 <%- include("templates/header") %>
+<style>
+  h2 {
+    font-family: 'museo-sans-rounded', sans-serif;
+    color: #e94a94;
+    font-weight: bold;
+  }
+</style>
 <div class="container">
   <% if (!session.GLOBAL_AUTHENTICATED) { %>
     <div class="alert alert-danger">
@@ -9,7 +16,7 @@
     <main class="form-signiin w-75 m-auto">
       <div class="d-flex gap-2 justify-content-center py-5">
         <form class="text-left" action="/profileSubmit" method="post">
-          <h1 class="h3 mb-4 fw-normal text-center">My Account</h1>
+          <h2 class="mb-4 text-center">My Account</h2>
           <% if (locals.errors) { %>
             <div class="alert alert-danger">
               <% for (let i = 0; i < locals.errors.length; i++) { %>
