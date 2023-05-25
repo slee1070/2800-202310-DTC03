@@ -52,8 +52,15 @@ We are a team of developers - Dream Crafters. We are tech experts dedicated to r
 
 
 ## 6. Features for Future
-
-
+As part of our future plans for PantryMaster, we are considering exciting features to enhance the user experience.
+1. Voice recognition technology 
+    This would allow users to interact with the app using their voice, enabling a hands-free and intuitive cooking experience. Users can set their preferred voice persona, and our AI-powered assistant will provide cooking instructions and guidance using that voice, adding a personalized touch to the cooking process. This innovative feature aims to make cooking more convenient, engaging, and accessible for users, further elevating their culinary journey with PantryMaster.
+2. Nutritional Information and Meal Planning 
+    Integrate a comprehensive nutritional information database into PantryMaster, allowing users to track their daily intake of calories, macronutrients, and other dietary factors. Additionally, provide meal planning functionalities that help users create balanced meal plans based on their nutritional goals.
+3. Smart Shopping List 
+    Develop a smart shopping list feature that syncs with users' pantry inventory and recipe selections. The app can automatically generate a shopping list based on missing ingredients, quantities needed, and preferred stores. This would streamline the grocery shopping process and ensure users have everything they need for their chosen recipes.
+4. Social Sharing and Community 
+    Build a social sharing platform within PantryMaster, enabling users to share their favorite recipes, cooking tips, and food experiences with a community of like-minded home cooks. This feature would foster engagement, inspiration, and collaboration among users.
 
 ## 7. Contents of Folder
 2800-202310-DTC03
