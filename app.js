@@ -579,16 +579,23 @@ app.get('/recipe', async (req, res) => {
     // If on the first page and search query exists, move all search results to the first page
     if (page === 1 && searchQuery && recipes.length > 1) {
       const searchResults = recipes.filter(recipe => recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
-      const nonSearchResults = recipes.filter(recipe => !recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
       const paginatedSearchResults = searchResults.slice(0, pageSize);
       const remainingSpace = pageSize - paginatedSearchResults.length;
-      const paginatedNonSearchResults = nonSearchResults.slice(0, remainingSpace);
+      const paginatedNonSearchResults = recipes.slice(paginatedSearchResults.length, paginatedSearchResults.length + remainingSpace);
       const paginatedRecipes = paginatedSearchResults.concat(paginatedNonSearchResults);
       res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
     } else {
       const paginatedRecipes = recipes.slice(startIndex, endIndex);
       res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
     }
+
+    // If there are no search results, display a pop-up alert
+    if (searchQuery && recipes.length === 0) {
+      const noResultsMessage = 'There are no search results.';
+      res.send(`<script>alert("${noResultsMessage}"); window.history.back();</script>`);
+      return; // Add this return statement to exit the route after sending the alert
+    }
+    
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('An error occurred while retrieving recipes.');
