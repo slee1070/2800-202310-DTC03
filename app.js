@@ -320,6 +320,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
+      req.session.emailNotifications = result.emailNotifications;
       req.session.save();
       res.redirect('/');
     } else {
@@ -568,6 +569,21 @@ app.post('/profile_change_password', async (req, res) => {
       res.redirect('/profile');
     }
   }
+});
+
+app.post('/update-user-setting', async (req, res) => {
+  const { emailNotifications } = req.body;
+
+  await usersModel.updateOne(
+    { username: req.session.loggedUsername },
+    { $set: { emailNotifications: emailNotifications } }
+  );
+  console.log('Updated user email preferences.')
+
+  // update session emailNotifications value
+  req.session.emailNotifications = emailNotifications;
+
+  res.status(200).send();
 });
 
 app.get('/aboutus', (req, res) => {

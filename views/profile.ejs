@@ -10,6 +10,12 @@
       <div class="d-flex gap-2 justify-content-center py-5">
         <form class="text-left" action="/profileSubmit" method="post">
           <h1 class="h3 mb-4 fw-normal text-center">My Account</h1>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <%= session.emailNotifications === 'checked' ? 'checked' : '' %>>
+            <label class="form-check-label mb-2" for="flexSwitchCheckDefault">
+              <%= session.emailNotifications === 'checked' ? 'Email Notifications: ON' : 'Email Notifications: OFF' %>  
+            </label>
+          </div>
           <% if (locals.errors) { %>
             <div class="alert alert-danger">
               <% for (let i = 0; i < locals.errors.length; i++) { %>
@@ -57,4 +63,24 @@
       document.getElementById("floatingEmail").disabled = true;
     }
   }
+
+  document.getElementById('flexSwitchCheckDefault').addEventListener('change', function(e) {
+    const isChecked = e.target.checked;
+    // if checked, set emailNotifications to empty string, else set it to 'checked'
+    const emailNotifications = isChecked ? 'checked' : ''
+    const label = document.querySelector('label[for="flexSwitchCheckDefault"]');
+
+    // update label text
+    label.textContent = isChecked ? 'Email Notifications: ON' : 'Email Notifications: OFF';
+
+    fetch('/update-user-setting', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        emailNotifications: emailNotifications,
+      }),
+    });
+  });
 </script>
