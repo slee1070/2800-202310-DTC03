@@ -7,65 +7,66 @@
   <!-- cuisine buttons go here -->
   <form id="cuisineForm" action="/preference_cuisine" method="post">
     <input type="hidden" name="userId" value="<%= result._id %>">
+    <h6 style="color:gray" class="text-center">Please uncheck unwanted cuisines for recipe recommendations.</h6>
     <section>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="European" id="European" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="European" id="European" class="checkbox" checked>
         <label for="European">
           <img src="images/user_preference/european.png" class="rounded-circle" width="80" height="80">
           <h6>European</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Mexican" id="Mexican" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Mexican" id="Mexican" class="checkbox" checked>
         <label for="Mexican">
           <img src="images/user_preference/mexican.png" class="rounded-circle" width="80" height="80">
           <h6>Mexican</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Chinese" id="Chinese" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Chinese" id="Chinese" class="checkbox" checked>
         <label for="Chinese">
           <img src="images/user_preference/chinese.png" class="rounded-circle" width="80" height="80">
           <h6>Chinese</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Korean" id="Korean" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Korean" id="Korean" class="checkbox" checked>
         <label for="Korean">
           <img src="images/user_preference/korean.png" class="rounded-circle" width="80" height="80">
           <h6>Korean</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Thai" id="Thai" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Thai" id="Thai" class="checkbox" checked>
         <label for="Thai">
           <img src="images/user_preference/thai.png" class="rounded-circle" width="80" height="80">
           <h6>Thai</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Brazilian" id="Brazilian" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Brazilian" id="Brazilian" class="checkbox" checked>
         <label for="Brazilian">
           <img src="images/user_preference/brazilian.png" class="rounded-circle" width="80" height="80">
           <h6>Brazilian</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Greek" id="Greek" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Greek" id="Greek" class="checkbox" checked>
         <label for="Greek">
           <img src="images/user_preference/greek.png" class="rounded-circle" width="80" height="80">
           <h6>Greek</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Indian" id="Indian" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Indian" id="Indian" class="checkbox" checked>
         <label for="Indian">
           <img src="images/user_preference/indian.png" class="rounded-circle" width="80" height="80">
           <h6>Indian</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="preferredCuisines[]" value="Japanese" id="Japanese" class="checkbox">
+        <input type="checkbox" name="preferredCuisines[]" value="Japanese" id="Japanese" class="checkbox" checked>
         <label for="Japanese">
           <img src="images/user_preference/japanese.png" class="rounded-circle" width="80" height="80">
           <h6>Japanese</h6>
@@ -75,8 +76,8 @@
 
     <div class="container text-center">
       <!-- <button class="w-100 btn btn-lg btn-warning mt-3" type="submit" name="submit">Next</button> -->
-      <button class="btn btn-lg btn-warning mt-3" type="submit" name="button" value="next" onclick="return validateForm()">Next</button><br>
-      <button class="btn btn-lg btn-light mt-2" type="submit" name="button" value="skip">Skip</button>
+      <button class="btn btn-lg btn-warning mt-3" type="submit" name="button" value="next" >Next</button><br>
+      <!-- <button class="btn btn-lg btn-light mt-2" type="submit" name="button" value="skip">Skip</button> -->
     </div>
 
     <div class="print-values">
