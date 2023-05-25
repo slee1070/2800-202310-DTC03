@@ -517,40 +517,59 @@ app.post('/preference', async (req, res) => {
 
 app.get('/recipe', async (req, res) => {
   try {
-  const userEmail = req.session.loggedEmail;
-  const user = await usersModel.findOne({ email: userEmail });
-  const cuisinePreference = user.cuisinePreference;
-  const dietaryRestrictions = user.dietaryRestrictions;
-  const collection = client.db('PantryMaster').collection('recipesWithKeywords');
+    const userEmail = req.session.loggedEmail;
+    const user = await usersModel.findOne({ email: userEmail });
+    const cuisinePreference = user.cuisinePreference;
+    const dietaryRestrictions = user.dietaryRestrictions;
+    const pantryItems = user.pantry.map(item => item.food.toLowerCase());
+    const collection = client.db('PantryMaster').collection('recipeData');
 
-  let recipes;
-  if (cuisinePreference) {
-    recipes = await collection.find({
-      Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
-    }).toArray();
-  } else {
-    recipes = await recipesWithKeywords.find().toArray();
-  }
+    const filter = {};
 
-  if (dietaryRestrictions) {
-    const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
-    recipes = recipes.filter(recipe => {
-      return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
-        || !recipe.Keywords.match(/Yeast Breads/i)
-        && !recipe.Keywords.match(/Nuts/i);
-    });
-  }
+    // Filter by dietary restrictions
+    if (dietaryRestrictions) {
+      filter.$and = dietaryRestrictions.map(keyword => ({
+        $and: [
+          { Keywords: new RegExp(keyword, 'i') },
+          {
+            $or: [
+              { Keywords: new RegExp('Vegan', 'i') },
+              { Keywords: new RegExp('Lacto Free', 'i') },
+              { Keywords: { $not: new RegExp('Nuts', 'i') } },
+              { Keywords: { $not: new RegExp('Yeast Breads', 'i') } }
+            ]
+          }
+        ]
+      }));
+    }    
 
-  // Pagination
-  const page = parseInt(req.query.page) || 1;
-  const pageSize = 10;
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = page * pageSize;
-  const totalPages = Math.ceil(recipes.length / pageSize);
-  const paginatedRecipes = recipes.slice(startIndex, endIndex);
+    // Filter by cuisine preference
+    if (cuisinePreference) {
+      if (!filter.$or) {
+        filter.$or = [];
+      }
+      filter.$or.push({ Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) } });
+    }
 
-  res.render('recipe', {paginatedRecipes, currentPage: page, totalPages
-  });
+    // Filter by pantry items
+    if (pantryItems.length > 0) {
+      if (!filter.$or) {
+        filter.$or = [];
+      }
+      filter.$or.push({ 'RecipeIngredientParts.food': { $in: pantryItems.map(item => new RegExp(item, 'i')) } });
+    }
+
+    const recipes = await collection.find(filter).toArray();
+
+    // Pagination
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    const totalPages = Math.ceil(recipes.length / pageSize);
+    const paginatedRecipes = recipes.slice(startIndex, endIndex);
+
+    res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('An error occurred while retrieving recipes.');
@@ -558,23 +577,7 @@ app.get('/recipe', async (req, res) => {
 });
 
 
-app.use(express.static('public'));
-app.get('/pantry', async (req, res) => {
-  if (!req.session.GLOBAL_AUTHENTICATED) {
-    res.redirect('/');
-  } else {
-      const user = await usersModel.findOne({username: req.session.loggedUsername});
-      const ingredients = await ingredientsModel.find();
-      let lastCategory = ingredients.pop();
-      ingredients.unshift(lastCategory);
-      res.render('pantry', {
-        session: req.session,
-        pantryItems: user.pantry,
-        username: req.session.loggedUsername,
-        ingredients: ingredients
-      });
-  }
-});
+
 
 app.post('/update-pantry', async (req, res) => {
   const { username, pantryItems } = req.body;
