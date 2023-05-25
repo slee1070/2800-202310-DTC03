@@ -35,7 +35,7 @@ const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PAS
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-cron.schedule("03 1 * * *", async function() {
+cron.schedule("35 2 * * *", async function() {
   console.log("Checking all users' pantries for expired items...");
 
   try {
@@ -79,7 +79,33 @@ async function sendMail(user, expiredItems) {
     from: process.env.NODE_EMAIL_ADDRESS,
     to: 'alfreychan@gmail.com',
     subject: 'Pantry Master - Expired Items in Your Pantry',
-    text: `Dear ${user.name},\n\nThe following items in your pantry have expired:\n\n${expiredItems.map(item => `${item.food} - Best before: ${new Date(item.bestBeforeDate).toLocaleDateString('en-US')}`) .join('\n')}\n\nBest regards,\n\nPantryMaster\n\nThis is an automated message. Please do not reply to this email.\n\nDreamCrafters Team, creators of PantryMaster ©2023\nVisit our website: www.pantrymaster.cyclic.app`,
+    html: `
+    <html>
+    <head>
+      <style>
+        .footer {
+          padding: 10px;
+          background-color: #f2f2f2;
+          text-align: center;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body>
+    Dear ${user.name},<br/><br/>
+    The following items in your pantry have expired:<br/><br/>
+    ${expiredItems.map(item => `${item.food} - Best before: ${new Date(item.bestBeforeDate).toLocaleDateString('en-US')}`).join('<br/>')}<br/><br/>
+    Best regards,<br/>
+    PantryMaster<br/><br/>
+    This is an automated message. Please do not reply to this email.<br/><br/>
+    <div class="footer">
+      DreamCrafters Team, creators of PantryMaster ©2023<br/>
+      Visit our website: <a href="http://www.pantrymaster.cyclic.app">www.pantrymaster.cyclic.app</a><br/>
+      <a href="http://localhost:3000/aboutus">Privacy Policy</a>
+    </div>
+    </body>
+    </html>
+    `
   });
 
    console.log('Message sent: %s', info.messageId)
