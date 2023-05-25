@@ -12,6 +12,10 @@ const usersSchema = new mongoose.Schema({
   password: String,
   securityQuestion: String,
   securityAnswer: String,
+  emailNotifications: {
+    type: String,
+    default: 'checked'
+  },
   persona: String,
   pantry: [pantryItemSchema],
   cuisinePreference: Array,
