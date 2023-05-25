@@ -8,9 +8,17 @@ const pantryItemSchema = new mongoose.Schema({
 
 // list of users schema
 const usersSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   name: String,
-  email: String,
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   password: String,
   securityQuestion: String,
   securityAnswer: String,
@@ -32,7 +40,6 @@ const usersSchema = new mongoose.Schema({
     default: 'checked'
   },
 });
-
 
 const usersModel = mongoose.model('users', usersSchema);
 

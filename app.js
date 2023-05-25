@@ -147,8 +147,8 @@ app.post('/signupSubmit', async (req, res) => {
       'string.max': 'Username must be betwen 5 to 15 characters long.',
       'string.empty': 'Please provide a username.',
     }),
-    name: Joi.string().alphanum().min(5).max(15).required().messages({
-      'string.alphanum': 'Name must only contain alphanumeric characters.',
+    name: Joi.string().regex(/^[a-zA-Z][a-zA-Z\s]*$/).min(5).max(15).required().messages({
+      'string.pattern.base': 'Name must only contain alphabetic characters.',
       'string.min': 'Name must be between 5 to 15 characters long.',
       'string.max': 'Username must be betwen 5 to 15 characters long.',
       'string.empty': 'Please provide a name.',
@@ -187,7 +187,24 @@ app.post('/signupSubmit', async (req, res) => {
   }).options({ allowUnknown: true });
 
   try {
-  const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
+    const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
+    const existingUser = await usersModel.findOne({ username: username });
+
+    if (existingUser) {
+      errorMessage.push('Username already exists.');
+    }
+
+    if (errorMessage.length > 0) {
+      // Render the signup page with error messages
+      return res.render('signup', {
+        errorMessage: errorMessage,
+        // Pass the existing form data back to the template to pre-fill the inputs
+        username: username,
+        name: name,
+        email: email,
+        securityQuestion: securityQuestion,
+      });
+    }
   const hashedSecurityAnswer = await bcrypt.hash(securityAnswer, 10);
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = {
@@ -222,8 +239,13 @@ app.post('/signupSubmit', async (req, res) => {
     errorMessage.push(error.message);
   });
   // render the error page with the error message array
-  res.render('signup_submit_error', {
+  res.render('signup', {
     errorMessage: errorMessage,
+    // Pass the existing form data back to the template to pre-fill the inputs
+    username: req.body.username,
+    name: req.body.name,
+    email: req.body.email,
+    securityQuestion: req.body.securityQuestion,
   });
   return;
 }
