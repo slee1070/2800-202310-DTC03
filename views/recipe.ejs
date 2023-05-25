@@ -1,24 +1,24 @@
 <%- include("templates/header") %>
-<link rel="stylesheet" href="/style/recipe.css">
+    <link rel="stylesheet" href="/style/recipe.css">
 
-<h1 class="center m-4">Recipes</h1>
-<!-- search bar -->
-<div class="center container mb-4">
-  <form action="/recipe" method="GET" class="d-flex justify-content-center">
-    <div class="d-flex align-items-center">
-      <input type="text" name="search" placeholder="Search recipes..." class="form-control">
-      <button type="submit" class="btn btn-warning ms-2">Search</button>
+    <h1 class="center m-4">Recipes</h1>
+    <!-- search bar -->
+    <div class="center container mb-4">
+        <form action="/recipe" method="GET" class="d-flex justify-content-center">
+            <div class="d-flex align-items-center">
+                <input type="text" name="search" placeholder="Search recipes..." class="form-control">
+                <button type="submit" class="btn btn-warning ms-2">Search</button>
+            </div>
+        </form>
     </div>
-  </form>
-</div>
-<!-- EJS template rendering for recipe cards -->
-<div class="center container">
-  <div id="recipeCards container" class="recipe-cards">
-    <% for (let recipe of paginatedRecipes) { %>
-      <!-- Start of individual recipe card -->
-      <div class="card" data-keywords="<%= recipe.Keywords %>">
-        <% if (recipe.Images) { %>
-          <% const images=recipe.Images.split(', ');
+    <!-- EJS template rendering for recipe cards -->
+    <div class="center container">
+        <div id="recipeCards container" class="recipe-cards">
+            <% for (let recipe of paginatedRecipes) { %>
+                <!-- Start of individual recipe card -->
+                <div class="card" data-keywords="<%= recipe.Keywords %>">
+                    <% if (recipe.Images) { %>
+                        <% const images=recipe.Images.split(', ');
                 const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');%>
         <div class="recipe-card">
           <!-- Recipe image container -->
@@ -28,22 +28,25 @@
           <!-- Recipe name -->
           <h2 class="center"><%= recipe.Name %></h2>
           <!-- Button that triggers the modal -->
-          <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector('#modal-<%=recipe._id %>').style.display='block'">
-            More
-            </button>
-      </div>
-      <% } %>
+          <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector('
+                            #modal-<%=recipe._id %>').style.display='block'">
+                            More
+                            </button>
+                </div>
+                <% } %>
 
-        <!-- Modal that displays the ingredients and instructions -->
-        <div id="modal-<%= recipe._id %>" class="modal">
-          <div class="modal-content">
-            <span class="close"
-              onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
-            <h2><%= recipe.Name %></h2>
-            <!-- Ingredients list -->
-            <p><strong>Ingredients:</strong></p>
-            <ul>
-              <% const ingredients=recipe.RecipeIngredientParts.split(', ');
+                    <!-- Modal that displays the ingredients and instructions -->
+                    <div id="modal-<%= recipe._id %>" class="modal">
+                        <div class="modal-content">
+                            <span class="close"
+                                onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
+                            <h2>
+                                <%= recipe.Name %>
+                            </h2>
+                            <!-- Ingredients list -->
+                            <p><strong>Ingredients:</strong></p>
+                            <ul>
+                                <% const ingredients=recipe.RecipeIngredientParts.split(', ');
               for (let i = 0; i < ingredients.length; i++) {
                 let ingredient = ingredients[i].replace(/"/g, '');
                 if (i === 0) { 
