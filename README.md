@@ -1,4 +1,5 @@
-# PantryMaster: Empowering Home Cooks for Flavorful and Convenient Meals
+# PantryMaster: 
+## Empowering Home Cooks for Flavorful and Convenient Meals
 
 ## 1. Project Description
 **Our team is developing a recipe recommendation app, PantryMaster, to help busy home cooks by recommending delicious recipes based on the ingredients that they already have in their pantry and refrigerator.**
