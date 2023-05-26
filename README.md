@@ -1,3 +1,4 @@
+# PantryMaster
 ## 1. Project Title
 PantryMaster - Empowering Home Cooks for Flavorful and Convenient Meals
 
