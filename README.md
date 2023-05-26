@@ -43,50 +43,60 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 ├── package-lock.json                   # Json file used for package version locking
 ├── package.json                        # Json file used by npm to specify the metadata and dependencies 
 ├── public                              # Folder that contains images, javascript, and style folders
-│   ├── images                              # Folder that contains images 
-│   │   ├── Chef Ramsay.png                     / Image file for AI persona
-│   │   ├── Grandma.png                         / Image file for AI persona
-│   │   ├── Whisker.png                         / Image file for AI persona
-│   │   ├── Remy.png                            / Image file for AI persona
-│   │   ├── icon_add.png                        / Icon image for add in pantry page
-│   │   ├── icon_remove.png                     / Icon image for remove in pantry page
-│   │   ├── logo.png                            / PantryMaster logo image
-│   │   ├── logo_title.png                      / PantryMaster logo title
-│   │   ├── ingredientts                    # Folder that contains food ingredients images
-│   │   │   ├── icon_beans.png                  / Icon image for beans in modal for pantry page
-│   │   │   ├── icon_berries.png                / Icon image for berries in modal for pantry page
-│   │   │   ├── icon_canned.png                 / Icon image for canned food in modal for pantry page
-│   │   │   ├── icon_chilli.png                 / Icon image for chilli food in modal for pantry page
-│   │   │   ├── icon_condiments.png             / Icon image for sauces and condiments in modal for pantry page
-│   │   │   ├── icon_dairy.png                  / Icon image for dairy products in modal for pantry page
-│   │   │   ├── icon_drinks.png                 / Icon image for drinks in modal for pantry page
-│   │   │   ├── icon_fruitVege.png              / Icon image for fruit and vegetables in modal for pantry page
-│   │   │   ├── icon_grains.png                 / Icon image for grains and pasta in modal for pantry page
-│   │   │   ├── icon_herbs.png                  / Icon image for herbs in modal for pantry page
-│   │   │   ├── icon_misc.png                   / Icon image for miscellaneous in modal for pantry page
-│   │   │   ├── icon_nuts.png                   / Icon image for nuts and seeds in modal for pantry page
-│   │   │   ├── icon_oils.png                   / Icon image for oils in modal for pantry page
-│   │   │   ├── icon_proteins.png               / Icon image for proteins in modal for pantry page
-│   │   │   └── icon_sugars.png                 / Icon image for sweetners in modal for pantry page
-│   │   └── user_preference                 # Folder that contains user preference images
-│   │       ├── brazilian.png                   / Image for Brazilian food 
-│   │       ├── chinese.png                     / Image for Chinese food 
-│   │       ├── european.png                    / Image for European food 
-│   │       ├── greek.png                       / Image for Greek food 
-│   │       ├── indian.png                      / Image for Indian food 
-│   │       ├── japanese.png                    / Image for Japanese food 
-│   │       ├── korean.png                      / Image for Korean food 
-│   │       ├── thai.png                        / Image for Thai food 
-│   │       ├── mexican.png                     / Image for Mexican food 
-│   │       ├── lactofree.png                   / Image for lactofree dietary restriction
-│   │       ├── nutfree.png                     / Image for nutfree dietary restriction
-│   │       ├── vegan.png                       / Image for vegan dietary restriction
-│   │       └── yeastfree.png                   / Image for yeastfree dietary restriction
-│   ├── js                                  # Folder that contains .js files
+├── images                              # Folder that contains images 
+│   ├── Chef Ramsay.png                         / Image file for AI persona
+│   ├── Grandma.png                             / Image file for AI persona
+│   ├── Remy.png                                / Image file for AI persona
+│   ├── Whisker.png                             / Image file for AI persona
+│   ├── icon_add.png                            / Icon image for add in pantry page
+│   ├── icon_remove.png                         / Icon image for remove in pantry page
+│   ├── ingredientts                    # Folder that contains food ingredients images
+│   │   ├── icon_beans.png                      / Icon image for beans in modal for pantry page
+│   │   ├── icon_berries.png                    / Icon image for berries in modal for pantry page
+│   │   ├── icon_canned.png                     / Icon image for canned food in modal for pantry page
+│   │   ├── icon_chilli.png                     / Icon image for chilli food in modal for pantry page
+│   │   ├── icon_condiments.png                 / Icon image for sauces and condiments in modal for pantry page
+│   │   ├── icon_dairy.png                      / Icon image for dairy products in modal for pantry page
+│   │   ├── icon_drinks.png                     / Icon image for drinks in modal for pantry page
+│   │   ├── icon_fruitVege.png                  / Icon image for fruit and vegetables in modal for pantry page
+│   │   ├── icon_grains.png                     / Icon image for grains and pasta in modal for pantry page
+│   │   ├── icon_herbs.png                      / Icon image for herbs in modal for pantry page
+│   │   ├── icon_misc.png                       / Icon image for miscellaneous in modal for pantry page
+│   │   ├── icon_nuts.png                       / Icon image for nuts and seeds in modal for pantry page
+│   │   ├── icon_oils.png                       / Icon image for oils in modal for pantry page
+│   │   ├── icon_proteins.png                   / Icon image for proteins in modal for pantry page
+│   │   └── icon_sugars.png                     / Icon image for sweetners in modal for pantry page
+│   ├── logo.png                                / PantryMaster logo image
+│   ├── svg
+│   │   ├── icon_account.svg                    / Icon image for account on nav bar
+│   │   ├── icon_chat.svg                       / Icon image for chat on nav bar
+│   │   ├── icon_favorite.svg                   / Icon image for favorite on nav bar
+│   │   ├── icon_fridge.svg                     / Icon image for fridge on nav bar
+│   │   ├── icon_home.svg                       / Icon image for home on nav bar
+│   │   ├── icon_info.svg                       / Icon image for info on nav bar
+│   │   ├── icon_login.svg                      / Icon image for login on nav bar
+│   │   ├── icon_logout.svg                     / Icon image for logout on nav bar
+│   │   ├── icon_recipe.svg                     / Icon image for recipe on nav bar
+│   │   └── icon_signup.svg                     / Icon image for signup on nav bar
+│   ├── user_preference                 # Folder that contains user preference images
+│   │   ├── brazilian.png                       / Image for Brazilian food 
+│   │   ├── chinese.png                         / Image for Chinese food 
+│   │   ├── european.png                        / Image for European food 
+│   │   ├── greek.png                           / Image for Greek food 
+│   │   ├── indian.png                          / Image for Indian food 
+│   │   ├── japanese.png                        / Image for Japanese food 
+│   │   ├── korean.png                          / Image for Korean food 
+│   │   ├── lactofree.png                       / Image for Thai food 
+│   │   ├── mexican.png                         / Image for Mexican food 
+│   │   ├── nutfree.png                         / Image for lactofree dietary restriction
+│   │   ├── thai.png                            / Image for nutfree dietary restriction
+│   │   ├── vegan.png                           / Image for vegan dietary restriction
+│   │   └── yeastfree.png                       / Image for yeastfree dietary restriction
+│   ├── js                              # Folder that contains .js files
 │   │   ├── chatbot_script.js                   / Javascript file for chatbot
 │   │   ├── fun.js                              / Javascript file for easter egg
 │   │   └── pantry.js                           / Javascript file for pantry
-│   └── style                               # Style folder that contains .css files
+│   └── style                           # Style folder that contains .css files
 │       ├── chatbot.css                         / Stylesheet for chatbot
 │       ├── cuisine.css                         / Stylesheet for cuisine
 │       ├── dietary_restriction.css             / Stylesheet for dietary restrictions 
