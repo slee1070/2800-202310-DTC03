@@ -1,11 +1,11 @@
+<!-- Log in page -->
 <%- include("templates/header") %>
   <div class="container">
     <main class="text-center form-signin w-75 m-auto">
       <div class="d-flex gap-2 justify-content-center py-5">
-        <!-- route -->
         <form action="/login" method="post">
           <form class="text-center">
-            <img class="mb-4" src="/images/Logo.png" alt="" width="100" height="m-auto">
+            <img class="mb-4" src="/images/logo.png" alt="" width="100" height="m-auto">
             <h1 class="h3 mb-3 fw-normal">Let's sign in</h1>
             <div class="form-floating">
               <input type="username" name="username" class="form-control" id="floatingUsername" placeholder="Username" required>
@@ -16,9 +16,6 @@
               <label for="floatingPassword">Password</label>
             </div>
             <div class="checkbox mb-3">
-              <label>
-                <input type="checkbox" value="remember-me"> Remember me
-              </label>
             </div>
             <button class="w-100 btn btn-lg btn-warning" type="submit">Sign in</button>
             <p class="mt-1">Forgot <a href="/username_retreival"

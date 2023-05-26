@@ -21,3 +21,16 @@ a#clickHere {
         transform: translateY(110vh) ;
     }
 }
+
+h1 {
+    font-family: "museo-sans-rounded", sans-serif;
+    font-style: normal;
+    color: #e94a94;
+    font-weight: bold;
+}
+
+button {
+    font-family: "museo-sans-rounded", sans-serif !important;
+    font-weight: 300 !important;
+    font-style: normal !important;
+}

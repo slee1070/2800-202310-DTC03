@@ -1,16 +1,41 @@
 <%- include("templates/header") %>
+<style>
+  h2 {
+    font-family: 'museo-sans-rounded', sans-serif;
+    color: #e94a94;
+    font-weight: bold;
+  }
+  .form-check-label {
+    font-size: 0.9em;
+    margin-right: 45px;
+    color: #3f3f3f;
+  }
+  .form-check-input {
+    background-color: #eaecee;
+  }
+</style>
+
 <div class="container">
+  <!-- check if user is logged in -->
   <% if (!session.GLOBAL_AUTHENTICATED) { %>
-    <div class="alert alert-danger">
+    <div class="alert alert-danger m-4">
       Access denied. You must be logged in to view this page.
       <a href="/login">Go to login</a>
     </div>
   <% } else { %>
     <main class="form-signiin w-75 m-auto">
       <div class="d-flex gap-2 justify-content-center py-5">
+        <!-- profile change form goes here -->
         <form class="text-left" action="/profileSubmit" method="post">
-          <h1 class="h3 mb-4 fw-normal text-center">My Account</h1>
+          <h2 class="mb-3 text-center">My Account</h2>
+          <div class="form-check form-switch d-flex justify-content-end">
+            <label class="form-check-label mb-3" for="flexSwitchCheckDefault">
+              <%= session.emailNotifications === 'checked' ? 'Email Notifications: ON' : 'Email Notifications: OFF' %>  
+            </label>
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <%= session.emailNotifications === 'checked' ? 'checked' : '' %>>
+          </div>
           <% if (locals.errors) { %>
+            <!-- error alert message goes here -->
             <div class="alert alert-danger">
               <% for (let i = 0; i < locals.errors.length; i++) { %>
                 <p><%= locals.errors[i].message %></p>
@@ -27,7 +52,7 @@
           </div>
           <div class="form-group mb-2">
             <label for="floatingEmail">Email address</label>
-            <input type="text" name="email" class="form-control" id="floatingEmail" value="<%= session.user.email %>" <% if (locals.disableFields) { %>disabled<% } %> >
+            <input type="text" name="email" class="form-control" id="floatingEmail" value="<%= session.loggedEmail %>" <% if (locals.disableFields) { %>disabled<% } %> >
           </div>
           <button id="edit" class="w-100 btn btn-lg btn-warning mt-3" type="button" onclick="toggleFields()">Edit</button>
           <button id="save" class="w-100 btn btn-lg btn-warning mt-3" type="submit">Save</button>
@@ -39,8 +64,9 @@
 </div>
 <%- include("templates/footer") %>
 <script>
+  // Function to toggle fields for edit and save
   function toggleFields() {
-    // if edit's innerhtml is edit, change it to cancel and enable all fields except username
+    // if edit's innerHTML is edit, change it to cancel and enable all fields except username
     // else, change it to edit and disable all fields except username
     const editButton = document.getElementById("edit");
     if (editButton.innerHTML === "Edit") {
@@ -57,4 +83,26 @@
       document.getElementById("floatingEmail").disabled = true;
     }
   }
+  
+  // Event listener for email notification switch
+  document.getElementById('flexSwitchCheckDefault').addEventListener('change', function(e) {
+    const isChecked = e.target.checked;
+    // if checked, set emailNotifications to empty string, else set it to 'checked'
+    const emailNotifications = isChecked ? 'checked' : ''
+    const label = document.querySelector('label[for="flexSwitchCheckDefault"]');
+
+    // update label text
+    label.textContent = isChecked ? 'Email Notifications: ON' : 'Email Notifications: OFF';
+
+    // update session for email notification 
+    fetch('/update-user-setting', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        emailNotifications: emailNotifications,
+      }),
+    });
+  });
 </script>

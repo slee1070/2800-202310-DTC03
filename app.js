@@ -1,33 +1,29 @@
+// Import required modules
 const express = require('express');
-const app = express();
+const nodemailer = require('nodemailer');
+const moment = require('moment');
+const cron = require('node-cron');
 const chatbot = require('./controller/chatbot');
 const session = require('express-session');
 const usersModel = require('./models/users');
-const recipe = require('./models/recipe');
 const ingredientsModel = require('./models/ingredients');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const url = require('url');
 const bodyParser = require('body-parser');
-// Add the body-parser middleware
+
+// Set up express application
+const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// 1 - import
-let ejs = require('ejs');
-// 2 - set the view engine to ejs
 app.set('view engine', 'ejs');
 
-const navLinks = [
-  { label: 'Home', path: '/' },
-  { label: 'Sign Up', path: '/signup' },
-  { label: 'Login', path: '/login' },
-];
-
+// Environment configuration
 const dotenv = require('dotenv');
-const { error } = require('console');
 dotenv.config();
 
+// Database connection
 const dbStore = new MongoDBStore({
   uri: `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`,
   collection: 'mySessions',
@@ -37,6 +33,84 @@ const dbStore = new MongoDBStore({
 const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+
+cron.schedule("* 12 * * *", async function() {
+  console.log("Checking all users' pantries for expired items...");
+
+  try {
+    const users = await usersModel.find(
+      { emailNotifications: 'checked' },
+    );
+
+    for (let user of users) {
+      const expiredItems = [];
+
+      for (let item of user.pantry) {
+        if (moment().isAfter(item.bestBeforeDate)) {
+          expiredItems.push(item);
+        }
+      }
+
+      if (expiredItems.length > 0) {
+        await sendMail(user, expiredItems);
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+async function sendMail(user, expiredItems) {
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: process.env.NODE_EMAIL_ADDRESS,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+      // accessToken: process.env.ACCESS_TOKEN,
+    },
+  });
+  console.log('Transporter created')
+
+  let info = await transporter.sendMail({
+    from: process.env.NODE_EMAIL_ADDRESS,
+    to: 'alfreychan@gmail.com',
+    subject: 'Pantry Master - Expired Items in Your Pantry',
+    html: `
+    <html>
+    <head>
+      <style>
+        .footer {
+          padding: 10px;
+          background-color: #f2f2f2;
+          text-align: center;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body>
+    Dear ${user.name},<br/><br/>
+    The following items in your pantry have expired:<br/><br/>
+    ${expiredItems.map(item => `${item.food} - Best before: ${new Date(item.bestBeforeDate).toLocaleDateString('en-US')}`).join('<br/>')}<br/><br/>
+    Best regards,<br/>
+    PantryMaster<br/><br/>
+    This is an automated message. Please do not reply to this email.<br/><br/>
+    <div class="footer">
+      DreamCrafters Team, creators of PantryMaster ©2023<br/>
+      Visit our website: <a href="http://www.pantrymaster.cyclic.app">www.pantrymaster.cyclic.app</a><br/>
+      Contact: dream.crafters.dtc03@gmail.com<br/>
+      <a href="http://localhost:3000/aboutus">Privacy Policy</a>
+    </div>
+    </body>
+    </html>
+    `
+  });
+
+   console.log('Message sent: %s', info.messageId)
+}
 
 app.use(
   session({
@@ -52,15 +126,35 @@ app.use(express.json());
 
 app.use('/', (req, res, next) => {
   res.locals.session = req.session;
-  app.locals.navLinks = navLinks;
   app.locals.currentURL = url.parse(req.url).pathname;
   next();
 });
 
 // public routes
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  if (req.session.GLOBAL_AUTHENTICATED) {
+    const checkDatesResult = await checkDates(req.session.loggedUsername);
+    req.session.outdatedItemsMessage = checkDatesResult.message;
+
+    console.log(checkDatesResult.hasOutdatedItems);
+    try{
+      await usersModel.updateOne(
+        { username: req.session.loggedUsername },
+        { $set: { hasOutdatedItems: checkDatesResult.hasOutdatedItems } }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    req.session.save();
+  }
+  const user = await usersModel.findOne({
+    username: req.session.loggedUsername,
+  });
+
   res.render('index', {
     session: req.session,
+    user: user,
   });
 });
 
@@ -78,8 +172,8 @@ app.post('/signupSubmit', async (req, res) => {
       'string.max': 'Username must be betwen 5 to 15 characters long.',
       'string.empty': 'Please provide a username.',
     }),
-    name: Joi.string().alphanum().min(5).max(15).required().messages({
-      'string.alphanum': 'Name must only contain alphanumeric characters.',
+    name: Joi.string().regex(/^[a-zA-Z][a-zA-Z\s]*$/).min(5).max(15).required().messages({
+      'string.pattern.base': 'Name must only contain alphabetic characters.',
       'string.min': 'Name must be between 5 to 15 characters long.',
       'string.max': 'Username must be betwen 5 to 15 characters long.',
       'string.empty': 'Please provide a name.',
@@ -118,7 +212,29 @@ app.post('/signupSubmit', async (req, res) => {
   }).options({ allowUnknown: true });
 
   try {
-  const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
+    const { username, name, password, email, securityQuestion, securityAnswer } = await schema.validateAsync(req.body, { abortEarly: false });
+    const existingUser = await usersModel.findOne({ username: username });
+    const existingEmail = await usersModel.findOne({ email: email });
+
+    if (existingUser) {
+      errorMessage.push('Username is already taken.');
+    }
+
+    if (existingEmail) {
+      errorMessage.push('Email address is already taken.');
+    }
+
+    if (errorMessage.length > 0) {
+      // Render the signup page with error messages
+      return res.render('signup', {
+        errorMessage: errorMessage,
+        // Pass the existing form data back to the template to pre-fill the inputs
+        username: username,
+        name: name,
+        email: email,
+        securityQuestion: securityQuestion,
+      });
+    }
   const hashedSecurityAnswer = await bcrypt.hash(securityAnswer, 10);
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = {
@@ -132,10 +248,16 @@ app.post('/signupSubmit', async (req, res) => {
   };
   const result = await usersModel.create(user);
   console.log(result);
-  // add some user created successfully message?
+  //  Set user authentication status and session data
   req.session.GLOBAL_AUTHENTICATED = true;
   req.session.loggedUsername = req.body.username;
   req.session.loggedName = req.body.name;
+  req.session.loggedEmail = req.body.email;
+  req.session.loggedCuisinePreference = req.body.cuisinePreference;
+  req.session.loggedDietaryRestrictions = req.body.dietaryRestrictions;
+  req.session.loggedPersona = req.body.persona;
+  req.session.save();
+  
   res.render('preference_cuisine', {
     result: result,
     session: req.session,
@@ -147,18 +269,20 @@ app.post('/signupSubmit', async (req, res) => {
     errorMessage.push(error.message);
   });
   // render the error page with the error message array
-  res.render('signup_submit_error', {
+  res.render('signup', {
     errorMessage: errorMessage,
+    // Pass the existing form data back to the template to pre-fill the inputs
+    username: req.body.username,
+    name: req.body.name,
+    email: req.body.email,
+    securityQuestion: req.body.securityQuestion,
   });
   return;
 }
 });
 
 app.use(express.static('public'));
-// app.get('/preference_cuisine', (req, res) => {
-//   const user = req.session.user;
-//   res.render('preference_cuisine', { session: req.session });
-// });
+
 
 app.post('/preference_cuisine', async (req, res) => {
   const userId = req.body.userId;
@@ -182,10 +306,6 @@ app.post('/preference_cuisine', async (req, res) => {
   }
 });
 
-// app.get('/preference_dietary_restriction', (req, res) => {
-//   const user = req.session.user;
-//   res.render('preference_dietary_restriction', { session: req.session });
-// });
 
 app.post('/preference_dietary_restriction', async (req, res) => {
   const userId = req.body.userId;
@@ -194,17 +314,37 @@ app.post('/preference_dietary_restriction', async (req, res) => {
   try {
     const user = await usersModel.findOne({ _id: userId });
     if (user) {
-      // Update user's cuisine preference
-      user.dietaryRestrictions = req.body.dietaryRestrictions;
+      // Update user's dietary restrictions
+      user.dietaryRestrictions = dietaryRestrictions;
       await user.save();
       req.session.user = user;
     }
     console.log("user's dietary restrictions", user.dietaryRestrictions);
+    res.render('choose_persona', { userId: userId, session: req.session });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post('/choose_persona', async (req, res) => {
+  const userId = req.body.userId;
+  const persona = req.body.persona;
+
+  try {
+    const user = await usersModel.findOne({ _id: userId });
+    if (user) {
+      // Update user's persona preference in the database
+      user.persona = persona;
+      await user.save();
+      req.session.user = user;
+    }
+    console.log("user's persona preference: ", user.persona);
     res.redirect('/');
   } catch (error) {
     console.log(error);
   }
 });
+
 
 app.get('/login', (req, res) => {
   res.render('login', {session: req.session});
@@ -237,6 +377,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedPassword = result.password;
       req.session.securityQuestion = result.securityQuestion;
       req.session.securityAnswer = result.securityAnswer;
+      req.session.emailNotifications = result.emailNotifications;
       req.session.save();
       res.redirect('/');
     } else {
@@ -247,6 +388,27 @@ app.post('/login', async (req, res) => {
   }
 });
 
+async function checkDates(currentUser) {
+  const user = await usersModel.findOne({ username: currentUser });
+  console.log(currentUser);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (user.pantry && Array.isArray(user.pantry)) {
+    const outdatedItems = user.pantry.filter(item => {
+      const bestBeforeDate = new Date(item.bestBeforeDate);
+      bestBeforeDate.setHours(0, 0, 0, 0);
+      console.log(`${item.food}, Outdated: ${bestBeforeDate < today}`)
+      return bestBeforeDate < today;
+    });
+
+    return { hasOutdatedItems: outdatedItems.length > 0, message: "You have outdated items in your pantry!" };
+  } else {
+    return { hasOutdatedItems: false, message: "" };
+  }
+}
+
+// Route to username_retreival
 app.get('/username_retreival', (req, res) => {
   res.render('username_retreival', { session: req.session });
 });
@@ -270,10 +432,12 @@ app.post('/display_username', async (req, res) => {
   }
 });
 
+// Route to password_recovery
 app.get('/password_recovery', (req, res) => { 
   res.render('password_recovery', { session: req.session });
 });
 
+// Defines route handler for submit_user_information
 app.post('/submit_user_information', async (req, res) => {
   try {
     const user = await usersModel.findOne({
@@ -295,6 +459,7 @@ app.post('/submit_user_information', async (req, res) => {
   }
 });
 
+// Defines route handler for submit_security_answer
 app.post('/submit_security_answer', async (req, res) => {
   try {
     const user = await usersModel.findOne({ _id: req.body.userId });
@@ -319,10 +484,12 @@ app.post('/submit_security_answer', async (req, res) => {
   }
 });
 
+// Route to security_answer_submit
 app.get('/security_answer_submit', (req, res) => {
   res.render('security_answer_submit');
 });
 
+// Defines route handler for reset_password
 app.post('/reset_password', async (req, res) => {
   try {
     const { password, confirmPassword } = req.body;
@@ -361,14 +528,17 @@ app.post('/reset_password', async (req, res) => {
   }
 });
 
+// Route to password_change
 app.get('/password_change', (req, res) => {
   res.render('password_change');
 });
 
+// Route to profile page
 app.get('/profile', (req, res) => {
   res.render('profile', {session: req.session, disableFields: true});
 });
 
+// Defines route handler to profileSubmit
 app.post('/profileSubmit', async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().alphanum().min(5).max(15).required().messages({
@@ -416,10 +586,12 @@ app.post('/profileSubmit', async (req, res) => {
   
 });
 
+// Route to profile_change_password
 app.get('/profile_change_password', (req, res) => {
   res.render('profile_change_password', {session: req.session});
 });
 
+// Route to profile_change_password
 app.post('/profile_change_password', async (req, res) => {
   const { old_password, password, confirmPassword } = req.body;
   const schema = Joi.object({
@@ -467,88 +639,169 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
+// Defines route handler for update-user-setting
+app.post('/update-user-setting', async (req, res) => {
+  const { emailNotifications } = req.body;
+
+  await usersModel.updateOne(
+    { username: req.session.loggedUsername },
+    { $set: { emailNotifications: emailNotifications } }
+  );
+  console.log('Updated user email preferences.')
+
+  // update session emailNotifications value
+  req.session.emailNotifications = emailNotifications;
+
+  res.status(200).send();
+});
+
+// route to about us page
+app.get('/aboutus', (req, res) => {
+  const user = req.session.user;
+  res.render('about_us', { session: req.session });
+});
+
+// route to preference page
 app.get('/preference', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
   } else {
     const user = await usersModel.findOne({ username: req.session.loggedUsername });
     const cuisineOptions = ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'];
-    const dietaryOptions = ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'];
+    const dietaryOptions = ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast-Free',];
+    const persona = ["Whisker", "Grandma", "Chef Ramsay", "Remy"]
     res.render('preference', {
       session: req.session,
       user: user,
       cuisineOptions: cuisineOptions,
       dietaryOptions: dietaryOptions,
+      persona: persona
     });
   }
 });
 
+// route to preference page
 app.post('/preference', async (req, res) => {
   const userId = req.body.userId;
   const cuisinePreference = req.body.cuisinePreference;
   const dietaryRestrictions = req.body.dietaryRestrictions;
+  const updatedPersona = req.body.persona;
 
   try {
     const user = await usersModel.findOne({ _id: userId });
     if (user) {
-      // Update user's cuisine preference and dietary restrictions
+      // Update user's persona, cuisine preference, and dietary restrictions
       user.cuisinePreference = cuisinePreference;
       user.dietaryRestrictions = dietaryRestrictions;
+      user.persona = updatedPersona;
       await user.save();
       req.session.user = user;
     }
     console.log(user);
     console.log("User's cuisine preference:", user.cuisinePreference);
     console.log("User's dietary restrictions:", user.dietaryRestrictions);
+    console.log("User's persona:", user.persona);
     res.render('preference', {
       session: req.session,
       user: user,
       cuisineOptions: ['European', 'Korean', 'Greek', 'Mexican', 'Thai', 'Indian', 'Chinese', 'Brazilian', 'Japanese'],
-      dietaryOptions: ['Nuts', 'Lactose Free', 'Vegan', 'Yeast Breads'] });
+      dietaryOptions: ['Nut-Free', 'Lactose Free', 'Vegan', 'Yeast-Free'],
+      persona: ["Whisker", "Grandma", "Chef Ramsay", "Remy"] });
   } catch (error) {
     console.log(error);
   }
 });
 
+// Route to recipe page
+app.get('/recipe', async (req, res) => {
+  try {
+    const userEmail = req.session.loggedEmail;
+    const user = await usersModel.findOne({ email: userEmail });
+    const cuisinePreference = user.cuisinePreference;
+    const dietaryRestrictions = user.dietaryRestrictions;
+    const pantryItems = user.pantry.map(item => item.food.toLowerCase());
+    const collection = client.db('PantryMaster').collection('recipeData');
 
-app.get('/preference', (req, res) => {
-  res.render('preference', {session: req.session, disableFields: true});
-});
+    const filter = {};
 
-// app.get('/recipe', async (req, res) => {
-//   const collection = client.db('PantryMaster').collection('recipeTest2');
-//   const cursor = collection.find();
-//   const recipes = [];
-//   await cursor.forEach(recipe => {
-//     recipes.push(recipe);
-//   });
-//   res.render('recipe', { recipes });
-// });
+    // Filter by dietary restrictions
+    if (dietaryRestrictions && dietaryRestrictions.length > 0) {
+      filter.$and = dietaryRestrictions.map(keyword => ({
+        $and: [
+          { Keywords: new RegExp(keyword, 'i') },
+          {
+            $or: [
+              { Keywords: { $regex: /Nut-Free/i } },
+              { Keywords: { $regex: /Lacto Free/i } },
+              { Keywords: { $regex: /Vegan/i } },
+              { Keywords: { $regex: /Yeast-Free/i } }
+            ]
+          }
+        ]
+      }));
+    }    
 
-app.get('/recipe2', async (req, res) => {
-  const recipeCollection = client.db('PantryMaster').collection('recipeTest2');
-  const query = {};
-  // Check if query parameter for keywords exists
-  if (req.query.keywords) {
-    const keywords = req.query.keywords.split(',');
-    query.Keywords = { $all: keywords };
+    // Filter by cuisine preference
+    if (cuisinePreference) {
+      if (!filter.$or) {
+        filter.$or = [];
+      }
+      filter.$or.push({ Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) } });
+    }
+
+    // Filter by pantry items
+    if (pantryItems.length > 0) {
+      if (!filter.$or) {
+        filter.$or = [];
+      }
+      filter.$or.push({ 'RecipeIngredientParts.food': { $in: pantryItems.map(item => new RegExp(item, 'i')) } });
+    }
+
+    // Check if there is a search query parameter
+    const searchQuery = req.query.search;
+    if (searchQuery) {
+      const searchFilter = { Name: { $regex: new RegExp(searchQuery, 'i') } };
+      filter.$or.unshift(searchFilter);
+    }
+
+    const recipes = await collection.find(filter).toArray();
+
+    // Pagination
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 12;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    const totalPages = Math.ceil(recipes.length / pageSize);
+
+    // If search query exists, move all search results to the first page
+    if (page === 1 && searchQuery && recipes.length > 1) {
+      const searchResults = recipes.filter(recipe => recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
+      const paginatedSearchResults = searchResults.slice(0, pageSize);
+      const remainingSpace = pageSize - paginatedSearchResults.length;
+      const paginatedNonSearchResults = recipes.slice(paginatedSearchResults.length, paginatedSearchResults.length + remainingSpace);
+      const paginatedRecipes = paginatedSearchResults.concat(paginatedNonSearchResults);
+      res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
+    } else {
+      const paginatedRecipes = recipes.slice(startIndex, endIndex);
+      res.render('recipe', { paginatedRecipes, currentPage: page, totalPages });
+    }
+
+    // If there are no search results, display a pop-up alert
+    if (searchQuery !== recipes.length === 0) {
+      const noResultsMessage = 'There are no search results.';
+      res.send(`<script>alert("${noResultsMessage}"); window.history.back();</script>`);
+      return; // Add this return statement to exit the route after sending the alert
+    }
+    
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('An error occurred while retrieving recipes.');
   }
-  const cursor = recipeCollection.find(query);
-  const recipes = [];
-  await cursor.forEach((recipe) => {
-    recipes.push(recipe);
-  });
-  // Fetch the user's dietary restrictions from the 'users' collection
-  const user = await usersModel.findOne({
-    username: req.session.loggedUsername,
-  });
-  const userCuisinePreference = user ? user.cuisinePreference || [] : [];
-  console.log('User Cuisine Preference:', userCuisinePreference);
-  res.render('recipe2', { recipes, userCuisinePreference });
 });
-
 
 app.use(express.static('public'));
+
+// Route to pantry page
 app.get('/pantry', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
@@ -566,6 +819,7 @@ app.get('/pantry', async (req, res) => {
   }
 });
 
+// Route to update-pantry page
 app.post('/update-pantry', async (req, res) => {
   const { username, pantryItems } = req.body;
   console.log(pantryItems);
@@ -642,7 +896,9 @@ app.get('/chat', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
   } else {
-      res.render('chat');
+      // res.render('chat', {persona: "Whisker"});
+      const user = await usersModel.findOne({ username: req.session.loggedUsername });
+      res.render('chat', {persona: user.persona})
   }
 });
 
@@ -656,91 +912,16 @@ app.post('/chat', async (req, res) => {
     foodList.push(items.food);
   }
   const query = `I have the following items in my pantry: ${foodList.toString()}.  ${req.body.query}`;
+  const persona = req.body.persona;
   console.log(query);
-  res.send(await chatbot(query))
+  res.send(await chatbot(persona, query))
 
 });
+
 
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
 });
-
-
-//populate all recipes
-app.get('/all_recipe', async (req, res) => {
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  const cursor = collection.find();
-  const recipes = [];
-  await cursor.forEach(recipe => {
-    recipes.push(recipe);
-  });
-  res.render('recipe', { recipes });
-});
-
-/*//Run both cuisinePreference and dietaryRestriction filters*/
-app.get('/recipe', async (req, res) => {
-  const userEmail = req.session.loggedEmail;
-  const user = await usersModel.findOne({ email: userEmail });
-  const cuisinePreference = user.cuisinePreference;
-  const dietaryRestrictions = user.dietaryRestrictions;
-  const collection = client.db('PantryMaster').collection('recipeTest2');
-  let recipes;
-if (cuisinePreference) {
-  recipes = await collection.find({
-    Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
-  }).toArray();
-} else {
-  recipes = await recipeTest2.find().toArray();
-}
-  if (dietaryRestrictions) {
-    const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
-    recipes = recipes.filter(recipe => {
-      return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
-        || !recipe.Keywords.match(/Yeast Breads/i)
-        && !recipe.Keywords.match(/Nuts/i);
-    });
-  }
-  res.render('recipe_cuisine', { recipes });
-});
-
-// /*Run cuisinePreference filter only */
-// app.get('/recipe', async (req, res) => {
-//   const userEmail = req.session.loggedEmail;
-//   const user = await usersModel.findOne({ email: userEmail });
-//   const cuisinePreference = user.cuisinePreference;
-//   const collection = client.db('PantryMaster').collection('recipeTest2');
-//   let recipes;
-//   if (cuisinePreference) {
-//     recipes = await collection.find({
-//       Keywords: { $in: cuisinePreference.map(keyword => new RegExp(keyword, 'i')) }
-//     }).toArray();
-//   } else {
-//     recipes = await recipeTest2.find().toArray();
-//   }
-//   console.log('Recipes:', recipes);
-//   res.render('recipe_cuisine', { recipes });
-// });
-
-
-// // /*Run dietaryRestriction filter only */
-// app.get('/recipe_cuisine', async (req, res) => {
-//   const userEmail = req.session.loggedEmail;
-//   const user = await usersModel.findOne({ email: userEmail });
-//   const dietaryRestrictions = user.dietaryRestrictions;
-//   const collection = client.db('PantryMaster').collection('recipeTest2');
-//   let recipes = await collection.find().toArray();
-//   if (dietaryRestrictions) {
-//     const dietaryRestrictionsRegex = dietaryRestrictions.map(keyword => new RegExp(keyword, 'i'));
-//     recipes = recipes.filter(recipe => {
-//       return !dietaryRestrictionsRegex.some(keyword => recipe.Keywords.match(keyword))
-//         || !recipe.Keywords.match(/Yeast Breads/i)
-//         && !recipe.Keywords.match(/Nuts/i);
-//     });
-//   }
-//   console.log('Recipes:', recipes);
-//   res.render('recipe_cuisine', { recipes });
-// });
-
 
 app.use(express.static('public'));
 

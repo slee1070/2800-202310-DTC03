@@ -1,0 +1,88 @@
+<!-- Choose cooking assistant persona during signup process -->
+<%- include("templates/header") %>
+  <link rel="stylesheet" href="/style/dietary_restriction.css">
+  <style>
+    input[type="radio"] {
+      -webkit-appearance: none;
+      position: relative;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: #ffffff;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      outline: none;
+      box-shadow: 15px 15px 25px rgba(2, 28, 53, 0.05);
+    }
+
+    input[type="radio"]:after {
+      position: absolute;
+      content: "\f111";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 400;
+      font-size: 15px;
+      top: 10px;
+      left: 10px;
+      color: #e2e6f3;
+    }
+
+    input[type="radio"]:checked {
+      border: 2px solid #84c9b2;
+    }
+
+    input[type="radio"]:checked:after {
+      font-weight: 900;
+      content: "\f058";
+      color: #84c9b2;
+    }
+
+    h2 {
+      font-family: "museo-sans-rounded", sans-serif;
+      font-style: normal;
+      color: #e94a94;
+      font-weight: bold;
+    }
+  </style>
+
+  <!-- Choose persona -->
+  <form id="choosePersonaForm" action="choose_persona" method="post" class="container">
+    <h1 class="text-center mt-4">Who do you want to chat with while cooking?</h1>
+    <input type="hidden" name="userId" value="<%= userId %>">
+    <section>
+      <div class="tile">
+        <input type="radio" name="persona" id="Whisker" value="Whisker" class="radio" checked>
+        <label for="Whisker">
+          <img src="images/Whisker.png" class="rounded-circle" width="80" height="80">
+          <h6>Whisker</h6>
+        </label>
+      </div>
+      <div class="tile">
+        <input type="radio" name="persona" id="Remy" value="Remy" class="radio">
+        <label for="Remy">
+          <img src="images/Remy.png" class="rounded-circle" width="80" height="80">
+          <h6>Remy</h6>
+        </label>
+      </div>
+      <div class="tile">
+        <input type="radio" name="persona" id="Grandma" value="Grandma" class="radio">
+        <label for="Grandma">
+          <img src="images/Grandma.png" class="rounded-circle" width="80" height="80">
+          <h6>Grandma</h6>
+        </label>
+      </div>
+      <div class="tile">
+        <input type="radio" name="persona" id="Chef" value="Chef Ramsay" class="radio">
+        <label for="Chef">
+          <img src="images/Chef Ramsay.png" class="rounded-circle" width="80" height="80">
+          <h6>Chef Ramsay</h6>
+        </label>
+      </div>
+    </section>
+    <div class="container text-center">
+      <button class="btn btn-lg btn-warning mt-3" type="submit" name="submit">Let's start!</button>
+    </div>
+  </form>
+
+<%- include("templates/footer") %>

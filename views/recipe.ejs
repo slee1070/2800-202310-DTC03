@@ -1,143 +1,103 @@
 <%- include("templates/header") %>
-    <!DOCTYPE html>
-    <html>
+    <link rel="stylesheet" href="/style/recipe.css">
 
-    <head>
-        <meta charset="utf-8">
-        <br>
-        <title>Recipes</title>
-        <style>
-            .center {
-                text-align: center;
-            }
-
-            .card {
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-
-            .card h2 {
-                margin-top: 0;
-            }
-
-            .card p {
-                margin: 0;
-            }
-
-            /* Modal styles */
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0, 0, 0, 0.4);
-            }
-
-            .modal-content {
-                background-color: #fefefe;
-                margin: 15% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 80%;
-            }
-
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-        </style>
-    </head>
-
-    <body>
-        <div class="container">
-            <h1 class="center">Recipes</h1>
-            <% for (let recipe of recipes) { %>
-                <div class="card">
-                    <% const images=recipe.Images.split(', ');
-           const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');
-        %>
-        <img src="<%= firstImage %>" alt="<%= recipe.Name %>"> <br>
-        <h2 class="center">
-            <%= recipe.Name %>
-        </h2>
-        <!-- Button that triggers the modal -->
-        <button class="w-100 btn btn-lg btn-warning mt-3"
-            onclick="document.querySelector(' #modal-<%=recipe.RecipeId %>').style.display='block'">More</button>
-                        <!-- Modal that displays the ingredients and instructions -->
-                        <div id="modal-<%= recipe.RecipeId %>" class="modal">
-                            <div class="modal-content">
-                                <span class="close"
-                                    onclick="document.getElementById('modal-<%= recipe.RecipeId %>').style.display='none'">&times;</span>
-                                <h2>
-                                    <%= recipe.Name %>
-                                </h2>
-                                <p><strong>Ingredients:</strong></p>
-                                <ul>
-                                    <% const
-                                        ingredients=recipe.RecipeIngredientParts.split(', ');
-                       for (let i = 0; i < ingredients.length; i++) {
-                         let ingredient = ingredients[i].replace(/"/g, '');
-                         if (i === 0) {
-                           // Remove the "c(" prefix from the first ingredient
-                           ingredient = ingredient.replace(/^c\(/, '');
-                         }
-                         if (i === ingredients.length - 1) {
-                           // Remove the ")" from the last ingredient
-                           ingredient = ingredient.replace(/\)$/, '');
-                         }
-                    %>
-                    <li><%= ingredient %></li>
-                    <% } %>
-                </ul>
-                <p><strong>Instructions:</strong></p>
-                <ol>
-                    <% const instructions=recipe.RecipeInstructions.replace(/\\n/g, '' ).replace(/^c\(/, '' ).replace(/\)$/, '' ).split(/", "/);
-                           for (let i = 0; i < instructions.length; i++) {
-                             let instruction = instructions[i].replace(/" /g, '' ); %>
-                    <li>
-                        <%= instruction %>
-                    </li>
-                    <% } %>
-                </ol>
+    <h1 class="center m-4">Recipes</h1>
+    <!-- search bar -->
+    <div class="center container mb-4">
+        <form action="/recipe" method="GET" class="d-flex justify-content-center">
+            <div class="d-flex align-items-center">
+                <input type="text" name="search" placeholder="Search recipes..." class="form-control">
+                <button type="submit" class="btn btn-warning ms-2">Search</button>
             </div>
-        </div>
+        </form>
     </div>
-    <% } %>
-</body>
+    <!-- EJS template rendering for recipe cards -->
+    <div class="center container">
+        <div id="recipeCards container" class="recipe-cards">
+            <% for (let recipe of paginatedRecipes) { %>
+                <!-- Start of individual recipe card -->
+                <div class="card" data-keywords="<%= recipe.Keywords %>">
+                    <% if (recipe.Images) { %>
+                        <% const images=recipe.Images.split(', ');
+                const firstImage = images[0].replace(/"/g, '').replace(/^c\(/, '');%>
+        <div class="recipe-card">
+          <!-- Recipe image container -->
+          <div class="recipe-image-container">
+            <img src="<%= firstImage %>" alt="<%= recipe.Name %>" class="recipe-image">
+          </div>
+          <!-- Recipe name -->
+          <h2 class="center"><%= recipe.Name %></h2>
+          <!-- Button that triggers the modal -->
+          <button class="more-button btn btn-lg btn-warning mt-3" onclick="document.querySelector('#modal-<%=recipe._id %>').style.display='block'">
+                            More
+                            </button>
+                </div>
+                <% } %>
+
+                    <!-- Modal that displays the ingredients and instructions -->
+                    <div id="modal-<%= recipe._id %>" class="modal">
+                        <div class="modal-content">
+                            <span class="close"
+                                onclick="document.getElementById('modal-<%= recipe._id %>').style.display='none'">&times;</span>
+                            <h2>
+                                <%= recipe.Name %>
+                            </h2>
+                            <!-- Ingredients list -->
+                            <p><strong>Ingredients:</strong></p>
+                            <ul>
+                                <% const ingredients=recipe.RecipeIngredientParts.split(', ');
+              for (let i = 0; i < ingredients.length; i++) {
+                let ingredient = ingredients[i].replace(/"/g, '');
+                if (i === 0) { 
+                  ingredient = ingredient.replace(/^c\(/, ''); // Remove the "c(" prefix from the first ingredient
+                }
+                if (i === ingredients.length - 1) { 
+                  ingredient = ingredient.replace(/\)$/, ''); // Remove the ")" from the last ingredient
+                }
+              %>
+              <li><%= ingredient %></li>
+            <% } %>
+            </ul>
+            <!-- Instructions list --> 
+            <p><strong>Instructions:</strong></p>
+            <ol>
+              <% const instructions = recipe.RecipeInstructions.replace(/\\n/g,'').replace(/^c\(/, '').replace(/\)$/, '').split(/", "/);
+                for (let i = 0; i < instructions.length; i++) {
+                  let instruction = instructions[i].replace(/" /g, '');%>
+              <li><%= instruction %></li>
+              <% } %>
+            </ol>
+          </div>
+        </div>
+      </div>
+  <% } %>
 </div>
+  <br />
+
+  <!-- Pagination section -->
+  <div class="pagination justify-content-center">
+    <!-- Previous page button -->
+    <% if (currentPage> 1) { %>
+    <a href="/recipe?page=<%= currentPage - 1 %>" class="btn btn-warning page ml-1 numberedButtons">Prev</a> <% } %>
+
+    <!-- Page number buttons -->
+    <%const startPage=Math.max(1, currentPage - 2);
+      const endPage=Math.min(totalPages, startPage + 4);
+      for (let i=startPage; i<=endPage; i++) {
+        if (i===currentPage) { 
+          %>
+    <button class="btn btn-warning page ml-1 numberedButtons active" value="<%= i %>"><%= i %></button>
+    <% } else { %>
+      <!-- Inactive page button -->
+    <a href="/recipe?page=<%= i %>" class="btn btn-warning page ml-1 numberedButtons" value="<%= i %>"><%= i %></a>
+    <% }
+  } %>
+
+    <!-- Next page button -->
+    <% if (currentPage < totalPages) { %>
+    <a href="/recipe?page=<%= currentPage + 1 %>" class="btn btn-warning page ml-1 numberedButtons">Next</a>
+    <% } %>
+  </div>
+</div>
+
 <%- include("templates/footer") %>
-
-<script>
-    const modals = document.querySelectorAll(' .modal'); let modal; modals.forEach(modalElement => {
-        modal = modalElement;
-
-        const closeBtn = modal.querySelector('.close');
-
-        closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
-</script>
-
-    </html>

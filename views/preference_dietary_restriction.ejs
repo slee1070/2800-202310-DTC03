@@ -1,11 +1,11 @@
 <%- include("templates/header") %>
   <link rel="stylesheet" href="/style/dietary_restriction.css">
 
-  <h1 class="text-center">Any dietary restriction?</h1>
-
-  <!-- dietary restriction buttons go here -->
-  <form id="dietaryRestrictionForm" action="preference_dietary_restriction" method="post">
+  <!-- dietary restriction checkboxes go here -->
+  <form id="dietaryRestrictionForm" action="preference_dietary_restriction" method="post" class="container">
+    <h1 class="text-center">Any dietary restriction?</h1>
     <input type="hidden" name="userId" value="<%= userId %>">
+    <h6 style="color:gray" class="text-center">Select any applicable dietary restrictions.</h6>
     <section>
       <div class="tile">
         <input type="checkbox" name="dietaryRestrictions[]" id="Vegan" value="Vegan" class="checkbox">
@@ -22,25 +22,23 @@
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="dietaryRestrictions[]" id="Yeast Breads" value="Yeast Breads" class="checkbox">
-        <label for="YeastFree">
+        <input type="checkbox" name="dietaryRestrictions[]" id="Yeast-Free" value="Yeast-Free" class="checkbox">
+        <label for="Yeast-Free">
           <img src="images/user_preference/yeastfree.png" class="rounded-circle" width="80" height="80">
           <h6>Yeast free</h6>
         </label>
       </div>
       <div class="tile">
-        <input type="checkbox" name="dietaryRestrictions[]" id="Nuts" value="Nuts" class="checkbox">
-        <label for="NutFree">
+        <input type="checkbox" name="dietaryRestrictions[]" id="Nut-Free" value="Nut-Free" class="checkbox">
+        <label for="Nut-Free">
           <img src="images/user_preference/nutfree.png" class="rounded-circle" width="80" height="80">
           <h6>Nut free</h6>
         </label>
       </div>
     </section>
     <div class="container text-center">
-      <button class="w-75 btn btn-lg btn-warning mt-3" type="submit" name="submit">Let's start!</button>
-      <!-- <button class="btn btn-lg btn-warning mt-3" type="submit">Next</button><br>
-      <button class="btn btn-lg btn-light mt-2" type="submit">Skip</button> -->
+      <button class="btn btn-lg btn-warning mt-3" type="submit" name="button" value="next">Next</button><br>
     </div>
   </form>
 
-  <%- include("templates/footer") %>
+<%- include("templates/footer") %>

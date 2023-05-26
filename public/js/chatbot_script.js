@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
       addMessage('You', query);
 
       // Show loading indication
-      addMessage('Assistant', 'Typing...', true);
+      addMessage(persona, 'Typing...', true);
 
       sendQuery(query);
     }
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        persona: persona,
         query: query,
       }),
     })
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Remove the loading indication
         removeLoadingMessage();
 
-        addMessage('Assistant', data.response);
+        addMessage(persona, data.response);
       })
       .catch((error) => {
         // Remove the loading indication
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       messageElement.classList.add('loading');
     }
 
-    if (sender === 'Assistant') {
+    if (sender === persona) {
       messageElement.classList.add('bot-message'); // Add 'bot-message' class for assistant messages
     } else {
       messageElement.classList.add('user-message');
@@ -87,3 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+var input = document.getElementById("user-input");
+input.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("send-btn").click();
+  }
+});
+
