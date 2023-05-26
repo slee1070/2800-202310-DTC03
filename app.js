@@ -34,7 +34,7 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-
+// Run user pantry check everyday at 12 pm 
 cron.schedule("* 12 * * *", async function() {
   console.log("Checking all users' pantries for expired items...");
 
@@ -61,6 +61,7 @@ cron.schedule("* 12 * * *", async function() {
   }
 });
 
+// send mail to a user for the expiring items 
 async function sendMail(user, expiredItems) {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -70,11 +71,11 @@ async function sendMail(user, expiredItems) {
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       refreshToken: process.env.REFRESH_TOKEN,
-      // accessToken: process.env.ACCESS_TOKEN,
     },
   });
   console.log('Transporter created')
 
+  // email template
   let info = await transporter.sendMail({
     from: process.env.NODE_EMAIL_ADDRESS,
     to: user.email,
@@ -108,10 +109,10 @@ async function sendMail(user, expiredItems) {
     </html>
     `
   });
-
    console.log('Message sent: %s', info.messageId)
 }
 
+// Session storage information
 app.use(
   session({
     secret: `${process.env.NODE_SESSION_SECRET}`,
@@ -124,6 +125,7 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// public routes
 app.use('/', (req, res, next) => {
   res.locals.session = req.session;
   app.locals.currentURL = url.parse(req.url).pathname;
@@ -158,10 +160,12 @@ app.get('/', async (req, res) => {
   });
 });
 
+// Signup route
 app.get('/signup', (req, res) => {
   res.render('signup', {session: req.session});
 });
 
+// User input conitions for the sign up process
 app.use(express.json());
 app.post('/signupSubmit', async (req, res) => {
   let errorMessage = [];
@@ -283,7 +287,7 @@ app.post('/signupSubmit', async (req, res) => {
 
 app.use(express.static('public'));
 
-
+// Route to preference_cuisine 
 app.post('/preference_cuisine', async (req, res) => {
   const userId = req.body.userId;
   
@@ -306,7 +310,7 @@ app.post('/preference_cuisine', async (req, res) => {
   }
 });
 
-
+// Route to preference_dietary_restriction
 app.post('/preference_dietary_restriction', async (req, res) => {
   const userId = req.body.userId;
   const dietaryRestrictions = req.body.dietaryRestrictions;
@@ -326,6 +330,7 @@ app.post('/preference_dietary_restriction', async (req, res) => {
   }
 });
 
+// Route to choose_persona
 app.post('/choose_persona', async (req, res) => {
   const userId = req.body.userId;
   const persona = req.body.persona;
@@ -333,7 +338,7 @@ app.post('/choose_persona', async (req, res) => {
   try {
     const user = await usersModel.findOne({ _id: userId });
     if (user) {
-      // Update user's persona preference in the database
+      // Update user's AI persona preference in the database
       user.persona = persona;
       await user.save();
       req.session.user = user;
@@ -345,11 +350,12 @@ app.post('/choose_persona', async (req, res) => {
   }
 });
 
-
+// Route to login
 app.get('/login', (req, res) => {
   res.render('login', {session: req.session});
 });
 
+// Populate log in conditions when user makes an error
 app.post('/login', async (req, res) => {
   // sanitize the input using Joi
   const schema = Joi.object({
@@ -388,6 +394,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//asyncrinous function for the user to input the best before date
 async function checkDates(currentUser) {
   const user = await usersModel.findOne({ username: currentUser });
   console.log(currentUser);
@@ -413,6 +420,7 @@ app.get('/username_retreival', (req, res) => {
   res.render('username_retreival', { session: req.session });
 });
 
+// Route to display_username
 app.post('/display_username', async (req, res) => {
   const email = req.body.email;
 
@@ -507,6 +515,7 @@ app.post('/reset_password', async (req, res) => {
         }),
     });
 
+    // populate error message when user makes mistakes when reset the password
     const { error } = await schema.validate({ password, confirmPassword });
     if (error) {
       const errorMessage = error.details[0].message;
@@ -840,7 +849,7 @@ app.post('/update-pantry', async (req, res) => {
   }
 });
 
-
+// Route to remove-from-pantry
 app.post('/remove-from-pantry', async (req, res) => {
   const { username, itemsToRemove } = req.body;
   console.log("test");
@@ -864,6 +873,7 @@ app.post('/remove-from-pantry', async (req, res) => {
   }
 });
 
+// Route to update-best-before-date
 app.post('/update-best-before-date', async (req, res) => {
   const { username, foodName, bestBeforeDate } = req.body;
 
@@ -891,17 +901,17 @@ app.post('/update-best-before-date', async (req, res) => {
   }
 });
 
-
+// Populate the AI persona based on the user preference
 app.get('/chat', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
   } else {
-      // res.render('chat', {persona: "Whisker"});
       const user = await usersModel.findOne({ username: req.session.loggedUsername });
       res.render('chat', {persona: user.persona})
   }
 });
 
+// Route to the chatbot page
 app.post('/chat', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const user = await usersModel.findOne({username: req.session.loggedUsername});
@@ -918,18 +928,20 @@ app.post('/chat', async (req, res) => {
 
 });
 
-
+// Route to page does not exist (404)
 app.get('/does_not_exist', (req, res) => {
   res.status(404).render('404', {session: req.session});
 });
 
 app.use(express.static('public'));
 
+// Route to logout page
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
 
+// Route to any other page (404)
 app.use((req, res) => {
   res.redirect('/does_not_exist');
 });

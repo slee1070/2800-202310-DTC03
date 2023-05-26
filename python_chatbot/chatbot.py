@@ -1,15 +1,16 @@
-import sys
-import os
+import sys  # Importing the `sys` module for system-related functionalities
+import os  # Importing the `os` module for operating system related functionalities
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # Importing the `load_dotenv` function from the `dotenv` module
+
+# Importing necessary classes and functions from custom modules
 from langchain import OpenAI
-
 from llama_index.storage.docstore import SimpleDocumentStore
 from llama_index.vector_stores import SimpleVectorStore
 from llama_index.storage.index_store import SimpleIndexStore
-from llama_index import  GPTListIndex, LLMPredictor, ServiceContext, PromptHelper, SimpleMongoReader, StorageContext, load_index_from_storage
+from llama_index import GPTListIndex, LLMPredictor, ServiceContext, PromptHelper, SimpleMongoReader, StorageContext, load_index_from_storage
 
-import logging
+import logging  # Importing the `logging` module for logging functionalities
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -29,6 +30,13 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 
 def construct_index(directory_path):
+    """
+    Constructs an index for the given directory path.
+
+    :param directory_path: The path to the directory containing the documents.
+    :return: The constructed index.
+    """
+    
     # Set maximum input size
     max_input_size = 4096
     # Set number of output tokens
@@ -54,6 +62,15 @@ def construct_index(directory_path):
 
 
 def ask_bot(index, query, persona_prompt, example_conversation):
+    """
+    Asks the chatbot a question/query.
+
+    :param index: The chatbot index.
+    :param query: The query/question to ask the chatbot.
+    :param persona_prompt: The persona prompt for the chatbot.
+    :param example_conversation: The example conversation for the chatbot.
+    :return: The response from the chatbot.
+    """
 
     prompt = persona_prompt + example_conversation + query
 
@@ -73,9 +90,18 @@ def ask_bot(index, query, persona_prompt, example_conversation):
     return response.response
 
 
+# Creating an index by calling the `construct_index` function with the "/content/" directory path
 index = construct_index("/content/")
 
 
 def chat_bot(query, persona_prompt, example_conversation):
+    """
+    Chatbot function that interacts with the chatbot model.
+
+    :param query: The query/question to ask the chatbot.
+    :param persona_prompt: The persona prompt for the chatbot.
+    :param example_conversation: The example conversation for the chatbot.
+    :return: The response from the chatbot.
+    """
     response = ask_bot(index, query, persona_prompt, example_conversation)
     return response

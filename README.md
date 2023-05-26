@@ -1,18 +1,23 @@
-# PantryMaster
-## 1. Project Title
-PantryMaster - Empowering Home Cooks for Flavorful and Convenient Meals
+# PantryMaster: Empowering Home Cooks for Flavorful and Convenient Meals
 
-## 2. Project Description
+## 1. Project Description
 **Our team is developing a recipe recommendation app, PantryMaster, to help busy home cooks by recommending delicious recipes based on the ingredients that they already have in their pantry and refrigerator.**
 
 Our project, PantryMaster, is a recipe recommendation app aimed at helping busy home cooks. Our team believes that everyone deserves convenient access to flavorful meals that can be prepared with ease. Our goal is to empower home cooks by leveraging advanced technology to recommend recipes tailored to their specific ingredients, preferences, and dietary needs. PantryMaster is designed to save time, reduce waste, and inspire culinary creativity, offering a personalized and engaging cooking journey. With a focus on quality, convenience, and sustainability, we strive to make meal planning and preparation an enjoyable and fulfilling experience for all.
 
-## 3. Technologies and Resources Used
+## 2. Technologies and Resources Used
 1. Embedded Javascript (EJS), Cascading Style Sheets (CSS), JavaScript (JS), Python (PY)
 2. Bootstrap 5.0 (Frontend library)
 3. MongoDB 6.0 (Database)
 4. Google icons (Material design)
-5. Dependencies
+5. Google’s OAuth (2.0):  Gmail with nodemailer
+6. Cyclic (Deploy and host the project)
+7. LlamaIndex (0.6.11): Data framework specifically designed for building LLM (Language Model) applications
+8. Langchain (0.0.154): Developing applications powered by language models
+9. GPT (3.0 Ada): An advanced language model developed by OpenAI
+10. Flask (2.0.1): A lightweight and versatile web framework for Python
+11. PyMongo (4.3.3): 
+12. Dependencies
     - axios (1.4.0)
     - bcrypt (5.1.0)
     - connect-mongodb-session (3.1.1)
@@ -29,7 +34,8 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
     - nodemailer (6.9.2)
     - nodemon (2.0.22)
 
-## 4. List of File Contents of folder
+## 3. List of File Contents of folder
+```
 2800-202310-DTC03
 ├── .gitignore                          # Git-ignore file 
 ├── app.js                              # File that contaions javascript functions
@@ -142,8 +148,9 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
         ├── footer_home.ejs                     / ejs file for footer for home page    
         ├── header.ejs                          / ejs file for header for all pages
         └── svg.ejs                             / ejs file for svg 
+```
 
-## 5. How to install or run the project
+## 4. How to install or run the project
 1. Clone the project repository from our GitHub repository.
 2. Install necessary dependancies listed in package.json file. 
 3. Sign up for a Cyclic account.
@@ -156,13 +163,57 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 10. Once you have configured your deployment settings, click on the "Deploy" button to start the deployment process. Cyclic will build and deploy your app in a container with your environment variables configured.
 11. The web app should now be live and accessible via a URL provided by Cyclic. You can monitor the status of your deployment and view logs in the Cyclic dashboard.
 
-## 6. How to use the product
+## 5. How to use the product
+1. Setting up user preferences and recommending recipes:
+    - When the user signs up, they can specify their cuisine preferences and dietary restrictions.
+    - Based on the user's pre-set preferences, our app suggests relevant recipes.
+    - For example, if a user prefers Mexican food and follows a vegan diet, the app will recommend vegan Mexican recipes.
+    - Users can also search for specific recipes using keywords.
 
-## 7. Credits, References, and Licenses
+2. Updating user's pantry list and sending notifications:
+    - Users can easily update the items in their pantry.
+    - By clicking the "+" button, users can search for and add items to their pantry.
+    - Users can manually select each item or use the search bar to find specific items.
+    - If a user wants to remove an item, they can simply click the "-" sign at the bottom of the list.
+    - The app also offers an expiry date notification feature.
+    - Users can add expiry dates to the items in their pantry.
+    - When items are nearing their best before date, the app sends email notifications to the users.
 
-## 8. Use of AI 
+3. AI chatbot for recipe search and suggestions:
+    - Our AI chatbot allows users to search for recipes and provides personalized suggestions based on their pantry items.
+    - The chatbot utilizes a comprehensive recipe dataset and AI capabilities.
+    - Users can interact with the chatbot to receive recipe recommendations and ask any questions they may have.
+    - The chatbot offers four distinct personas for users to choose from, catering to their preferences.
+    - Users can also enjoy lighthearted humor as the chatbot entertains them with funny jokes.
 
-## 9. Contact information
+## 6. Credits, References, and Licenses
+| Credits                          | Refences                                                                           | License                                |
+| :------------------------------- | :--------------------------------------------------------------------------------- | :------------------------------------- |
+| Flaticon                         | https://www.flaticon.com/                                                          | N/A                                    |
+| LlamaIndex 0.6.11                | https://gpt-index.readthedocs.io/                                                  | N/A                                    |
+| MongoDB Reader from LlamaIndex   | https://gpt-index.readthedocs.io/en/latest/examples/data_connectors/MongoDemo.html | N/A                                    |
+| LangChain                        | https://python.langchain.com/                                                      | N/A                                    |
+| OpenAI                           | https://openai.com/                                                                | N/A                                    |
+| Adobe Fonts                      | https://fonts.adobe.com/                                                           | N/A                                    |
+| Adobe Stock                      | https://stock.adobe.com/                                                           | N/A                                    |
+| Freepik                          | https://www.freepik.com/                                                           | N/A                                    |
+| Unsplash                         | https://unsplash.com/                                                              | N/A                                    |
+| PyMongo (4.3.3)                  | https://pymongo.readthedocs.io/en/stable/                                          | License                                |
+| LangChain (0.0.154)              | https://python.langchain.com/                                                      | N/A                                    |
+| Bootstrap 5.0 (Frontend library) | https://getbootstrap.com/                                                          | License                                |
+| MongoDB 6.0 (Database)           | https://www.mongodb.com/docs/manual/release-notes/6.0/                             | Server Side Public License (SSPL) v1.0 |
+| Google icons (Material design)   | https://fonts.google.com/icons                                                     | Apache License 2.0                     |
+| Google's OAuth (2.0)             | https://developers.google.com/identity/protocols/oauth2                            | N/A                                    |
+| Cyclic                           | https://docs.cyclic.sh/                                                            | N/A                                    |
+| LlamaIndex (0.6.11)              | https://gpt-index.readthedocs.io/en/latest/                                        | N/A                                    |
+| GPT (3.0 Ada)                    | https://platform.openai.com/docs/models                                            | N/A                                    |
+| Flask (2.0.1)                    | https://flask.palletsprojects.com/en/2.3.x/changes/                                | BSD-3-Clause License                   |
+| Bcrypt (5.1.0)                   | https://www.npmjs.com/package/bcrypt                                               | MIT License                            |
+
+## 7. Use of AI 
+Our app incorporates AI through the implementation of a chatbot powered by OpenAI and a dataset stored in MongoDB. We utilized Python with Flask and LamaIndex to enable the AI to access our MongoDB dataset. As a result, our AI chatbot offers users the ability to search for recipes and receive personalized suggestions based on their pantry items. By leveraging the capabilities of AI and utilizing a comprehensive recipe dataset, the chatbot can provide accurate recipe recommendations and address user inquiries effectively. To enhance the user experience, we have incorporated four distinct personas for the chatbot, allowing users to select the one that aligns with their preferences. Additionally, users can enjoy lighthearted humor as the chatbot entertains them with amusing jokes.
+
+## 8. Contact information
 We are a team of developers - Dream Crafters. We are tech experts dedicated to revolutionizing the way busy home cooks plan and prepare meals. We understand the challenges faced by individuals striving to balance their busy lifestyles with the desire to enjoy delicious, home-cooked meals. Our mission for this project is to provide an innovative and user-friendly app that simplifies the recipe search process, reduces food waste, and enhances the overall cooking experience. 
 ### collaborators
 1. Alfrey Chan 
@@ -171,7 +222,7 @@ We are a team of developers - Dream Crafters. We are tech experts dedicated to r
 4. Amy Sim
 Contact: dream.crafters.dtc03@gmail.com
 
-## 10. Features for Future
+## 9. Features for Future
 As part of our future plans for PantryMaster, we are considering exciting features to enhance the user experience.
 1. Voice recognition technology 
     This would allow users to interact with the app using their voice, enabling a hands-free and intuitive cooking experience. Users can set their preferred voice persona, and our AI-powered assistant will provide cooking instructions and guidance using that voice, adding a personalized touch to the cooking process. This innovative feature aims to make cooking more convenient, engaging, and accessible for users, further elevating their culinary journey with PantryMaster.
