@@ -119,18 +119,64 @@ function removeFromPantry() {
   });
 }
 
-$(document).ready(function () {
-  $('#modal-button').click(function () {
-    $('#myModal').modal('show');
+function filterIngredients() {
+  var input, filter, container, ingredients, button, i, txtValue;
+  input = document.getElementById('ingredient-search');
+  filter = input.value.toUpperCase();
+  container = document.getElementsByClassName('modal-background-primary');
+
+  for (i = 0; i < container.length; i++) {
+    ingredients = container[i].querySelectorAll('.custom-ingredient-button, .hidden-ingredients .custom-ingredient-button');
+    for (let j = 0; j < ingredients.length; j++) {
+      button = ingredients[j];
+      txtValue = button.textContent || button.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        button.style.display = '';
+      } else {
+        button.style.display = 'none';
+      }
+    }
+  }
+}
+
+  function showHiddenIngredients() {
+    const hiddenIngredients = document.getElementsByClassName("hidden-ingredients");
+    for (let i = 0; i < hiddenIngredients.length; i++) {
+      hiddenIngredients[i].style.display = "block";
+    }
+  }
+
+function hideHiddenIngredients() {
+  const hiddenIngredients = document.getElementsByClassName("hidden-ingredients");
+  for (let i = 0; i < hiddenIngredients.length; i++) {
+    hiddenIngredients[i].style.display = "none";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const ingredientSearchInput = document.getElementById("ingredient-search");
+  const showMoreButtons = document.querySelectorAll(".custom-showMore-button");
+
+  ingredientSearchInput.addEventListener("mouseover", function () {
+    showHiddenIngredients();
+        for (let i = 0; i < showMoreButtons.length; i++) {
+        showMoreButtons[i].style.display = "none";
+      }
   });
+});
 
-  const showMoreButtons = document.querySelectorAll('.show-more-btn');
+$(document).ready(function(){
+  $("#modal-button").click(function(){
+    $('#myModal').modal('show');
+});
 
-  showMoreButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const hiddenIngredients = button.nextElementSibling;
-      hiddenIngredients.style.display = 'block';
-      button.style.display = 'none';
+const showMoreButtons = document.querySelectorAll('.show-more-btn');
+
+showMoreButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const hiddenIngredients = button.nextElementSibling;
+    hiddenIngredients.style.display = 'block';
+    button.style.display = 'none';
     });
   });
 });

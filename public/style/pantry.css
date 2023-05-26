@@ -48,8 +48,24 @@
   padding-left: 15px !important;
   padding-right: 15px !important;
 }
+
 #my_pantry_title {
   font-family: 'museo-sans-rounded', sans-serif;
   color: #e94a94;
   font-weight: bold;
+}
+
+#ingredient-search {
+  width: 100%;
+  border-radius: 20px;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #f2f2f2;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#ingredient-search::placeholder {
+  color: #999;
 }

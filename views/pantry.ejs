@@ -59,6 +59,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body my-primary">
+        <input type="text" id="ingredient-search" placeholder="Search ingredient" onkeyup="filterIngredients()">
         <% ingredients.forEach((category) => { %>
           <div class="container pb-2 px-0 mb-3 modal-background-primary custom-border">
             <h5 class="modal-header-primary px-2 py-2 custom-header-border" style="border-bottom: solid black">
