@@ -410,6 +410,7 @@ async function checkDates(currentUser) {
   }
 }
 
+// Route to username_retreival
 app.get('/username_retreival', (req, res) => {
   res.render('username_retreival', { session: req.session });
 });
@@ -433,10 +434,12 @@ app.post('/display_username', async (req, res) => {
   }
 });
 
+// Route to password_recovery
 app.get('/password_recovery', (req, res) => { 
   res.render('password_recovery', { session: req.session });
 });
 
+// Defines route handler for submit_user_information
 app.post('/submit_user_information', async (req, res) => {
   try {
     const user = await usersModel.findOne({
@@ -458,6 +461,7 @@ app.post('/submit_user_information', async (req, res) => {
   }
 });
 
+// Defines route handler for submit_security_answer
 app.post('/submit_security_answer', async (req, res) => {
   try {
     const user = await usersModel.findOne({ _id: req.body.userId });
@@ -482,10 +486,12 @@ app.post('/submit_security_answer', async (req, res) => {
   }
 });
 
+// Route to security_answer_submit
 app.get('/security_answer_submit', (req, res) => {
   res.render('security_answer_submit');
 });
 
+// Defines route handler for reset_password
 app.post('/reset_password', async (req, res) => {
   try {
     const { password, confirmPassword } = req.body;
@@ -524,14 +530,17 @@ app.post('/reset_password', async (req, res) => {
   }
 });
 
+// Route to password_change
 app.get('/password_change', (req, res) => {
   res.render('password_change');
 });
 
+// Route to profile page
 app.get('/profile', (req, res) => {
   res.render('profile', {session: req.session, disableFields: true});
 });
 
+// Defines route handler to profileSubmit
 app.post('/profileSubmit', async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().alphanum().min(5).max(15).required().messages({
@@ -579,10 +588,12 @@ app.post('/profileSubmit', async (req, res) => {
   
 });
 
+// Route to profile_change_password
 app.get('/profile_change_password', (req, res) => {
   res.render('profile_change_password', {session: req.session});
 });
 
+// Route to profile_change_password
 app.post('/profile_change_password', async (req, res) => {
   const { old_password, password, confirmPassword } = req.body;
   const schema = Joi.object({
@@ -630,6 +641,7 @@ app.post('/profile_change_password', async (req, res) => {
   }
 });
 
+// Defines route handler for update-user-setting
 app.post('/update-user-setting', async (req, res) => {
   const { emailNotifications } = req.body;
 
@@ -788,7 +800,6 @@ app.get('/recipe', async (req, res) => {
     res.status(500).send('An error occurred while retrieving recipes.');
   }
 });
-
 
 app.use(express.static('public'));
 
