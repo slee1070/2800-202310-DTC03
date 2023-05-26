@@ -35,7 +35,7 @@ const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PAS
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-cron.schedule("35 2 * * *", async function() {
+cron.schedule("* 12 * * *", async function() {
   console.log("Checking all users' pantries for expired items...");
 
   try {
@@ -101,6 +101,7 @@ async function sendMail(user, expiredItems) {
     <div class="footer">
       DreamCrafters Team, creators of PantryMaster ©2023<br/>
       Visit our website: <a href="http://www.pantrymaster.cyclic.app">www.pantrymaster.cyclic.app</a><br/>
+      Contact: dream.crafters.dtc03@gmail.com<br/>
       <a href="http://localhost:3000/aboutus">Privacy Policy</a>
     </div>
     </body>
