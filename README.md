@@ -67,7 +67,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   │   ├── icon_proteins.png                   / Icon image for proteins in modal for pantry page
 │   │   └── icon_sugars.png                     / Icon image for sweetners in modal for pantry page
 │   ├── logo.png                                / PantryMaster logo image
-│   ├── svg
+│   ├── svg                             # Folder that contains svg icons
 │   │   ├── icon_account.svg                    / Icon image for account on nav bar
 │   │   ├── icon_chat.svg                       / Icon image for chat on nav bar
 │   │   ├── icon_favorite.svg                   / Icon image for favorite on nav bar
