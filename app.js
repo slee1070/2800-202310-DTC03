@@ -77,7 +77,7 @@ async function sendMail(user, expiredItems) {
 
   let info = await transporter.sendMail({
     from: process.env.NODE_EMAIL_ADDRESS,
-    to: 'alfreychan@gmail.com',
+    to: user.email,
     subject: 'Pantry Master - Expired Items in Your Pantry',
     html: `
     <html>
