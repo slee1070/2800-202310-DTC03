@@ -281,10 +281,7 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.use(express.static('public'));
-// app.get('/preference_cuisine', (req, res) => {
-//   const user = req.session.user;
-//   res.render('preference_cuisine', { session: req.session });
-// });
+
 
 app.post('/preference_cuisine', async (req, res) => {
   const userId = req.body.userId;
