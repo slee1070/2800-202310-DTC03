@@ -48,15 +48,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   │   ├── Grandma.png                         / Image file for AI persona
 │   │   ├── Whisker.png                         / Image file for AI persona
 │   │   ├── Remy.png                            / Image file for AI persona
-│   │   ├── icon_account.png                    / Icon image for user account on nav bar
 │   │   ├── icon_add.png                        / Icon image for add in pantry page
-│   │   ├── icon_chat.png                       / Icon image for chat on nav bar
-│   │   ├── icon_favorite.png                   / Icon image for favorite on nav bar
-│   │   ├── icon_fridge.png                     / Icon image for fridge on nav bar
-│   │   ├── icon_home.png                       / Icon image for home on nav bar
-│   │   ├── icon_info.png                       / Icon image for about us on nav bar
-│   │   ├── icon_logout.png                     / Icon image for log out on nav bar
-│   │   ├── icon_recipe.png                     / Icon image for recipe on nav bar
 │   │   ├── icon_remove.png                     / Icon image for remove in pantry page
 │   │   ├── logo.png                            / PantryMaster logo image
 │   │   ├── logo_title.png                      / PantryMaster logo title
@@ -160,7 +152,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 
 ## 8. Use of AI 
 
-## 9. Contact information: dream.crafters.dtc03@gmail.com
+## 9. Contact information
 We are a team of developers - Dream Crafters. We are tech experts dedicated to revolutionizing the way busy home cooks plan and prepare meals. We understand the challenges faced by individuals striving to balance their busy lifestyles with the desire to enjoy delicious, home-cooked meals. Our mission for this project is to provide an innovative and user-friendly app that simplifies the recipe search process, reduces food waste, and enhances the overall cooking experience. 
 ### collaborators
 1. Alfrey Chan 
