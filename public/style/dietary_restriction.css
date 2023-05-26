@@ -88,14 +88,9 @@ label h6 {
 
 /* mobile screen */
 @media (max-width: 768px) {
-  /* section {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-  } */
-
   .tile {
-    height: 130px;
-    width: 110px;
+    height: 170px;
+    width: 150px;
   }
 
   .btn {

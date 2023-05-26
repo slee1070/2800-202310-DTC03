@@ -1,10 +1,9 @@
 <%- include("templates/header") %>
   <link rel="stylesheet" href="/style/dietary_restriction.css">
 
-  <h1 class="text-center">Any dietary restriction?</h1>
-
   <!-- dietary restriction checkboxes go here -->
-  <form id="dietaryRestrictionForm" action="preference_dietary_restriction" method="post">
+  <form id="dietaryRestrictionForm" action="preference_dietary_restriction" method="post" class="container">
+    <h1 class="text-center">Any dietary restriction?</h1>
     <input type="hidden" name="userId" value="<%= userId %>">
     <h6 style="color:gray" class="text-center">Select any applicable dietary restrictions.</h6>
     <section>
