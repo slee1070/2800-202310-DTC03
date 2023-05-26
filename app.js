@@ -308,10 +308,6 @@ app.post('/preference_cuisine', async (req, res) => {
   }
 });
 
-// app.get('/preference_dietary_restriction', (req, res) => {
-//   const user = req.session.user;
-//   res.render('preference_dietary_restriction', { session: req.session });
-// });
 
 app.post('/preference_dietary_restriction', async (req, res) => {
   const userId = req.body.userId;
