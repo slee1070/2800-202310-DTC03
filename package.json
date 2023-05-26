@@ -2,7 +2,7 @@
   "name": "PantryMaster",
   "version": "1.0.0",
   "description": "",
-  "main": "./controller/server.js",
+  "main": "/controller/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
