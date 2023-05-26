@@ -60,6 +60,22 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   │   ├── icon_remove.png                     / Icon image for remove in pantry page
 │   │   ├── logo.png                            / PantryMaster logo image
 │   │   ├── logo_title.png                      / PantryMaster logo title
+│   │   ├── ingredientts                    # Folder that contains food ingredients images
+│   │   │   ├── icon_beans.png                  / Icon image for beans in modal for pantry page
+│   │   │   ├── icon_berries.png                / Icon image for berries in modal for pantry page
+│   │   │   ├── icon_canned.png                 / Icon image for canned food in modal for pantry page
+│   │   │   ├── icon_chilli.png                 / Icon image for chilli food in modal for pantry page
+│   │   │   ├── icon_condiments.png             / Icon image for sauces and condiments in modal for pantry page
+│   │   │   ├── icon_dairy.png                  / Icon image for dairy products in modal for pantry page
+│   │   │   ├── icon_drinks.png                 / Icon image for drinks in modal for pantry page
+│   │   │   ├── icon_fruitVege.png              / Icon image for fruit and vegetables in modal for pantry page
+│   │   │   ├── icon_grains.png                 / Icon image for grains and pasta in modal for pantry page
+│   │   │   ├── icon_herbs.png                  / Icon image for herbs in modal for pantry page
+│   │   │   ├── icon_misc.png                   / Icon image for miscellaneous in modal for pantry page
+│   │   │   ├── icon_nuts.png                   / Icon image for nuts and seeds in modal for pantry page
+│   │   │   ├── icon_oils.png                   / Icon image for oils in modal for pantry page
+│   │   │   ├── icon_proteins.png               / Icon image for proteins in modal for pantry page
+│   │   │   └── icon_sugars.png                 / Icon image for sweetners in modal for pantry page
 │   │   └── user_preference                 # Folder that contains user preference images
 │   │       ├── brazilian.png                   / Image for Brazilian food 
 │   │       ├── chinese.png                     / Image for Chinese food 
@@ -77,12 +93,15 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   ├── js                                  # Folder that contains .js files
 │   │   ├── chatbot_script.js                   / Javascript file for chatbot
 │   │   ├── fun.js                              / Javascript file for easter egg
-│   │   └── recipe2.js                          / Javascript file for recipe sort
+│   │   └── pantry.js                           / Javascript file for pantry
 │   └── style                               # Style folder that contains .css files
 │       ├── chatbot.css                         / Stylesheet for chatbot
 │       ├── cuisine.css                         / Stylesheet for cuisine
 │       ├── dietary_restriction.css             / Stylesheet for dietary restrictions 
 │       ├── index.css                           / Stylesheet for index page
+│       ├── pantry.css                          / Stylesheet for pantry page
+│       ├── recipe.css                          / Stylesheet for recipe page
+│       ├── signup.css                          / Stylesheet for signup page
 │       └── navbar.css                          / Stylesheet for nav bar
 ├── python_chatbot                      # Folder for Python chatbot
 │   ├── app.py                                  / Python file that contains app functions
