@@ -189,24 +189,21 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 ## 6. Credits, References, and Licenses
 | Credits                          | Refences                                                                           | License                                |
 | :------------------------------- | :--------------------------------------------------------------------------------- | :------------------------------------- |
-| Flaticon                         | https://www.flaticon.com/                                                          | N/A                                    |
-| LlamaIndex 0.6.11                | https://gpt-index.readthedocs.io/                                                  | N/A                                    |
-| MongoDB Reader from LlamaIndex   | https://gpt-index.readthedocs.io/en/latest/examples/data_connectors/MongoDemo.html | N/A                                    |
-| LangChain                        | https://python.langchain.com/                                                      | N/A                                    |
-| OpenAI                           | https://openai.com/                                                                | N/A                                    |
-| Adobe Fonts                      | https://fonts.adobe.com/                                                           | N/A                                    |
-| Adobe Stock                      | https://stock.adobe.com/                                                           | N/A                                    |
-| Freepik                          | https://www.freepik.com/                                                           | N/A                                    |
-| Unsplash                         | https://unsplash.com/                                                              | N/A                                    |
-| PyMongo (4.3.3)                  | https://pymongo.readthedocs.io/en/stable/                                          | License                                |
-| LangChain (0.0.154)              | https://python.langchain.com/                                                      | N/A                                    |
-| Bootstrap 5.0 (Frontend library) | https://getbootstrap.com/                                                          | License                                |
+| Flaticon                         | https://www.flaticon.com/                                                          | Free License                           |
+| LlamaIndex 0.6.11                | https://gpt-index.readthedocs.io/                                                  | Open Source                            |
+| MongoDB Reader from LlamaIndex   | https://gpt-index.readthedocs.io/en/latest/examples/data_connectors/MongoDemo.html | Open Source for research               |
+| OpenAI                           | https://openai.com/                                                                | Pay per use                            |
+| Adobe Fonts                      | https://fonts.adobe.com/                                                           | Student License                        |
+| Adobe Stock                      | https://stock.adobe.com/                                                           | Student License                        |
+| Freepik                          | https://www.freepik.com/                                                           | Free Licenes                           |
+| Unsplash                         | https://unsplash.com/                                                              | Free Licenes                           |
+| LangChain (0.0.154)              | https://python.langchain.com/                                                      | Open Source                            |
+| Bootstrap 5.0 (Frontend library) | https://getbootstrap.com/                                                          | Open Source                            |
 | MongoDB 6.0 (Database)           | https://www.mongodb.com/docs/manual/release-notes/6.0/                             | Server Side Public License (SSPL) v1.0 |
-| Google icons (Material design)   | https://fonts.google.com/icons                                                     | Apache License 2.0                     |
-| Google's OAuth (2.0)             | https://developers.google.com/identity/protocols/oauth2                            | N/A                                    |
-| Cyclic                           | https://docs.cyclic.sh/                                                            | N/A                                    |
-| LlamaIndex (0.6.11)              | https://gpt-index.readthedocs.io/en/latest/                                        | N/A                                    |
-| GPT (3.0 Ada)                    | https://platform.openai.com/docs/models                                            | N/A                                    |
+| Google icons (Material design)   | https://fonts.google.com/icons                                                     | Apache License 2.0 - Open Source       |
+| Google's OAuth (2.0)             | https://developers.google.com/identity/protocols/oauth2                            | Free Licenes                           |
+| Cyclic                           | https://docs.cyclic.sh/                                                            | Free Licenes                           |
+| GPT (3.0 Ada)                    | https://platform.openai.com/docs/models                                            | Open Source                            |
 | Flask (2.0.1)                    | https://flask.palletsprojects.com/en/2.3.x/changes/                                | BSD-3-Clause License                   |
 | Bcrypt (5.1.0)                   | https://www.npmjs.com/package/bcrypt                                               | MIT License                            |
 
@@ -215,11 +212,12 @@ Our app incorporates AI through the implementation of a chatbot powered by OpenA
 
 ## 8. Contact information
 We are a team of developers - Dream Crafters. We are tech experts dedicated to revolutionizing the way busy home cooks plan and prepare meals. We understand the challenges faced by individuals striving to balance their busy lifestyles with the desire to enjoy delicious, home-cooked meals. Our mission for this project is to provide an innovative and user-friendly app that simplifies the recipe search process, reduces food waste, and enhances the overall cooking experience. 
-### collaborators
+### Collaborators
 1. Alfrey Chan 
 2. Diane Choi
 3. Sung Lee 
 4. Amy Sim
+
 Contact: dream.crafters.dtc03@gmail.com
 
 ## 9. Features for Future
