@@ -649,11 +649,13 @@ app.post('/update-user-setting', async (req, res) => {
   res.status(200).send();
 });
 
+// route to about us page
 app.get('/aboutus', (req, res) => {
   const user = req.session.user;
   res.render('about_us', { session: req.session });
 });
 
+// route to preference page
 app.get('/preference', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
@@ -672,6 +674,7 @@ app.get('/preference', async (req, res) => {
   }
 });
 
+// route to preference page
 app.post('/preference', async (req, res) => {
   const userId = req.body.userId;
   const cuisinePreference = req.body.cuisinePreference;
@@ -703,7 +706,7 @@ app.post('/preference', async (req, res) => {
   }
 });
 
-// Route for recipe page
+// Route to recipe page
 app.get('/recipe', async (req, res) => {
   try {
     const userEmail = req.session.loggedEmail;
@@ -764,7 +767,7 @@ app.get('/recipe', async (req, res) => {
     const endIndex = page * pageSize;
     const totalPages = Math.ceil(recipes.length / pageSize);
 
-    // If on the first page and search query exists, move all search results to the first page
+    // If search query exists, move all search results to the first page
     if (page === 1 && searchQuery && recipes.length > 1) {
       const searchResults = recipes.filter(recipe => recipe.Name.toLowerCase().includes(searchQuery.toLowerCase()));
       const paginatedSearchResults = searchResults.slice(0, pageSize);
@@ -778,7 +781,7 @@ app.get('/recipe', async (req, res) => {
     }
 
     // If there are no search results, display a pop-up alert
-    if (searchQuery && recipes.length === 0) {
+    if (searchQuery !== recipes.length === 0) {
       const noResultsMessage = 'There are no search results.';
       res.send(`<script>alert("${noResultsMessage}"); window.history.back();</script>`);
       return; // Add this return statement to exit the route after sending the alert
@@ -791,9 +794,9 @@ app.get('/recipe', async (req, res) => {
 });
 
 
-
 app.use(express.static('public'));
 
+// Route to pantry page
 app.get('/pantry', async (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.redirect('/');
@@ -811,6 +814,7 @@ app.get('/pantry', async (req, res) => {
   }
 });
 
+// Route to update-pantry page
 app.post('/update-pantry', async (req, res) => {
   const { username, pantryItems } = req.body;
   console.log(pantryItems);
