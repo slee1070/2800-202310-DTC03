@@ -167,6 +167,7 @@ We are a team of developers - Dream Crafters. We are tech experts dedicated to r
 2. Diane Choi
 3. Sung Lee 
 4. Amy Sim
+Contact: dream.crafters.dtc03@gmail.com
 
 ## 10. Features for Future
 As part of our future plans for PantryMaster, we are considering exciting features to enhance the user experience.
