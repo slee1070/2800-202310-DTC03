@@ -39,7 +39,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 ```
 2800-202310-DTC03
 ├── .gitignore                          # Git-ignore file 
-├── app.js                              # File that contaions javascript functions
+├── app.js                              # File that contains javascript functions
 ├── controller                          # Folder that contains controlling js files 
 │   ├── chatbot.js                              / Javascript file for chatbot
 │   └── server.js                               / Javascript file for the server connection
@@ -57,7 +57,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   ├── Whisker.png                             / Image file for AI persona
 │   ├── icon_add.png                            / Icon image for add in pantry page
 │   ├── icon_remove.png                         / Icon image for remove in pantry page
-│   ├── ingredientts                    # Folder that contains food ingredients images
+│   ├── ingredients                    # Folder that contains food ingredients images
 │   │   ├── icon_beans.png                      / Icon image for beans in modal for pantry page
 │   │   ├── icon_berries.png                    / Icon image for berries in modal for pantry page
 │   │   ├── icon_canned.png                     / Icon image for canned food in modal for pantry page
@@ -72,7 +72,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   │   ├── icon_nuts.png                       / Icon image for nuts and seeds in modal for pantry page
 │   │   ├── icon_oils.png                       / Icon image for oils in modal for pantry page
 │   │   ├── icon_proteins.png                   / Icon image for proteins in modal for pantry page
-│   │   └── icon_sugars.png                     / Icon image for sweetners in modal for pantry page
+│   │   └── icon_sugars.png                     / Icon image for sweeteners in modal for pantry page
 │   ├── logo.png                                / PantryMaster logo image
 │   ├── svg                             # Folder that contains svg icons
 │   │   ├── icon_account.svg                    / Icon image for account on nav bar
@@ -84,7 +84,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   │   ├── icon_login.svg                      / Icon image for login on nav bar
 │   │   ├── icon_logout.svg                     / Icon image for logout on nav bar
 │   │   ├── icon_recipe.svg                     / Icon image for recipe on nav bar
-│   │   └── icon_signup.svg                     / Icon image for signup on nav bar
+│   │   └── icon_signup.svg                     / Icon image for sign up on nav bar
 │   ├── user_preference                 # Folder that contains user preference images
 │   │   ├── brazilian.png                       / Image for Brazilian food 
 │   │   ├── chinese.png                         / Image for Chinese food 
@@ -95,10 +95,10 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │   │   ├── korean.png                          / Image for Korean food 
 │   │   ├── lactofree.png                       / Image for Thai food 
 │   │   ├── mexican.png                         / Image for Mexican food 
-│   │   ├── nutfree.png                         / Image for lactofree dietary restriction
-│   │   ├── thai.png                            / Image for nutfree dietary restriction
+│   │   ├── nutfree.png                         / Image for lactose free dietary restriction
+│   │   ├── thai.png                            / Image for nut free dietary restriction
 │   │   ├── vegan.png                           / Image for vegan dietary restriction
-│   │   └── yeastfree.png                       / Image for yeastfree dietary restriction
+│   │   └── yeastfree.png                       / Image for yeast free dietary restriction
 │   ├── js                              # Folder that contains .js files
 │   │   ├── chatbot_script.js                   / Javascript file for chatbot
 │   │   ├── fun.js                              / Javascript file for easter egg
@@ -110,7 +110,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 │       ├── index.css                           / Stylesheet for index page
 │       ├── pantry.css                          / Stylesheet for pantry page
 │       ├── recipe.css                          / Stylesheet for recipe page
-│       ├── signup.css                          / Stylesheet for signup page
+│       ├── signup.css                          / Stylesheet for sign up page
 │       └── navbar.css                          / Stylesheet for nav bar
 ├── python_chatbot                      # Folder for Python chatbot
 │   ├── app.py                                  / Python file that contains app functions
@@ -139,7 +139,7 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
     ├── reset_password_success.ejs              / ejs file for reset_password_success page
     ├── security_answer_submit.ejs              / ejs file for security_answer_submit page
     ├── security_question_error.ejs             / ejs file for security_question_error page
-    ├── signup.ejs                              / ejs file for signup page    
+    ├── signup.ejs                              / ejs file for sign up page    
     ├── signup_submit_error.ejs                 / ejs file for signup_submit_error page
     ├── username_retreival.ejs                  / ejs file for username_retreival page    
     ├── username_retreival_view.ejs             / ejs file for username_retreival_view page
@@ -152,17 +152,85 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 ```
 
 ## 4. How to install or run the project
-1. Clone the project repository from our GitHub repository.
-2. Install necessary dependancies listed in package.json file. 
-3. Sign up for a Cyclic account.
-4. Once you're signed in to your Cyclic account, click on the "Create a new project" button. You'll be prompted to enter a name for your project.
-5. After creating your project, connect your Git repository with Cyclic. To do this, go to your project dashboard, click on the "Connect Git Repository" button, and follow the instructions to connect your repository.
-6. Before deploying your app, make sure to install all necessary dependencies. Open a terminal in your local project directory and run the following command to install all the required dependencies: npm i
-7. Cyclic allows you to add environment variables to your deployment to securely store and manage your app's configuration. To add environment variables locally, create a file called .env in your project directory and add your variables.
-8. Deploy your app: To deploy your app, go to your project dashboard on Cyclic, click on the "Deployments" tab, and then click on the "New Deployment" button. Here, you can configure your deployment settings, such as the name of the deployment, the Docker image to use, and the environment variables to set.
-9. In the "Environment Variables" section, you can add any environment variables that your app needs to run. To add a variable, click on the "Add Variable" button and enter the variable name and value.
-10. Once you have configured your deployment settings, click on the "Deploy" button to start the deployment process. Cyclic will build and deploy your app in a container with your environment variables configured.
-11. The web app should now be live and accessible via a URL provided by Cyclic. You can monitor the status of your deployment and view logs in the Cyclic dashboard.
+1. Materials that need to be installed:
+    - Embedded Javascript (EJS), Cascading Style Sheets (CSS), JavaScript (JS), Python (PY)
+    - Bootstrap 5.0 - Frontend library used for responsive design and UI components.
+    - MongoDB 6.0 - Database used for storing application data.
+    - Google icons - Material design icons used for visual elements.
+    - Google's OAuth (2.0) with Gmail and nodemailer - Used for authentication and sending emails.
+    - Cyclic - Deployment and hosting platform used for hosting the project.
+    - LlamaIndex (0.6.11) - Data framework specifically designed for building Language Model applications.
+    - Langchain (0.0.154) - Framework for developing applications powered by language models.
+    - GPT (3.0 Ada) - An advanced language model developed by OpenAI.
+    - Flask (2.0.1) - Lightweight and versatile web framework for Python.
+    - PyMongo (4.3.3) - Python driver for MongoDB.
+
+2. 3rd party APIs and frameworks 
+    OpenAI API key
+
+3. Required API key
+    Your OpenAI API key should be stored in your .env file.
+
+4. Installation process for the dependencies
+    1. Open Visual Studio Code: Launch the Visual Studio Code application on your Windows computer.
+    2. Open your project folder: Use the File menu or the Open Folder button in Visual Studio Code to navigate and open the folder where your project is located.
+    3. Open the integrated terminal: In Visual Studio Code, go to the View menu and select "Terminal" or use the shortcut Ctrl+ backtick (`) to open the integrated terminal at the bottom of the window.
+    4. Check if Node.js and npm are installed: In the terminal, type the following commands and press Enter after each one: node --version and npm --version
+    5. Install dependencies using npm: In the terminal, navigate to your project folder using the cd command.
+    6. Install each dependency: Once you are in the project folder, use the following command to install each dependency listed in number 12 of Section #2 one by one. Replace <dependency> with the actual name of the dependency you want to install (i.e. npm install <dependency>)
+    7. Repeat step 6 for all dependencies: Run the npm install command for each dependency you listed in your project.
+    8. Verify the installation: After the installation of each dependency is complete, you can check the package.json file in your project folder to ensure that the dependencies are listed there.  
+ 
+5. Configuration instruction
+    - For running our PantryMaster Node.js application, the developer needs to install the following:
+        1. Node.js: Install the latest version of Node.js from the official Node.js website (https://nodejs.org/). Choose the appropriate version for your operating system and follow the installation instructions. 
+        2. Integrated Development Environment (IDE): You can choose any IDE. Some popular options include Visual Studio Code.
+        3. Database: Make sure to have MongoDB installed and running. You can visit the official MongoDB website (https://www.mongodb.com/) and follow the installation instructions specific to your operating system.
+        4. Add an.env file: In your project directory, create an .env file. This file will contain environment variables used by our Node.js application. This file contains necessary configuration variables, such as database connection strings, API keys, or any other sensitive information required by our application.
+        5. To set up and install the project dependencies listed in the package.json file, follow these steps:
+            - Navigate to your project directory using the command line or terminal.
+            - Install project dependencies using npm by typing: npm install
+            - This command will read the package.json file and install all the listed dependencies.
+        6. Once the dependencies are installed and the .env file is added, you can proceed with developing and running our Node.js application. You can use the scripts defined in the package.json file, such as "start" for starting the server using node ./controller/server.js
+        7. Once the Node server is running, open your browser and navigate to localhost:3000. This will allow you to access and interact with our application through the local development server.
+    
+    - Our Node.js application includes a chatbot implemented in Flask, which needs to be running on a separate server. To run the application with the chatbot server hosted remotely, you can simply access "localhost:3000" after you run the Node server. However, if you prefer to run the chatbot server locally, please follow these steps. To run our PantryMaster Flask chatbot application server, the developer needs to install the following:
+        1. Language: Python - Install the latest version of Python programming language from the official Python website (https://www.python.org/). Make sure to choose the appropriate version for your operating system.
+        2. Integrated Development Environment (IDE): You can choose an IDE based on your preference. Some popular options for Python development include PyCharm and Visual Studio Code.
+        3. Python Libraries: To install the Python dependencies, you need to navigate to the /python_chatbot directory where the requirements.txt file is located. Open your command line and change the current working directory to /python_chatbot before running the 'pip install -r requirements.txt'
+        4. Run the flask server: py .\python_chatbot\app.py (Windows) or python python_chatbot/app.py (Mac)
+        5. Now you can go back to localhost:3000 in your web browser to access the PantryMaster Node.js application with the chatbot server running locally.
+
+    - Setting up Google OAuth
+        1. Visit console.cloud.google.com and log in with you Gmail account
+        2. Click on “Select a project” on the top left corner
+        3. Select “NEW PROJECT”
+        4. Enter your project name, and click “CREATE”
+        5. On the left, select “OAuth content screen” in the drop-down menu under “APIs and services”
+        6. Select your project, check “External”, and click “CREATE”
+        7. Enter your App name, email for the app, developer contact information, and then “SAVE AND CONTINUE”
+        8. Select “Credentials” on the left-hand side, then “CREATE CREDENTIALS”, and “OAuth client ID”
+        9. Select “Web application” for Application type, and add https://developers.google.com/oauthplayground under “Authorised redirect URIs”
+        10. Click “CREATE”
+        11.	Copy down the Client ID and Client secret
+        12.	Visit https://developers.google.com/oauthplayground
+        13.	On the top right corner, click the gear icon and enter your Client ID and Client secret
+        14.	For Step 1, type in https://mail.google.com and click “Authorize APIs”
+        15.	For Step 2, select “Exchange authorization code for tokens” and copy down the Refresh token
+        16.	Check “Auto-refresh the token before it expires” 
+        17.	If you haven’t yet, create a file named “.env”, and copy and paste the four lines below
+            1.	CLIENT_ID=
+            2.	CLIENT_SECRET=
+            3.	REFRESH_TOKEN=
+            4.	REDIRECT_URI=
+        18.	For the four variables above, paste the Client ID, Client secret, Refresh token, and redirect URI from the earlier steps (DO NOT INCLUDE SPACES BETWEEN “=”)
+        19.	Ensure you have installed the following dependencies: “nodemailer”, “moment”, “cron”.
+        20.	Modify the email template in lines 78-110 in app.js
+        21.	To select the times to automatically send out emails, change the cron schedule expression on line 38 accordingly
+        22.	Modify lines between 38 to 113 according to your set up for proper functionality 
+        23.	Finally, periodically revisit developers.google.com/oauthplayground to receive a new refresh token if expired (also update the new token in .env)
+
+6. Testing checklist document: https://docs.google.com/spreadsheets/d/1khk0JnBLdOgkB3fuSdh7bAD50upJOmT9xDEvNVg_AK8/edit#gid=394496370 
 
 ## 5. How to use the product
 1. Setting up user preferences and recommending recipes:
@@ -209,7 +277,14 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 | Bcrypt (5.1.0)                   | https://www.npmjs.com/package/bcrypt                                               | MIT License                            |
 
 ## 7. Use of AI 
-Our app incorporates AI through the implementation of a chatbot powered by OpenAI and a dataset stored in MongoDB. We utilized Python with Flask and LamaIndex to enable the AI to access our MongoDB dataset. As a result, our AI chatbot offers users the ability to search for recipes and receive personalized suggestions based on their pantry items. By leveraging the capabilities of AI and utilizing a comprehensive recipe dataset, the chatbot can provide accurate recipe recommendations and address user inquiries effectively. To enhance the user experience, we have incorporated four distinct personas for the chatbot, allowing users to select the one that aligns with their preferences. Additionally, users can enjoy lighthearted humor as the chatbot entertains them with amusing jokes.
+1. Use AI to help create our app
+    We leveraged AI specifically Chat GPT to generate ideas and suggestions during the brainstorming phase of app development. By inputting prompts and receiving generated text, we were able to explore various possibilities and gather inspiration for app features, user interactions, and content generation.
+2. Use AI to create data sets and clean data sets
+    While we didn't use AI to directly create or clean data sets, we utilized AI techniques and algorithms to process and analyze the existing recipe dataset. This helped us extract relevant information and optimize the data for efficient retrieval by the chatbot. By applying AI algorithms, we were able to enhance the quality and usefulness of the data set, ensuring that the chatbot can provide valuable insights and recommendations to the users.
+3. Our app use AI
+    Our app incorporates AI functionalities. The AI chatbot utilizes Python with Flask and LlamaIndex to interact with users and provide recipe recommendations based on their pantry items. The chatbot leverages AI algorithms to understand user queries, process the data, and generate appropriate responses. By utilizing AI, we aim to enhance the user experience and provide valuable assistance in finding recipes and addressing cooking-related inquiries. Additionally, the chatbot incorporates four distinct personas, which allows users to select the persona that aligns with their preferences. Each persona represents a unique character with specific traits, communication styles, and responses.
+4. Limitations and further works
+    To overcome the challenge of having four different personas and generating the right responses, we implemented an iterative approach. We repeatedly modified the prompts and tested them to ensure that the chatbot produced the appropriate answers. During the testing phase, we tested the chatbot's responses and compared them against the desired outcomes for each persona. If the generated responses deviated from the expected behavior, we made adjustments to the prompts and retested the chatbot.
 
 ## 8. Contact information
 We are a team of developers - Dream Crafters. We are tech experts dedicated to revolutionizing the way busy home cooks plan and prepare meals. We understand the challenges faced by individuals striving to balance their busy lifestyles with the desire to enjoy delicious, home-cooked meals. Our mission for this project is to provide an innovative and user-friendly app that simplifies the recipe search process, reduces food waste, and enhances the overall cooking experience. 
