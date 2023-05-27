@@ -277,13 +277,13 @@ Our project, PantryMaster, is a recipe recommendation app aimed at helping busy 
 | Bcrypt (5.1.0)                   | https://www.npmjs.com/package/bcrypt                                               | MIT License                            |
 
 ## 7. Use of AI 
-1. Use AI to help create our app
+1. **Use AI to help create our app**: 
     We leveraged AI specifically Chat GPT to generate ideas and suggestions during the brainstorming phase of app development. By inputting prompts and receiving generated text, we were able to explore various possibilities and gather inspiration for app features, user interactions, and content generation.
-2. Use AI to create data sets and clean data sets
+2. **Use AI to create data sets and clean data sets**:
     While we didn't use AI to directly create or clean data sets, we utilized AI techniques and algorithms to process and analyze the existing recipe dataset. This helped us extract relevant information and optimize the data for efficient retrieval by the chatbot. By applying AI algorithms, we were able to enhance the quality and usefulness of the data set, ensuring that the chatbot can provide valuable insights and recommendations to the users.
-3. Our app use AI
+3. **Our app use AI**:
     Our app incorporates AI functionalities. The AI chatbot utilizes Python with Flask and LlamaIndex to interact with users and provide recipe recommendations based on their pantry items. The chatbot leverages AI algorithms to understand user queries, process the data, and generate appropriate responses. By utilizing AI, we aim to enhance the user experience and provide valuable assistance in finding recipes and addressing cooking-related inquiries. Additionally, the chatbot incorporates four distinct personas, which allows users to select the persona that aligns with their preferences. Each persona represents a unique character with specific traits, communication styles, and responses.
-4. Limitations and further works
+4. **Limitations and further works**:
     To overcome the challenge of having four different personas and generating the right responses, we implemented an iterative approach. We repeatedly modified the prompts and tested them to ensure that the chatbot produced the appropriate answers. During the testing phase, we tested the chatbot's responses and compared them against the desired outcomes for each persona. If the generated responses deviated from the expected behavior, we made adjustments to the prompts and retested the chatbot.
 
 ## 8. Contact information
@@ -298,11 +298,11 @@ Contact: dream.crafters.dtc03@gmail.com
 
 ## 9. Features for Future
 As part of our future plans for PantryMaster, we are considering exciting features to enhance the user experience.
-1. Voice recognition technology 
+1. **Voice recognition technology**: 
     This would allow users to interact with the app using their voice, enabling a hands-free and intuitive cooking experience. Users can set their preferred voice persona, and our AI-powered assistant will provide cooking instructions and guidance using that voice, adding a personalized touch to the cooking process. This innovative feature aims to make cooking more convenient, engaging, and accessible for users, further elevating their culinary journey with PantryMaster.
-2. Nutritional Information and Meal Planning 
+2. **Nutritional Information and Meal Planning**: 
     Integrate a comprehensive nutritional information database into PantryMaster, allowing users to track their daily intake of calories, macronutrients, and other dietary factors. Additionally, provide meal planning functionalities that help users create balanced meal plans based on their nutritional goals.
-3. Smart Shopping List 
+3. **Smart Shopping List**: 
     Develop a smart shopping list feature that syncs with users' pantry inventory and recipe selections. The app can automatically generate a shopping list based on missing ingredients, quantities needed, and preferred stores. This would streamline the grocery shopping process and ensure users have everything they need for their chosen recipes.
-4. Social Sharing and Community 
+4. **Social Sharing and Community**:
     Build a social sharing platform within PantryMaster, enabling users to share their favorite recipes, cooking tips, and food experiences with a community of like-minded home cooks. This feature would foster engagement, inspiration, and collaboration among users.
